@@ -332,7 +332,7 @@
 
         <div style="width: 100%; max-width: 360px; margin: 0 auto;">
           <div id="share-card-capture" class="w-[360px] h-[640px] relative shadow-2xl bg-[#0a0f1c] overflow-hidden rounded-[2rem]" style="background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08);">
-            <div class="absolute inset-0 bg-black/35 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-black/40 pointer-events-none"></div>
             
             <div class="absolute top-6 left-6 right-6 z-20 flex justify-between items-center w-[312px]">
               <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-gym-neon to-[#4ab002] flex items-center justify-center shadow-[0_0_15px_rgba(88,204,2,0.4)] border border-white/10" id="card-pro-logo-container">
@@ -961,7 +961,7 @@
         document.getElementById('share-style-select').addEventListener('change', updateSharePreview);
         document.getElementById('share-custom-text-input').addEventListener('input', updateSharePreview);
 
-        // --- EXPORT GRAPHICS ENGINE (ULTRA HD FIX) ---
+        // --- EXPORT GRAPHICS ENGINE (BLOB + WEB SHARE API) ---
         const downloadBtn = document.getElementById('btn-download-share');
         if (downloadBtn) {
             downloadBtn.addEventListener('click', async () => {
@@ -973,28 +973,46 @@
                 downloadBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto text-[#0a0f1c]"></i> CAPTURING HD STORY...';
                 try { lucide.createIcons(); } catch(err){}
 
-                // Wait for high quality custom fonts to be fully loaded by the browser before painting the canvas
                 await document.fonts.ready;
 
-                // Scale 4 forces a massive 1440px wide high-resolution output
                 html2canvas(captureTarget, {
                     backgroundColor: null, 
                     logging: false,
                     scale: 4, 
-                    useCORS: true,
-                    allowTaint: true,
-                    removeContainer: true
+                    useCORS: true
                 }).then(canvas => {
-                    const image = canvas.toDataURL('image/png');
-                    const link = document.createElement('a');
-                    link.download = `salvapp_story_${Date.now()}.png`;
-                    link.href = image;
-                    link.click();
-                    
-                    downloadBtn.disabled = false;
-                    downloadBtn.innerHTML = originalText;
-                    try { lucide.createIcons(); } catch(err){}
-                    showToast('High-fidelity story saved! 📸');
+                    // Using toBlob bypasses string length limits on mobile browsers
+                    canvas.toBlob(async (blob) => {
+                        if(!blob) throw new Error("Canvas generation failed.");
+                        
+                        const fileName = `salvapp_story_${Date.now()}.png`;
+                        const file = new File([blob], fileName, { type: 'image/png' });
+
+                        // Try Native Web Share API first (Instagram, WhatsApp, Save Image natively)
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            try {
+                                await navigator.share({
+                                    files: [file],
+                                    title: 'Salvapp Story',
+                                    text: 'Check out my latest lift!'
+                                });
+                                showToast('Story shared! ⚡');
+                            } catch (shareErr) {
+                                // If user cancels share sheet, don't show error. Otherwise fallback.
+                                if (shareErr.name !== 'AbortError') {
+                                    triggerStandardDownload(blob, fileName);
+                                }
+                            }
+                        } else {
+                            // Standard desktop download
+                            triggerStandardDownload(blob, fileName);
+                        }
+                        
+                        downloadBtn.disabled = false;
+                        downloadBtn.innerHTML = originalText;
+                        try { lucide.createIcons(); } catch(err){}
+                        
+                    }, 'image/png', 1.0);
                 }).catch(err => {
                     console.error('Export error triggered:', err);
                     downloadBtn.disabled = false;
@@ -1003,6 +1021,19 @@
                     showToast('Export failed. Review asset CORS profile settings.');
                 });
             });
+        }
+
+        // Helper function for the standard anchor click download
+        function triggerStandardDownload(blob, fileName) {
+            const objUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = objUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(objUrl), 1000);
+            showToast('High-fidelity story saved! 📸');
         }
 
         // --- DASHBOARD DISPLAY SYSTEM ---
