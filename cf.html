@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CrossFit Tracker Pro</title>
+  <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect fill='%2358cc02' width='100' height='100'/&gt;&lt;text x='50' y='65' font-size='60' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'&gt;⚡&lt;/text&gt;&lt;/svg&gt;" type="image/svg+xml">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .tab-active { background: #58cc02; color: white; }
+    .tab-btn { transition: all 0.2s; }
+    .toast { animation: slideUp 0.3s ease-out; }
+    @keyframes slideUp { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+    .streak-fire { animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+    .pr-card-highlight { background: #fffbeb; border: 2px solid #fbbf24; }
+    .timer-display { font-variant-numeric: tabular-nums; }
+  </style>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+</head>
+<body class="min-h-screen w-full text-gray-800" style="background: linear-gradient(rgb(232, 245, 225), rgb(240, 244, 248));">
+  
+  <header class="w-full px-4 pt-5 pb-3">
+    <div class="max-w-2xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-3xl">🏋️</span>
+        <h1 class="font-extrabold text-2xl tracking-tight text-gray-900">CrossFit Tracker</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1 bg-white rounded-full px-3 py-1 shadow-sm text-sm border border-gray-100">
+          <span class="streak-fire">🔥</span> <span id="streak-count" class="font-bold">0</span> <span class="text-gray-500 text-xs">streak</span>
+        </div>
+        <div class="flex items-center gap-1 bg-white rounded-full px-3 py-1 shadow-sm text-sm border border-gray-100">
+          <span>⚡</span> <span id="xp-count" class="font-bold">0</span> <span class="text-gray-500 text-xs">XP</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-4 pb-12">
+    <nav class="flex flex-wrap gap-2 mb-6" role="tablist">
+      <button class="tab-btn px-5 py-2 rounded-full font-bold text-sm shadow tab-active flex-1 md:flex-none" data-tab="tracker">📝 Log</button> 
+      <button class="tab-btn px-5 py-2 rounded-full font-bold text-sm shadow bg-white text-gray-600 flex-1 md:flex-none" data-tab="timer">⏱️ Timer</button>
+      <button class="tab-btn px-5 py-2 rounded-full font-bold text-sm shadow bg-white text-gray-600 flex-1 md:flex-none" data-tab="progress">📊 Stats</button>
+    </nav>
+
+    <section id="tab-tracker" class="space-y-6 animate-fade-in">
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white rounded-xl p-3 text-center shadow-sm">
+          <p class="text-xs text-gray-500 font-medium">TOTAL LIFTS</p>
+          <p id="stat-total" class="text-xl font-bold">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-3 text-center shadow-sm border-2 border-purple-500">
+          <p class="text-xs text-purple-500 font-bold">THIS WEEK</p>
+          <p id="stat-week" class="text-xl font-bold text-purple-600">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-3 text-center shadow-sm">
+          <p class="text-xs text-gray-500 font-medium">VOLUME</p>
+          <p id="stat-volume" class="text-xl font-bold">0</p>
+          <p class="text-xs text-gray-400">kg</p>
+        </div>
+        <div class="bg-white rounded-xl p-3 text-center shadow-sm">
+          <p class="text-xs text-gray-500 font-medium">PRs 🏆</p>
+          <p id="stat-prs" class="text-xl font-bold">0</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="font-bold text-lg text-gray-800">Log a Lift</h2>
+          <span class="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded">+10 XP</span>
+        </div>
+        
+        <form id="lift-form" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="text-sm font-semibold block mb-1 text-gray-600">Movement</label> 
+              <select id="movement-select" class="w-full border-2 border-gray-200 rounded-xl px-3 py-2.5 font-medium focus:border-green-400 focus:outline-none bg-white"> 
+                <option>Back Squat</option> <option>Front Squat</option> <option>Deadlift</option> 
+                <option>Clean</option> <option>Clean & Jerk</option> <option>Snatch</option> 
+                <option>Bench Press</option> <option>Overhead Press</option> <option>Thruster</option> 
+              </select>
+            </div>
+            <div>
+              <label class="text-sm font-semibold block mb-1 text-gray-600">Weight (kg)</label> 
+              <input id="lift-weight" type="number" step="0.5" min="0" class="w-full border-2 border-gray-200 rounded-xl px-3 py-2.5 font-medium focus:border-green-400 focus:outline-none" required>
+            </div>
+            <div>
+              <label class="text-sm font-semibold block mb-1 text-gray-600">Reps</label> 
+              <input id="lift-reps" type="number" min="1" value="1" class="w-full border-2 border-gray-200 rounded-xl px-3 py-2.5 font-medium focus:border-green-400 focus:outline-none" required>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-semibold block mb-1 text-gray-600">Date</label> 
+              <input id="lift-date" type="date" class="w-full border-2 border-gray-200 rounded-xl px-3 py-2.5 font-medium focus:border-green-400 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-sm font-semibold block mb-1 text-gray-600">Notes / Rx?</label> 
+              <input id="lift-notes" type="text" placeholder="e.g. Felt heavy, Rx'd" class="w-full border-2 border-gray-200 rounded-xl px-3 py-2.5 font-medium focus:border-green-400 focus:outline-none">
+            </div>
+          </div>
+          <button type="submit" class="w-full md:w-auto px-6 py-3 rounded-xl font-bold shadow-md hover:bg-green-600 transition float-right bg-[#58cc02] text-white">Save Entry</button>
+          <div class="clear-both"></div>
+        </form>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-bold text-lg text-gray-800">Recent Activity</h2>
+          <select id="history-filter" class="border-2 border-gray-200 rounded-xl px-3 py-1.5 text-sm font-medium focus:outline-none bg-white"> 
+            <option value="all">All</option> 
+          </select>
+        </div>
+        <div id="history-list" class="space-y-2"></div>
+      </div>
+    </section>
+
+    <section id="tab-timer" class="space-y-5 hidden">
+      <div class="bg-gray-900 rounded-3xl p-8 shadow-xl text-center flex flex-col items-center justify-center min-h-[300px]">
+        <h2 class="text-gray-400 font-bold tracking-widest text-sm mb-4 uppercase">WOD Timer</h2>
+        <div id="timer-display" class="timer-display text-7xl md:text-8xl font-black text-white mb-8 tracking-tighter">
+          00:00.0
+        </div>
+        <div class="flex gap-4">
+          <button id="btn-start" class="bg-green-500 hover:bg-green-400 text-white font-bold py-3 px-8 rounded-full text-lg transition shadow-lg shadow-green-500/30">Start</button>
+          <button id="btn-stop" class="bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-8 rounded-full text-lg transition shadow-lg shadow-red-500/30 hidden">Stop</button>
+          <button id="btn-reset" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full text-lg transition">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-progress" class="space-y-6 hidden">
+      
+      <div>
+        <h2 class="font-bold text-lg mb-3 text-gray-800">Personal Records 🏆</h2>
+        <div id="pr-list" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-bold text-lg text-gray-800">Growth 📈</h2>
+          <select id="progress-movement-filter" class="border-2 border-gray-200 rounded-xl px-3 py-1.5 text-sm font-medium focus:outline-none bg-white"> 
+            <option value="">Select Movement</option> 
+          </select>
+        </div>
+        <div id="progress-chart" class="bg-white rounded-2xl p-6 shadow-sm min-h-[120px] flex items-center justify-center border border-gray-100">
+          <p class="text-gray-400 text-sm">Select a movement to see progress</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full font-bold shadow-2xl hidden toast z-50 flex items-center gap-2">
+    <span>✅</span> <span id="toast-msg">Saved!</span>
+  </div>
+
+  <script src="/_sdk/data_sdk.js"></script>
+  <script>
+    let allData = [];
+    let currentRecordCount = 0;
+
+    // --- Tab Switching Logic ---
+    const tabs = document.querySelectorAll('[data-tab]');
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(t => { t.classList.remove('tab-active'); t.classList.add('bg-white', 'text-gray-600'); });
+        btn.classList.add('tab-active'); btn.classList.remove('bg-white', 'text-gray-600');
+        
+        ['tracker', 'timer', 'progress'].forEach(tab => {
+          document.getElementById(`tab-${tab}`).classList.add('hidden');
+        });
+        document.getElementById(`tab-${btn.dataset.tab}`).classList.remove('hidden');
+      });
+    });
+
+    // --- Timer Logic (NEW) ---
+    let timerInterval;
+    let startTime;
+    let elapsedTime = 0;
+    const timerDisplay = document.getElementById('timer-display');
+    const btnStart = document.getElementById('btn-start');
+    const btnStop = document.getElementById('btn-stop');
+    const btnReset = document.getElementById('btn-reset');
+
+    function formatTime(ms) {
+      let totalSeconds = Math.floor(ms / 1000);
+      let minutes = Math.floor(totalSeconds / 60);
+      let seconds = totalSeconds % 60;
+      let tenths = Math.floor((ms % 1000) / 100);
+      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${tenths}`;
+    }
+
+    btnStart.addEventListener('click', () => {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(() => {
+        elapsedTime = Date.now() - startTime;
+        timerDisplay.textContent = formatTime(elapsedTime);
+      }, 50);
+      btnStart.classList.add('hidden');
+      btnStop.classList.remove('hidden');
+    });
+
+    btnStop.addEventListener('click', () => {
+      clearInterval(timerInterval);
+      btnStop.classList.add('hidden');
+      btnStart.classList.remove('hidden');
+    });
+
+    btnReset.addEventListener('click', () => {
+      clearInterval(timerInterval);
+      elapsedTime = 0;
+      timerDisplay.textContent = "00:00.0";
+      btnStop.classList.add('hidden');
+      btnStart.classList.remove('hidden');
+    });
+
+    // --- Core App Functions ---
+    document.getElementById('lift-date').valueAsDate = new Date();
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 2500);
+    }
+
+    function calcStreak(data) {
+      const days = new Set(data.filter(d => d.type === 'lift').map(d => d.date ? d.date.split('T')[0] : null).filter(Boolean));
+      let streak = 0, date = new Date();
+      while (true) {
+        if (days.has(date.toISOString().split('T')[0])) { streak++; date.setDate(date.getDate() - 1); }
+        else break;
+      }
+      document.getElementById('streak-count').textContent = streak;
+    }
+
+    function calcXP(data) {
+      const xp = data.reduce((total, d) => total + (d.type === 'lift' ? 10 : 5), 0);
+      document.getElementById('xp-count').textContent = xp;
+    }
+
+    function getPersonalRecords(data) {
+      const prs = {};
+      data.filter(d => d.type === 'lift').forEach(l => {
+        if (!prs[l.movement] || l.weight_kg > prs[l.movement].weight_kg) prs[l.movement] = l;
+      });
+      return prs;
+    }
+
+    function populateFilters(data) {
+      const movements = [...new Set(data.filter(d => d.type === 'lift').map(d => d.movement).filter(Boolean))];
+      ['history-filter', 'progress-movement-filter'].forEach(id => {
+        const sel = document.getElementById(id);
+        const current = sel.value;
+        sel.innerHTML = id === 'progress-movement-filter' ? '<option value="">Select Movement</option>' : '<option value="all">All</option>';
+        movements.forEach(m => sel.innerHTML += `<option value="${m}">${m}</option>`);
+        sel.value = current || (id === 'progress-movement-filter' ? '' : 'all');
+      });
+    }
+
+    function renderStats(data) {
+      const lifts = data.filter(d => d.type === 'lift');
+      document.getElementById('stat-total').textContent = lifts.length;
+
+      const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
+      document.getElementById('stat-week').textContent = lifts.filter(l => new Date(l.date) >= weekStart).length;
+
+      const vol = lifts.reduce((sum, l) => sum + (l.weight_kg * l.reps), 0);
+      document.getElementById('stat-volume').textContent = vol >= 1000 ? (vol/1000).toFixed(1) + 'k' : vol;
+
+      document.getElementById('stat-prs').textContent = Object.keys(getPersonalRecords(data)).length;
+    }
+
+    function renderHistory(data) {
+      const filter = document.getElementById('history-filter').value;
+      let items = data.filter(d => d.type === 'lift').sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      if (filter && filter !== 'all') items = items.filter(d => d.movement === filter);
+
+      const prs = getPersonalRecords(data);
+      document.getElementById('history-list').innerHTML = items.slice(0, 15).map(item => {
+        const isPR = prs[item.movement] && prs[item.movement].__backendId === item.__backendId;
+        return `
+          <div class="flex justify-between items-center bg-white rounded-xl px-4 py-3 shadow-sm border border-gray-50">
+            <div>
+              <span class="font-bold text-gray-800">${item.movement}</span> ${isPR ? '🏆' : ''} 
+              <span class="text-gray-500 text-sm ml-1">${item.weight_kg}kg × ${item.reps}</span>
+              ${item.notes ? `<p class="text-xs text-gray-400 mt-0.5">${item.notes}</p>` : ''}
+            </div>
+            <div class="flex flex-col items-end gap-1">
+              <span class="text-xs text-gray-400 font-medium">${item.date ? item.date.split('T')[0] : ''}</span>
+              <button onclick="deleteRecord('${item.__backendId}')" class="text-red-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </div>
+          </div>`;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function renderPRs(data) {
+      const prs = getPersonalRecords(data);
+      const container = document.getElementById('pr-list');
+      const entries = Object.entries(prs);
+      
+      if (entries.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 text-sm col-span-2">No PRs yet.</p>';
+        return;
+      }
+      container.innerHTML = entries.map(([name, rec]) => `
+        <div class="pr-card-highlight rounded-xl p-4 flex flex-col items-center justify-center shadow-sm">
+          <p class="font-bold text-xs text-gray-600 mb-1 text-center">${name}</p>
+          <p class="text-2xl font-black text-gray-900">${rec.weight_kg}<span class="text-sm font-medium text-gray-500 ml-1">kg</span></p>
+          <p class="text-xs text-gray-400 mt-1">est 1RM: ${Math.round(rec.weight_kg * (1 + (rec.reps/30)))}kg</p>
+        </div>
+      `).join('');
+    }
+
+    function renderProgressChart(data) {
+      const movement = document.getElementById('progress-movement-filter').value;
+      const container = document.getElementById('progress-chart');
+      if (!movement) return container.innerHTML = '<p class="text-gray-400 text-sm">Select a movement to see progress 📈</p>';
+      
+      const lifts = data.filter(d => d.type === 'lift' && d.movement === movement).sort((a,b) => (a.date||'').localeCompare(b.date||''));
+      if (lifts.length === 0) return container.innerHTML = '<p class="text-gray-400 text-sm">No data yet.</p>';
+      
+      const max = Math.max(...lifts.map(l => l.weight_kg));
+      container.innerHTML = `
+        <div class="w-full space-y-2">
+          <div class="flex items-center justify-between text-sm"><span class="text-gray-500">Best: <strong class="text-gray-900">${max}kg</strong></span><span class="text-gray-400">${lifts.length} entries</span></div>
+          <div class="flex items-end gap-1 h-20 border-b border-gray-100 pb-1">
+            ${lifts.slice(-15).map(l => {
+              const pct = Math.max(10, (l.weight_kg / max) * 100);
+              return `<div class="flex-1 bg-green-400 rounded-t opacity-90 hover:opacity-100 transition" style="height:${pct}%" title="${l.weight_kg}kg"></div>`;
+            }).join('')}
+          </div>
+        </div>`;
+    }
+
+    function render(data) {
+      allData = data; currentRecordCount = data.length;
+      calcStreak(data); calcXP(data); renderStats(data);
+      populateFilters(data); renderHistory(data); renderPRs(data); renderProgressChart(data);
+    }
+
+    document.getElementById('history-filter').addEventListener('change', () => renderHistory(allData));
+    document.getElementById('progress-movement-filter').addEventListener('change', () => renderProgressChart(allData));
+
+    async function deleteRecord(id) {
+      const rec = allData.find(d => d.__backendId === id);
+      if (rec && (await window.dataSdk.delete(rec)).isOk) showToast('Entry Deleted!');
+    }
+
+    document.getElementById('lift-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (currentRecordCount >= 999) return showToast('Limit reached!');
+      const btn = e.target.querySelector('button[type="submit"]'); btn.disabled = true;
+      
+      const result = await window.dataSdk.create({
+        type: 'lift',
+        movement: document.getElementById('movement-select').value,
+        weight_kg: parseFloat(document.getElementById('lift-weight').value),
+        reps: parseInt(document.getElementById('lift-reps').value),
+        date: document.getElementById('lift-date').value ? new Date(document.getElementById('lift-date').value).toISOString() : new Date().toISOString(),
+        notes: document.getElementById('lift-notes').value,
+        body_weight_kg: 0, height_cm: 0, bmi: 0
+      });
+      
+      btn.disabled = false;
+      if (result.isOk) { showToast('Lift logged! +10 XP'); e.target.reset(); document.getElementById('lift-date').valueAsDate = new Date(); }
+    });
+
+    (async () => {
+      if (!(await window.dataSdk.init({ onDataChanged: render })).isOk) showToast('Failed to connect');
+    })();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
