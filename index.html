@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="CF PRO">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0a0f1c">
   <title>CF Pro</title>
@@ -14,53 +15,37 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-          colors: { gym: { neon: '#58cc02', dark: '#0a0f1c', border: 'rgba(255,255,255,0.06)' } }
-        }
-      }
+    tailwind.config = { 
+        theme: { 
+            extend: { 
+                fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }, 
+                colors: { 
+                    gym: { neon: '#58cc02', dark: '#0a0f1c' },
+                    theme: { ice: '#38bdf8', fire: '#f97316' }
+                } 
+            } 
+        } 
     }
   </script>
 
   <style>
-    body { 
-        background-color: #0a0f1c; color: #f8fafc; 
-        overflow-x: hidden; -webkit-tap-highlight-color: transparent;
-    }
-    
-    /* Ambient Background Orbs */
+    body { background-color: #0a0f1c; color: #f8fafc; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
     .bg-orbs { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-    .orb-1 { position: absolute; top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(88, 204, 2, 0.15); border-radius: 50%; filter: blur(100px); }
-    .orb-2 { position: absolute; bottom: 10%; right: -10%; width: 60vw; height: 60vw; background: rgba(56, 189, 248, 0.1); border-radius: 50%; filter: blur(120px); }
-
-    /* Liquid Glass Panels */
-    .glass-panel {
-        background: rgba(20, 25, 40, 0.5);
-        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
-    }
+    .orb-1 { position: absolute; top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(88, 204, 2, 0.15); border-radius: 50%; filter: blur(100px); transition: background 0.5s ease; }
+    .orb-2 { position: absolute; bottom: 10%; right: -10%; width: 60vw; height: 60vw; background: rgba(56, 189, 248, 0.1); border-radius: 50%; filter: blur(120px); transition: background 0.5s ease;}
     
-    .glass-input {
-        background: rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        transition: all 0.2s ease;
-    }
+    .glass-panel { background: rgba(20, 25, 40, 0.5); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1); }
+    .glass-input { background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.2s ease; }
     .glass-input:focus { border-color: #58cc02; background: rgba(88, 204, 2, 0.05); box-shadow: 0 0 0 4px rgba(88, 204, 2, 0.1); }
-
-    /* Floating Dock Animations */
+    
     .nav-item { transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; }
     .nav-active { color: #58cc02; transform: translateY(-2px); }
     .nav-inactive { color: #64748b; }
-    .nav-active::after {
-        content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
-        width: 4px; height: 4px; background: #58cc02; border-radius: 50%; box-shadow: 0 0 8px #58cc02;
-    }
+    .nav-active::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: #58cc02; border-radius: 50%; box-shadow: 0 0 8px #58cc02; }
     
     .toast-enter { animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
     @keyframes slideUp { 0% { transform: translate(-50%, 120%); opacity: 0; } 100% { transform: translate(-50%, 0); opacity: 1; } }
@@ -68,90 +53,66 @@
     .timer-font { font-variant-numeric: tabular-nums; letter-spacing: -0.04em; }
     .text-gradient { background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     ::-webkit-scrollbar { display: none; }
+    
+    .lightbox-enter { opacity: 1 !important; pointer-events: auto !important; }
+    .lightbox-img-enter { transform: scale(1) !important; }
+
+    /* Liquid Glass Selector Physics */
+    .liquid-selector { position: relative; display: flex; background: rgba(0,0,0,0.4); border-radius: 1rem; padding: 4px; border: 1px solid rgba(255,255,255,0.05); }
+    .liquid-pill { position: absolute; top: 4px; bottom: 4px; border-radius: 0.75rem; background: rgba(255,255,255,0.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1; }
+    .liquid-btn { position: relative; z-index: 2; flex: 1; padding: 10px 0; text-align: center; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.3s; cursor: pointer; }
+    .liquid-btn.active { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
   </style>
 </head>
 
 <body class="min-h-screen w-full antialiased pb-32">
   
-  <div class="bg-orbs"><div class="orb-1"></div><div class="orb-2"></div></div>
+  <div class="bg-orbs"><div id="main-orb-1" class="orb-1"></div><div id="main-orb-2" class="orb-2"></div></div>
 
-  <header class="fixed top-0 w-full z-40 px-5 pt-6 pb-4 bg-gradient-to-b from-[#0a0f1c] to-transparent">
-    <div class="max-w-xl mx-auto flex items-center justify-between">
-      <h1 class="font-black text-2xl tracking-tighter text-white">CF<span class="text-gym-neon">PRO</span></h1>
+  <header class="fixed top-0 w-full z-40 px-5 pt-6 pb-4 bg-gradient-to-b from-[#0a0f1c] to-transparent pointer-events-none">
+    <div class="max-w-xl mx-auto flex items-center justify-between pointer-events-auto">
+      <h1 class="font-black text-2xl tracking-tighter text-white">CF<span id="header-pro" class="text-gym-neon transition-colors duration-300">PRO</span></h1>
       <div class="flex items-center gap-3">
-        <div class="flex items-center gap-1.5 glass-panel rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg">
-          <span class="text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]">🔥</span> <span id="streak-count">0</span>
-        </div>
-        <div class="flex items-center gap-1.5 glass-panel rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg">
-          <span class="text-gym-neon drop-shadow-[0_0_8px_rgba(88,204,2,0.8)]">⚡</span> <span id="xp-count">0</span>
-        </div>
+        <div class="flex items-center gap-1.5 glass-panel rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg"><span class="text-orange-500">🔥</span> <span id="streak-count">0</span></div>
+        <div class="flex items-center gap-1.5 glass-panel rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg"><span class="text-gym-neon">⚡</span> <span id="xp-count">0</span></div>
       </div>
     </div>
   </header>
 
+  <div id="lightbox" class="fixed inset-0 z-[100] bg-[#0a0f1c]/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
+    <button class="absolute top-8 right-6 text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition active:scale-90"><i data-lucide="x" class="w-6 h-6"></i></button>
+    <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl scale-95 transition-transform duration-300 object-contain">
+  </div>
+
   <main class="max-w-xl mx-auto px-5 pt-28">
     
     <section id="tab-tracker" class="space-y-6 animate-fade-in">
-      
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="glass-panel rounded-3xl p-4 flex flex-col justify-between aspect-[4/3]">
-          <div class="flex justify-between items-start"><i data-lucide="activity" class="w-5 h-5 text-blue-400 opacity-80"></i><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Lifts</span></div>
-          <p id="stat-total" class="text-3xl font-black text-gradient mt-2">0</p>
-        </div>
-        <div class="glass-panel rounded-3xl p-4 flex flex-col justify-between aspect-[4/3] border-gym-neon/20 relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-br from-gym-neon/10 to-transparent"></div>
-          <div class="flex justify-between items-start relative z-10"><i data-lucide="flame" class="w-5 h-5 text-gym-neon"></i><span class="text-[10px] font-bold text-gym-neon uppercase tracking-wider">Week</span></div>
-          <p id="stat-week" class="text-3xl font-black text-white relative z-10">0</p>
-        </div>
-        <div class="glass-panel rounded-3xl p-4 flex flex-col justify-between aspect-[4/3]">
-          <div class="flex justify-between items-start"><i data-lucide="layers" class="w-5 h-5 text-purple-400 opacity-80"></i><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vol</span></div>
-          <p id="stat-volume" class="text-3xl font-black text-gradient mt-2">0</p>
-        </div>
-        <div class="glass-panel rounded-3xl p-4 flex flex-col justify-between aspect-[4/3]">
-          <div class="flex justify-between items-start"><i data-lucide="medal" class="w-5 h-5 text-yellow-400 opacity-80"></i><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">PRs</span></div>
-          <p id="stat-prs" class="text-3xl font-black text-gradient mt-2">0</p>
-        </div>
+        <div class="glass-panel rounded-3xl p-4 flex flex-col justify-between aspect-[4/3]"><div class="flex justify-between items-start"><i data-lucide="activity" class="w-5 h-5 text-blue-400 opacity-80"></i><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Lifts</span></div><p id="stat-total" class="text-3xl font-black text-gradient mt-2">0</p></div>
+        <div class="glass-panel rounded-3xl p-4 flex flex-col justify-between aspect-[4/3] border-gym-neon/20 relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-br from-gym-neon/10 to-transparent"></div><div class="flex justify-between items-start relative z-10"><i data-lucide="flame" class="w-5 h-5 text-gym-neon"></i><span class="text-[10px] font-bold text-gym-neon uppercase tracking-wider">Week</span></div><p id="stat-week" class="text-3xl font-black text-white relative z-10">0</p></div>
+        <div class="glass-panel rounded-3xl p-4 flex flex-col justify-between aspect-[4/3]"><div class="flex justify-between items-start"><i data-lucide="layers" class="w-5 h-5 text-purple-400 opacity-80"></i><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vol</span></div><p id="stat-volume" class="text-3xl font-black text-gradient mt-2">0</p></div>
+        <div class="glass-panel rounded-3xl p-4 flex flex-col justify-between aspect-[4/3]"><div class="flex justify-between items-start"><i data-lucide="medal" class="w-5 h-5 text-yellow-400 opacity-80"></i><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">PRs</span></div><p id="stat-prs" class="text-3xl font-black text-gradient mt-2">0</p></div>
       </div>
 
       <div class="glass-panel rounded-[2rem] p-6">
         <h2 class="font-bold text-xl text-white mb-6">Log Workout</h2>
         <form id="lift-form" class="space-y-4">
-          <div class="relative">
-            <label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">MOVEMENT</label> 
-            <select id="movement-select" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none appearance-none cursor-pointer"> 
-              <option class="bg-slate-900 text-white">Back Squat</option><option class="bg-slate-900 text-white">Front Squat</option><option class="bg-slate-900 text-white">Deadlift</option><option class="bg-slate-900 text-white">Clean</option><option class="bg-slate-900 text-white">Clean & Jerk</option><option class="bg-slate-900 text-white">Snatch</option><option class="bg-slate-900 text-white">Bench Press</option><option class="bg-slate-900 text-white">Overhead Press</option><option class="bg-slate-900 text-white">Thruster</option> 
-            </select>
-            <i data-lucide="chevron-down" class="absolute right-5 top-[42px] w-5 h-5 text-slate-400 pointer-events-none"></i>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">WEIGHT (KG)</label><input id="lift-weight" type="number" step="0.5" min="0" placeholder="0.0" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none" required></div>
-            <div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">REPS</label><input id="lift-reps" type="number" min="1" value="1" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none" required></div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">DATE</label><input id="lift-date" type="date" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none" required></div>
-            <div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">NOTES</label><input id="lift-notes" type="text" placeholder="Rx? Scaled?" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none"></div>
-          </div>
-          <button type="submit" class="w-full py-4 mt-4 rounded-2xl font-black text-[#0a0f1c] text-sm uppercase tracking-[0.2em] bg-gym-neon hover:bg-[#4ab002] transition shadow-[0_0_30px_rgba(88,204,2,0.4)] active:scale-[0.98]">
-            Save to Sheet
-          </button>
+          <div class="relative"><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">MOVEMENT</label><select id="movement-select" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none appearance-none cursor-pointer"><option class="bg-slate-900 text-white">Back Squat</option><option class="bg-slate-900 text-white">Front Squat</option><option class="bg-slate-900 text-white">Deadlift</option><option class="bg-slate-900 text-white">Clean</option><option class="bg-slate-900 text-white">Clean & Jerk</option><option class="bg-slate-900 text-white">Snatch</option><option class="bg-slate-900 text-white">Bench Press</option><option class="bg-slate-900 text-white">Overhead Press</option><option class="bg-slate-900 text-white">Thruster</option></select><i data-lucide="chevron-down" class="absolute right-5 top-[42px] w-5 h-5 text-slate-400 pointer-events-none"></i></div>
+          <div class="grid grid-cols-2 gap-4"><div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">WEIGHT (KG)</label><input id="lift-weight" type="number" step="0.5" min="0" placeholder="0.0" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none" required></div><div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">REPS</label><input id="lift-reps" type="number" min="1" value="1" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none" required></div></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">DATE</label><input id="lift-date" type="date" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none" required></div><div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">NOTES</label><input id="lift-notes" type="text" placeholder="Rx? Scaled?" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none"></div></div>
+          <button type="submit" class="w-full py-4 mt-4 rounded-2xl font-black text-[#0a0f1c] text-sm uppercase tracking-[0.2em] bg-gym-neon hover:bg-[#4ab002] transition shadow-[0_0_30px_rgba(88,204,2,0.4)] active:scale-[0.98]">Save to Sheet</button>
         </form>
       </div>
 
       <div class="mb-10">
-        <div class="flex items-center justify-between mb-4 px-2">
-          <h2 class="font-bold text-lg text-white">Recent Activity</h2>
-          <select id="history-filter" class="glass-input rounded-xl px-4 py-2 text-xs font-bold text-white outline-none cursor-pointer"><option class="bg-slate-900" value="all">All Movements</option></select>
-        </div>
+        <div class="flex items-center justify-between mb-4 px-2"><h2 class="font-bold text-lg text-white">Recent Activity</h2><select id="history-filter" class="glass-input rounded-xl px-4 py-2 text-xs font-bold text-white outline-none cursor-pointer"><option class="bg-slate-900" value="all">All Movements</option></select></div>
         <div id="history-list" class="space-y-3"></div>
       </div>
     </section>
 
     <section id="tab-progress" class="space-y-6 hidden">
       <div class="glass-panel rounded-[2rem] p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="font-bold text-xl text-white">Strength Curve</h2>
-          <select id="chart-movement-filter" class="glass-input rounded-xl px-3 py-1.5 text-xs font-bold text-gym-neon outline-none cursor-pointer"></select>
-        </div>
+        <div class="flex items-center justify-between mb-6"><h2 class="font-bold text-xl text-white">Strength Curve</h2><select id="chart-movement-filter" class="glass-input rounded-xl px-3 py-1.5 text-xs font-bold text-gym-neon outline-none cursor-pointer"></select></div>
         <div class="relative h-[250px] w-full"><canvas id="progressChart"></canvas></div>
       </div>
       <div class="mb-10">
@@ -162,13 +123,17 @@
 
     <section id="tab-pics" class="space-y-6 hidden">
       <div class="glass-panel rounded-[2rem] p-6">
-        <h2 class="font-bold text-xl text-white mb-5">Add Progress Photo</h2>
+        <h2 class="font-bold text-xl text-white mb-5">Add Photo</h2>
         <form id="pic-form" class="space-y-4">
-          <input id="pic-url" type="url" placeholder="Direct Image URL (e.g., https://i.postimg.cc/...)" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none text-sm" required>
-          <input id="pic-caption" type="text" placeholder="Add notes/caption (e.g., Week 4 PR)" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none text-sm">
-          <button type="submit" class="w-full py-4 mt-2 rounded-2xl font-black text-white text-sm uppercase tracking-[0.2em] bg-white/10 border border-white/10 hover:bg-white/20 transition active:scale-[0.98]">
-            Save to Gallery
-          </button>
+          <div id="pic-preview-box" class="hidden w-full aspect-square rounded-[1.5rem] overflow-hidden glass-input relative shadow-xl border border-white/10 transition-all">
+            <img id="pic-preview-img" src="" class="w-full h-full object-cover">
+            <div id="pic-preview-error" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0f1c]/90 backdrop-blur-md hidden z-10">
+              <i data-lucide="image-off" class="w-10 h-10 text-red-500 mb-3"></i><p class="text-xs text-red-400 font-bold px-6 text-center leading-relaxed">Invalid Image Link.</p>
+            </div>
+          </div>
+          <div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">DIRECT IMAGE URL</label><input id="pic-url" type="url" placeholder="e.g., https://i.postimg.cc/image.jpg" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none text-sm" required></div>
+          <div><label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">NOTES</label><input id="pic-caption" type="text" placeholder="e.g., Week 4 PR!" class="w-full glass-input rounded-2xl px-5 py-4 font-bold text-white outline-none text-sm"></div>
+          <button id="pic-save-btn" type="submit" disabled class="w-full py-4 mt-4 rounded-2xl font-black text-white text-sm uppercase tracking-[0.2em] bg-white/10 border border-white/10 transition opacity-50 cursor-not-allowed">ENTER URL</button>
         </form>
       </div>
       <div class="mb-10">
@@ -177,9 +142,117 @@
       </div>
     </section>
 
+    <section id="tab-share" class="space-y-6 hidden">
+      <div class="glass-panel rounded-[2rem] p-6">
+        <h2 class="font-bold text-xl text-white mb-2">Story Creator</h2>
+        <p class="text-xs text-slate-400 mb-6">Build a custom graphic for Instagram or Strava.</p>
+        
+        <div class="space-y-5 mb-8">
+          
+          <div>
+            <label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">THEME ACCENT</label> 
+            <div class="liquid-selector" id="theme-selector">
+              <div class="liquid-pill" id="theme-pill" style="width: 33.33%; transform: translateX(0%);"></div>
+              <div class="liquid-btn active" data-theme="neon" data-color="#58cc02" data-index="0">Neon</div>
+              <div class="liquid-btn" data-theme="ice" data-color="#38bdf8" data-index="1">Ice</div>
+              <div class="liquid-btn" data-theme="fire" data-color="#f97316" data-index="2">Fire</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">ATHLETE HANDLE</label> 
+                <input id="share-athlete-input" type="text" placeholder="@handle" class="w-full glass-input rounded-xl px-4 py-3 font-bold text-white outline-none text-xs">
+              </div>
+              <div>
+                <label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">GYM / LOCATION</label> 
+                <input id="share-gym-input" type="text" placeholder="CrossFit Box" class="w-full glass-input rounded-xl px-4 py-3 font-bold text-white outline-none text-xs">
+              </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+              <div class="relative">
+                <label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">SELECT LIFT</label> 
+                <select id="share-workout-select" class="w-full glass-input rounded-xl px-4 py-3 font-bold text-white outline-none appearance-none cursor-pointer text-xs">
+                  <option value="" class="bg-slate-900 text-white">Recent lift...</option>
+                </select>
+                <i data-lucide="chevron-down" class="absolute right-3 top-[34px] w-4 h-4 text-slate-400 pointer-events-none"></i>
+              </div>
+              <div class="relative">
+                <label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">INTENSITY TAG</label> 
+                <select id="share-tag-select" class="w-full glass-input rounded-xl px-4 py-3 font-bold text-white outline-none appearance-none cursor-pointer text-xs">
+                  <option value="NEW PR 🏆" class="bg-slate-900 text-white">New PR 🏆</option>
+                  <option value="HEAVY SINGLE 🔥" class="bg-slate-900 text-white">Heavy Single 🔥</option>
+                  <option value="GRIND MODE 😤" class="bg-slate-900 text-white">Grind Mode 😤</option>
+                  <option value="LIGHT WORK 💨" class="bg-slate-900 text-white">Light Work 💨</option>
+                  <option value="RECOVERY 🔋" class="bg-slate-900 text-white">Recovery 🔋</option>
+                </select>
+                <i data-lucide="chevron-down" class="absolute right-3 top-[34px] w-4 h-4 text-slate-400 pointer-events-none"></i>
+              </div>
+          </div>
+          
+          <div class="relative">
+            <label class="text-[11px] font-bold text-slate-400 mb-2 block pl-1">BACKGROUND IMAGE</label> 
+            <label class="w-full glass-input rounded-xl px-4 py-3 font-bold text-white outline-none flex items-center justify-between cursor-pointer hover:bg-white/5 transition">
+                <span id="share-upload-text" class="text-xs truncate">Upload from Camera Roll...</span>
+                <i data-lucide="upload" class="w-4 h-4 text-gym-neon flex-shrink-0" id="share-upload-icon"></i>
+                <input type="file" id="share-image-upload" accept="image/*" class="hidden">
+            </label>
+          </div>
+        </div>
+
+        <div id="share-card-capture" class="w-full aspect-[9/16] rounded-[2rem] overflow-hidden relative shadow-2xl bg-[#0a0f1c] border border-white/10 flex flex-col justify-between p-5">
+          <img id="share-card-bg" src="" class="absolute inset-0 w-full h-full object-cover hidden">
+          <div class="absolute inset-0 bg-gradient-to-b from-[#0a0f1c]/90 via-transparent to-transparent h-1/3"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1c] via-[#0a0f1c]/20 to-transparent"></div>
+          
+          <div class="relative z-10 flex justify-between items-start pt-2">
+             <div class="flex items-center gap-2">
+                 <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center border border-white/20 backdrop-blur-sm shadow-lg">
+                     <i data-lucide="user" class="w-4 h-4 text-white"></i>
+                 </div>
+                 <div class="flex flex-col leading-tight">
+                     <span id="card-athlete-name" class="text-sm font-bold text-white drop-shadow-md">@athlete</span>
+                     <span id="card-gym-name" class="text-[10px] font-bold text-slate-300 uppercase tracking-widest drop-shadow-md flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> Location</span>
+                 </div>
+             </div>
+             <h1 class="font-black text-xl tracking-tighter text-white/50">CF<span id="card-pro-logo" class="text-gym-neon">PRO</span></h1>
+          </div>
+          
+          <div class="relative z-10 pb-2">
+             <div class="bg-[#141928]/80 border border-white/20 rounded-[1.5rem] p-5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                 <div class="flex justify-between items-end mb-3">
+                     <div>
+                         <p id="share-card-date" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">TODAY</p>
+                         <p id="share-card-movement" class="text-xl font-black text-white uppercase tracking-tight leading-none">MOVEMENT</p>
+                     </div>
+                     <div id="card-intensity-badge" class="bg-gym-neon/20 border border-gym-neon/50 text-gym-neon text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
+                         NEW PR 🏆
+                     </div>
+                 </div>
+                 
+                 <div class="flex items-baseline gap-2 mb-1">
+                     <p id="share-card-weight" class="text-7xl font-black text-white tracking-tighter drop-shadow-md">0</p>
+                     <span class="text-2xl font-bold text-slate-400">kg</span>
+                 </div>
+                 
+                 <div class="flex justify-between items-center border-t border-white/10 pt-3 mt-2">
+                     <p id="share-card-reps" class="text-sm font-bold text-slate-300">× 0 reps</p>
+                     <p id="share-card-1rm" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Est 1RM: <span class="text-white">0kg</span></p>
+                 </div>
+             </div>
+          </div>
+        </div>
+
+        <button id="btn-download-share" disabled class="w-full py-4 mt-6 rounded-2xl font-black text-[#0a0f1c] text-sm uppercase tracking-[0.2em] bg-gym-neon hover:bg-[#4ab002] transition shadow-[0_0_30px_rgba(88,204,2,0.4)] flex justify-center items-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+          <i data-lucide="instagram" class="w-5 h-5"></i> DOWNLOAD STORY
+        </button>
+      </div>
+    </section>
+
     <section id="tab-timer" class="hidden h-full">
       <div class="glass-panel rounded-[2rem] p-8 text-center flex flex-col items-center justify-center min-h-[60vh] border-t-white/10">
-        <div id="timer-display" class="timer-font text-8xl md:text-9xl font-black text-gradient mt-8 mb-12">00:00<span class="text-4xl text-slate-500">.0</span></div>
+        <div id="timer-display" class="timer-font text-8xl md:text-9xl font-black text-gradient mt-8 mb-12 drop-shadow-xl">00:00<span class="text-4xl text-slate-500">.0</span></div>
         <div class="flex gap-4 w-full">
           <button id="btn-start" class="flex-1 bg-white text-[#0a0f1c] font-black uppercase tracking-[0.2em] py-5 rounded-2xl text-lg hover:bg-slate-200 transition shadow-[0_0_40px_rgba(255,255,255,0.2)] active:scale-95">START</button>
           <button id="btn-stop" class="flex-1 bg-red-500 text-white font-black uppercase tracking-[0.2em] py-5 rounded-2xl text-lg hidden shadow-[0_0_40px_rgba(239,68,68,0.4)] active:scale-95">STOP</button>
@@ -190,12 +263,13 @@
 
   </main>
 
-  <nav class="fixed bottom-6 left-4 right-4 max-w-md mx-auto glass-panel z-50 rounded-full py-4 px-6 shadow-2xl">
+  <nav class="fixed bottom-6 left-2 right-2 max-w-md mx-auto glass-panel z-50 rounded-full py-3 px-4 shadow-2xl">
     <div class="flex justify-between items-center">
-      <button class="nav-item nav-active flex flex-col items-center gap-1.5 w-16" data-tab="tracker"><i data-lucide="edit-3" class="w-6 h-6"></i><span class="text-[10px] font-bold tracking-wide">Log</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1.5 w-16" data-tab="progress"><i data-lucide="trending-up" class="w-6 h-6"></i><span class="text-[10px] font-bold tracking-wide">Chart</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1.5 w-16" data-tab="pics"><i data-lucide="image" class="w-6 h-6"></i><span class="text-[10px] font-bold tracking-wide">Pics</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1.5 w-16" data-tab="timer"><i data-lucide="timer" class="w-6 h-6"></i><span class="text-[10px] font-bold tracking-wide">Timer</span></button>
+      <button class="nav-item nav-active flex flex-col items-center gap-1 w-12 sm:w-16" data-tab="tracker"><i data-lucide="plus-circle" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-wide">Log</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-1 w-12 sm:w-16" data-tab="progress"><i data-lucide="trending-up" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-wide">Chart</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-1 w-12 sm:w-16" data-tab="pics"><i data-lucide="image" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-wide">Pics</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-1 w-12 sm:w-16" data-tab="share"><i data-lucide="instagram" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-wide">Story</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-1 w-12 sm:w-16" data-tab="timer"><i data-lucide="timer" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-wide">Timer</span></button>
     </div>
   </nav>
 
@@ -205,27 +279,43 @@
   </div>
 
   <script>
-    // Bulletproof wrapper
     document.addEventListener('DOMContentLoaded', () => {
-        try { lucide.createIcons(); } catch (e) { console.error("Icons failed to load", e); }
+        try { lucide.createIcons(); } catch (e) { console.error("Icons failed", e); }
 
         let workouts = [];
         let pics = [];
         try { workouts = JSON.parse(localStorage.getItem('cf_workouts')) || []; } catch(e){}
         try { pics = JSON.parse(localStorage.getItem('cf_pics')) || []; } catch(e){}
 
-        // Floating Dock Navigation
+        // Global color state for the app theme
+        let currentThemeColor = '#58cc02'; // Default neon
+
+        // Bottom Dock
         const tabs = document.querySelectorAll('.nav-item');
         tabs.forEach(btn => {
           btn.addEventListener('click', () => {
             if(navigator.vibrate) navigator.vibrate(50); 
-            tabs.forEach(t => { t.classList.remove('nav-active'); t.classList.add('nav-inactive'); });
-            btn.classList.add('nav-active'); btn.classList.remove('nav-inactive');
+            tabs.forEach(t => { 
+                t.classList.remove('nav-active'); 
+                t.classList.add('nav-inactive'); 
+                t.style.color = ''; // reset inline color
+                const dot = t.querySelector('style'); if(dot) dot.remove();
+            });
             
-            ['tracker', 'timer', 'progress', 'pics'].forEach(tab => { document.getElementById(`tab-${tab}`).classList.add('hidden'); });
+            btn.classList.add('nav-active'); 
+            btn.classList.remove('nav-inactive');
+            btn.style.color = currentThemeColor;
+            
+            // Dynamic glowing dot color
+            const style = document.createElement('style');
+            style.innerHTML = `.nav-active::after { background: ${currentThemeColor} !important; box-shadow: 0 0 8px ${currentThemeColor} !important; }`;
+            btn.appendChild(style);
+            
+            ['tracker', 'timer', 'progress', 'pics', 'share'].forEach(tab => { document.getElementById(`tab-${tab}`).classList.add('hidden'); });
             document.getElementById(`tab-${btn.dataset.tab}`).classList.remove('hidden');
-
+            
             if(btn.dataset.tab === 'progress') updateChart();
+            if(btn.dataset.tab === 'share') updateShareDropdowns();
             window.scrollTo({ top: 0, behavior: 'smooth' });
           });
         });
@@ -243,50 +333,257 @@
 
         function calculate1RM(weight, reps) { return parseInt(reps) === 1 ? parseFloat(weight) : Math.round(parseFloat(weight) * (1 + (parseInt(reps) / 30))); }
 
-        // --- PICS GALLERY LOGIC (FIXED) ---
+        // --- LIGHTBOX LOGIC ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        
+        window.openLightbox = function(url) {
+            lightboxImg.src = url; lightbox.classList.remove('hidden');
+            setTimeout(() => { lightbox.classList.add('lightbox-enter'); lightboxImg.classList.add('lightbox-img-enter'); }, 10);
+        }
+        window.closeLightbox = function() {
+            lightbox.classList.remove('lightbox-enter'); lightboxImg.classList.remove('lightbox-img-enter');
+            setTimeout(() => { lightbox.classList.add('hidden'); }, 300);
+        }
+
+        // --- PICS GALLERY LOGIC ---
+        const picUrlInput = document.getElementById('pic-url');
+        const picCaptionInput = document.getElementById('pic-caption');
+        const picPreviewBox = document.getElementById('pic-preview-box');
+        const picPreviewImg = document.getElementById('pic-preview-img');
+        const picPreviewError = document.getElementById('pic-preview-error');
+        const picSaveBtn = document.getElementById('pic-save-btn');
+
+        function updatePicPreview() {
+            const url = picUrlInput.value.trim();
+            if(url) {
+                picPreviewBox.classList.remove('hidden'); picPreviewImg.src = url;
+                picSaveBtn.textContent = 'CHECKING...'; picSaveBtn.disabled = true;
+                picSaveBtn.className = "w-full py-4 mt-4 rounded-2xl font-black text-white text-sm uppercase tracking-[0.2em] bg-white/10 border border-white/10 transition";
+            } else {
+                picPreviewBox.classList.add('hidden'); picSaveBtn.textContent = 'ENTER URL'; picSaveBtn.disabled = true;
+                picSaveBtn.className = "w-full py-4 mt-4 rounded-2xl font-black text-white text-sm uppercase tracking-[0.2em] bg-white/10 border border-white/10 transition opacity-50 cursor-not-allowed";
+            }
+        }
+
+        if(picUrlInput) picUrlInput.addEventListener('input', updatePicPreview);
+        if(picPreviewImg) {
+            picPreviewImg.addEventListener('load', () => {
+                picPreviewImg.classList.remove('hidden'); picPreviewError.classList.add('hidden');
+                picSaveBtn.disabled = false; picSaveBtn.textContent = 'SAVE TO GALLERY';
+                picSaveBtn.style.backgroundColor = currentThemeColor;
+                picSaveBtn.style.boxShadow = `0 0 30px ${currentThemeColor}66`;
+                picSaveBtn.className = "w-full py-4 mt-4 rounded-2xl font-black text-[#0a0f1c] text-sm uppercase tracking-[0.2em] transition active:scale-[0.98]";
+            });
+            picPreviewImg.addEventListener('error', () => {
+                if(picUrlInput.value.trim() === '') return;
+                picPreviewImg.classList.add('hidden'); picPreviewError.classList.remove('hidden');
+                picSaveBtn.disabled = true; picSaveBtn.textContent = 'INVALID LINK';
+                picSaveBtn.style = "";
+                picSaveBtn.className = "w-full py-4 mt-4 rounded-2xl font-black text-white text-sm uppercase tracking-[0.2em] bg-red-500/50 cursor-not-allowed transition border border-red-500/50";
+            });
+        }
+
         function renderPics() {
           const gallery = document.getElementById('pic-gallery');
           if (pics.length === 0) {
             gallery.innerHTML = '<div class="col-span-2 glass-panel p-8 text-center rounded-[2rem]"><i data-lucide="camera-off" class="w-8 h-8 mx-auto text-slate-500 mb-2"></i><p class="text-slate-400 text-sm font-bold">No photos yet.</p></div>';
             lucide.createIcons(); return;
           }
-          
           gallery.innerHTML = [...pics].reverse().map(p => `
-            <div class="relative group rounded-[2rem] overflow-hidden glass-input aspect-square shadow-xl flex flex-col">
-              <img src="${p.url}" alt="${p.caption}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x400/1e293b/ffffff?text=Image+Not+Found';">
-              
-              <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1c]/95 via-[#0a0f1c]/20 to-transparent opacity-90"></div>
-              
-              <div class="absolute bottom-0 left-0 right-0 p-4">
-                <p class="text-white text-xs font-bold leading-tight line-clamp-2">${p.caption}</p>
-              </div>
-              
-              <button onclick="deletePic('${p.id}')" class="absolute top-3 right-3 bg-red-500/80 backdrop-blur-md text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all active:scale-95 z-10">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
+            <div class="relative group rounded-[2rem] overflow-hidden glass-input aspect-square shadow-xl flex flex-col cursor-pointer" onclick="openLightbox('${p.url}')">
+              <img src="${p.url}" alt="${p.caption}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x400/1e293b/ffffff?text=Error';">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1c]/95 via-[#0a0f1c]/10 to-transparent opacity-90 pointer-events-none z-0"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-4 z-10"><p class="text-white text-xs font-bold leading-tight line-clamp-2">${p.caption}</p></div>
+              <button onclick="event.stopPropagation(); deletePic('${p.id}')" class="absolute top-3 right-3 bg-red-500/80 backdrop-blur-md text-white p-2.5 rounded-full shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all active:scale-90 z-20"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </div>
           `).join('');
-          
-          lucide.createIcons(); // Refresh icons for the newly injected HTML
+          lucide.createIcons();
         }
 
-        window.deletePic = function(id) {
-            pics = pics.filter(p => p.id !== id);
-            try { localStorage.setItem('cf_pics', JSON.stringify(pics)); } catch(e){}
-            renderPics();
-        };
+        window.deletePic = function(id) { pics = pics.filter(p => p.id !== id); try { localStorage.setItem('cf_pics', JSON.stringify(pics)); } catch(e){} renderPics(); };
 
         const picForm = document.getElementById('pic-form');
         if(picForm) {
             picForm.addEventListener('submit', (e) => {
-              e.preventDefault();
-              pics.push({ id: 'pic_' + Date.now(), url: document.getElementById('pic-url').value, caption: document.getElementById('pic-caption').value || 'Progress Photo' });
+              e.preventDefault(); if(picSaveBtn.disabled) return; 
+              pics.push({ id: 'pic_' + Date.now(), url: picUrlInput.value, caption: picCaptionInput.value || 'Progress Photo' });
               try { localStorage.setItem('cf_pics', JSON.stringify(pics)); } catch(e){}
-              renderPics(); e.target.reset(); showToast('Photo Added! 📸');
+              renderPics(); picForm.reset(); updatePicPreview(); showToast('Photo Added! 📸');
             });
         }
 
-        // --- DASHBOARD LOGIC (FIXED) ---
+        // --- SHARE TAB LOGIC (STRAVA STYLE) ---
+        const shareWorkoutSelect = document.getElementById('share-workout-select');
+        const shareBtn = document.getElementById('btn-download-share');
+        const shareImageUpload = document.getElementById('share-image-upload');
+        const shareUploadText = document.getElementById('share-upload-text');
+        const shareUploadIcon = document.getElementById('share-upload-icon');
+        
+        // New Inputs
+        const athleteInput = document.getElementById('share-athlete-input');
+        const gymInput = document.getElementById('share-gym-input');
+        const tagSelect = document.getElementById('share-tag-select');
+        
+        // Card Elements
+        const cardAthleteName = document.getElementById('card-athlete-name');
+        const cardGymName = document.getElementById('card-gym-name');
+        const cardIntensityBadge = document.getElementById('card-intensity-badge');
+        const cardProLogo = document.getElementById('card-pro-logo');
+
+        // Restore saved profile
+        if(localStorage.getItem('cf_athlete')) athleteInput.value = localStorage.getItem('cf_athlete');
+        if(localStorage.getItem('cf_gym')) gymInput.value = localStorage.getItem('cf_gym');
+
+        // Liquid Glass Theme Selector Logic
+        const themeBtns = document.querySelectorAll('.liquid-btn');
+        const themePill = document.getElementById('theme-pill');
+        const headerPro = document.getElementById('header-pro');
+        const mainOrb1 = document.getElementById('main-orb-1');
+        
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if(navigator.vibrate) navigator.vibrate(20);
+                themeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const index = btn.getAttribute('data-index');
+                const color = btn.getAttribute('data-color');
+                
+                // Slide Pill
+                themePill.style.transform = `translateX(${index * 100}%)`;
+                
+                // Apply App-wide color changes
+                currentThemeColor = color;
+                document.documentElement.style.setProperty('--gym-neon', color);
+                
+                // Update specific elements
+                headerPro.style.color = color;
+                cardProLogo.style.color = color;
+                shareUploadIcon.style.color = color;
+                mainOrb1.style.background = `${color}25`; // add transparency hex
+                
+                cardIntensityBadge.style.color = color;
+                cardIntensityBadge.style.borderColor = `${color}80`;
+                cardIntensityBadge.style.backgroundColor = `${color}33`;
+                
+                if(!shareBtn.disabled) {
+                    shareBtn.style.backgroundColor = color;
+                    shareBtn.style.boxShadow = `0 0 30px ${color}66`;
+                }
+
+                // Update active nav tab color
+                const activeNav = document.querySelector('.nav-active');
+                if(activeNav) {
+                    activeNav.style.color = color;
+                    const style = activeNav.querySelector('style');
+                    if(style) style.innerHTML = `.nav-active::after { background: ${color} !important; box-shadow: 0 0 8px ${color} !important; }`;
+                }
+            });
+        });
+
+        // Live typing updates for card
+        athleteInput.addEventListener('input', (e) => { 
+            cardAthleteName.textContent = e.target.value || '@athlete'; 
+            localStorage.setItem('cf_athlete', e.target.value);
+        });
+        gymInput.addEventListener('input', (e) => { 
+            cardGymName.innerHTML = `<i data-lucide="map-pin" class="w-3 h-3 inline"></i> ${e.target.value || 'Location'}`; 
+            lucide.createIcons();
+            localStorage.setItem('cf_gym', e.target.value);
+        });
+        tagSelect.addEventListener('change', (e) => { cardIntensityBadge.textContent = e.target.value; });
+
+        function updateShareDropdowns() {
+            shareWorkoutSelect.innerHTML = '<option value="" class="bg-slate-900">Select a recent lift...</option>';
+            [...workouts].reverse().slice(0, 15).forEach(w => {
+                shareWorkoutSelect.innerHTML += `<option value="${w.id}" class="bg-slate-900 text-white">${w.date} - ${w.movement} (${w.weight}kg)</option>`;
+            });
+            
+            // Trigger initial live updates
+            cardAthleteName.textContent = athleteInput.value || '@athlete';
+            cardGymName.innerHTML = `<i data-lucide="map-pin" class="w-3 h-3 inline"></i> ${gymInput.value || 'Location'}`;
+            lucide.createIcons();
+        }
+
+        if(shareImageUpload) {
+            shareImageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if(file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const bgImg = document.getElementById('share-card-bg');
+                        bgImg.src = event.target.result; bgImg.classList.remove('hidden');
+                        shareUploadText.textContent = "Image loaded! ✅";
+                        shareUploadText.style.color = currentThemeColor;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function updateSharePreview() {
+            const wid = shareWorkoutSelect.value;
+            if(wid) {
+                const w = workouts.find(x => x.id === wid);
+                if(w) {
+                    document.getElementById('share-card-date').textContent = w.date;
+                    document.getElementById('share-card-movement').textContent = w.movement;
+                    document.getElementById('share-card-weight').textContent = w.weight;
+                    document.getElementById('share-card-reps').textContent = `× ${w.reps} reps`;
+                    document.getElementById('share-card-1rm').innerHTML = `Est 1RM: <span class="text-white">${calculate1RM(w.weight, w.reps)}kg</span>`;
+                    
+                    shareBtn.disabled = false;
+                    shareBtn.style.backgroundColor = currentThemeColor;
+                    shareBtn.style.boxShadow = `0 0 30px ${currentThemeColor}66`;
+                    shareBtn.className = "w-full py-4 mt-6 rounded-2xl font-black text-[#0a0f1c] text-sm uppercase tracking-[0.2em] transition flex justify-center items-center gap-2 active:scale-95";
+                }
+            } else {
+                document.getElementById('share-card-date').textContent = "TODAY";
+                document.getElementById('share-card-movement').textContent = "MOVEMENT";
+                document.getElementById('share-card-weight').textContent = "0";
+                document.getElementById('share-card-reps').textContent = "× 0 reps";
+                document.getElementById('share-card-1rm').innerHTML = `Est 1RM: <span class="text-white">0kg</span>`;
+                
+                shareBtn.disabled = true;
+                shareBtn.style = "";
+                shareBtn.className = "w-full py-4 mt-6 rounded-2xl font-black text-[#0a0f1c] text-sm uppercase tracking-[0.2em] bg-white/20 transition flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed";
+            }
+        }
+
+        if(shareWorkoutSelect) shareWorkoutSelect.addEventListener('change', updateSharePreview);
+
+        if(shareBtn) {
+            shareBtn.addEventListener('click', () => {
+                if(shareBtn.disabled) return;
+                const originalHtml = shareBtn.innerHTML;
+                shareBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> GENERATING...';
+                lucide.createIcons(); shareBtn.disabled = true;
+
+                // Clone the node to take a clean screenshot without UI glitches
+                const captureDiv = document.getElementById('share-card-capture');
+                
+                html2canvas(captureDiv, {
+                    scale: 3, // Very high res for Instagram
+                    useCORS: true,
+                    backgroundColor: '#0a0f1c',
+                    logging: false
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                    const link = document.createElement('a');
+                    link.download = `CF_PRO_Story_${Date.now()}.jpg`;
+                    link.href = imgData; link.click();
+                    
+                    showToast('Story Saved! 🚀');
+                    shareBtn.innerHTML = originalHtml; shareBtn.disabled = false; lucide.createIcons();
+                }).catch(err => {
+                    console.error(err); showToast('Error generating image.');
+                    shareBtn.innerHTML = originalHtml; shareBtn.disabled = false; lucide.createIcons();
+                });
+            });
+        }
+
+        // --- DASHBOARD LOGIC ---
         function updateDashboard() {
           document.getElementById('stat-total').textContent = workouts.length;
           const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
@@ -301,10 +598,7 @@
           document.getElementById('streak-count').textContent = streak;
 
           const prs = {};
-          workouts.forEach(w => {
-              const wNum = parseFloat(w.weight);
-              if (!prs[w.movement] || wNum > parseFloat(prs[w.movement].weight)) prs[w.movement] = w;
-          });
+          workouts.forEach(w => { const wNum = parseFloat(w.weight); if (!prs[w.movement] || wNum > parseFloat(prs[w.movement].weight)) prs[w.movement] = w; });
           document.getElementById('stat-prs').textContent = Object.keys(prs).length;
 
           const prContainer = document.getElementById('pr-list');
@@ -312,12 +606,12 @@
               prContainer.innerHTML = '<div class="col-span-2 glass-panel p-8 text-center rounded-[2rem]"><p class="text-slate-400 text-sm font-bold">Log a lift to see PRs.</p></div>';
           } else {
               prContainer.innerHTML = Object.entries(prs).map(([name, rec]) => `
-                <div class="glass-input rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden group">
+                <div class="glass-input rounded-[2rem] p-5 flex flex-col justify-center relative overflow-hidden group border-white/10">
                   <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:scale-110 transition duration-500"><i data-lucide="dumbbell" class="w-24 h-24 text-white"></i></div>
                   <p class="font-bold text-[10px] text-slate-400 uppercase tracking-widest mb-1 truncate relative z-10">${name}</p>
                   <p class="text-3xl font-black text-white relative z-10 drop-shadow-md">${rec.weight}<span class="text-sm font-bold text-slate-500 ml-1">kg</span></p>
-                  <div class="mt-3 inline-block bg-gym-neon/10 border border-gym-neon/20 rounded-lg px-2 py-1 relative z-10 w-max">
-                    <p class="text-[10px] text-gym-neon font-bold">1RM: ${calculate1RM(rec.weight, rec.reps)}kg</p>
+                  <div class="mt-3 inline-block bg-white/5 border border-white/10 rounded-lg px-2 py-1 relative z-10 w-max">
+                    <p class="text-[10px] text-white font-bold">1RM: ${calculate1RM(rec.weight, rec.reps)}kg</p>
                   </div>
                 </div>`).join('');
           }
@@ -331,19 +625,17 @@
               <div>
                 <div class="flex items-center gap-2">
                     <span class="font-bold text-white text-lg tracking-tight">${item.movement}</span>
-                    ${prs[item.movement] && prs[item.movement].id === item.id ? '<span class="text-[9px] bg-gym-neon text-[#0a0f1c] px-2 py-0.5 rounded-full font-black uppercase tracking-widest shadow-[0_0_10px_rgba(88,204,2,0.4)]">PR</span>' : ''}
+                    ${prs[item.movement] && prs[item.movement].id === item.id ? '<span class="text-[9px] bg-white text-[#0a0f1c] px-2 py-0.5 rounded-full font-black uppercase tracking-widest">PR</span>' : ''}
                 </div>
                 <div class="flex items-center gap-2 mt-1">
-                    <span class="text-gym-neon font-black">${item.weight}kg</span>
+                    <span class="font-black text-white">${item.weight}kg</span>
                     <span class="text-slate-400 text-xs font-bold">× ${item.reps}</span>
                 </div>
                 ${item.notes ? `<p class="text-xs text-slate-400 mt-3 font-medium bg-black/20 p-2 rounded-lg inline-block border border-white/5">"${item.notes}"</p>` : ''}
               </div>
               <div class="flex flex-col items-end gap-3 h-full justify-between">
                 <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">${item.date}</span>
-                <button onclick="deleteWorkout('${item.id}')" class="p-2.5 bg-white/5 hover:bg-red-500 hover:text-white text-slate-400 rounded-full transition active:scale-95">
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
+                <button onclick="deleteWorkout('${item.id}')" class="p-2.5 bg-white/5 hover:bg-red-500 hover:text-white text-slate-400 rounded-full transition active:scale-95"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
               </div>
             </div>`).join('');
 
@@ -354,14 +646,19 @@
               movements.forEach(m => sel.innerHTML += `<option class="bg-slate-900 text-white" value="${m}">${m}</option>`);
               if (movements.includes(current)) sel.value = current;
           });
+          lucide.createIcons();
           
-          lucide.createIcons(); // Vital: Refresh icons after building history
+          // Apply current theme color dynamically to stats
+          document.getElementById('stat-week').style.textShadow = `0 0 10px ${currentThemeColor}80`;
+          document.getElementById('stat-week').parentElement.style.borderColor = `${currentThemeColor}33`;
+          const statBg = document.getElementById('stat-week').parentElement.querySelector('div');
+          if(statBg) statBg.style.background = `linear-gradient(to bottom right, ${currentThemeColor}1a, transparent)`;
         }
 
         window.deleteWorkout = function(id) {
             workouts = workouts.filter(w => w.id !== id);
             try { localStorage.setItem('cf_workouts', JSON.stringify(workouts)); } catch(e){}
-            updateDashboard(); updateChart();
+            updateDashboard(); updateChart(); updateShareDropdowns();
         };
 
         const histFilter = document.getElementById('history-filter');
@@ -387,22 +684,22 @@
             const data = dataPoints.map(d => calculate1RM(d.weight, d.reps));
 
             const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(88, 204, 2, 0.4)');
-            gradient.addColorStop(1, 'rgba(88, 204, 2, 0)');
+            gradient.addColorStop(0, `${currentThemeColor}66`);
+            gradient.addColorStop(1, `${currentThemeColor}00`);
 
             progressChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Est 1RM (kg)', data: data, borderColor: '#58cc02', backgroundColor: gradient,
-                        borderWidth: 4, pointBackgroundColor: '#0a0f1c', pointBorderColor: '#58cc02',
+                        label: 'Est 1RM (kg)', data: data, borderColor: currentThemeColor, backgroundColor: gradient,
+                        borderWidth: 4, pointBackgroundColor: '#0a0f1c', pointBorderColor: currentThemeColor,
                         pointBorderWidth: 3, pointRadius: 5, pointHoverRadius: 8, fill: true, tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(20,25,40,0.9)', titleColor: '#fff', bodyColor: '#58cc02', bodyFont: {weight: 'bold', size: 14}, padding: 12, borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, displayColors: false, callbacks: { label: c => c.parsed.y + ' kg' } } },
+                    plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(20,25,40,0.9)', titleColor: '#fff', bodyColor: currentThemeColor, bodyFont: {weight: 'bold', size: 14}, padding: 12, borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, displayColors: false, callbacks: { label: c => c.parsed.y + ' kg' } } },
                     scales: {
                         x: { grid: { display: false }, ticks: { color: '#64748b', font: { weight: 'bold', size: 10 } } },
                         y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { weight: 'bold', size: 10 } } }
@@ -411,7 +708,7 @@
             });
         }
 
-        // --- FORM SUBMISSION ---
+        // --- LIFT FORM SUBMIT ---
         const liftForm = document.getElementById('lift-form');
         if(liftForm) {
             liftForm.addEventListener('submit', async (e) => {
@@ -431,7 +728,7 @@
 
               workouts.push(payload);
               try { localStorage.setItem('cf_workouts', JSON.stringify(workouts)); } catch(e){}
-              updateDashboard(); updateChart();
+              updateDashboard(); updateChart(); updateShareDropdowns();
               
               try {
                 await fetch("https://script.google.com/macros/s/AKfycbwenOQOCxZ002HWlg9hm1GAcdJbsru6w0K9cANH9cFe2Yj1_IlpaBZLao2pseTqvsjI/exec", { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors', headers: { 'Content-Type': 'application/json' } });
@@ -446,13 +743,24 @@
         const timerDisplay = document.getElementById('timer-display'), btnStart = document.getElementById('btn-start'), btnStop = document.getElementById('btn-stop'), btnReset = document.getElementById('btn-reset');
         function formatTime(ms) { let totalSeconds = Math.floor(ms / 1000), minutes = Math.floor(totalSeconds / 60), seconds = totalSeconds % 60, tenths = Math.floor((ms % 1000) / 100); return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}<span class="text-4xl text-slate-500">.${tenths}</span>`; }
         if(btnStart) {
-            btnStart.addEventListener('click', () => { if(navigator.vibrate) navigator.vibrate(50); startTime = Date.now() - elapsedTime; timerInterval = setInterval(() => { elapsedTime = Date.now() - startTime; timerDisplay.innerHTML = formatTime(elapsedTime); }, 50); btnStart.classList.add('hidden'); btnStop.classList.remove('hidden'); });
-            btnStop.addEventListener('click', () => { if(navigator.vibrate) navigator.vibrate([50, 50, 50]); clearInterval(timerInterval); btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); });
-            btnReset.addEventListener('click', () => { clearInterval(timerInterval); elapsedTime = 0; timerDisplay.innerHTML = '00:00<span class="text-4xl text-slate-500">.0</span>'; btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); });
+            btnStart.addEventListener('click', () => { 
+                if(navigator.vibrate) navigator.vibrate(50); 
+                startTime = Date.now() - elapsedTime; 
+                timerInterval = setInterval(() => { elapsedTime = Date.now() - startTime; timerDisplay.innerHTML = formatTime(elapsedTime); }, 50); 
+                btnStart.classList.add('hidden'); btnStop.classList.remove('hidden'); 
+            });
+            btnStop.addEventListener('click', () => { 
+                if(navigator.vibrate) navigator.vibrate([50, 50, 50]); 
+                clearInterval(timerInterval); btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); 
+            });
+            btnReset.addEventListener('click', () => { 
+                clearInterval(timerInterval); elapsedTime = 0; timerDisplay.innerHTML = '00:00<span class="text-4xl text-slate-500">.0</span>'; 
+                btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); 
+            });
         }
 
         // Initial render
-        updateDashboard(); renderPics();
+        updateDashboard(); renderPics(); updateShareDropdowns();
     });
   </script>
 </body>
