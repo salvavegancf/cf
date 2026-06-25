@@ -68,22 +68,6 @@
 
 <body class="min-h-screen w-full antialiased" style="padding-bottom: calc(7rem + env(safe-area-inset-bottom));">
 
-  <div id="auth-screen" class="fixed inset-0 z-[200] bg-[#000000] flex flex-col items-center justify-center p-6 hidden pointer-events-auto">
-      <div class="w-full max-w-sm bento-card p-8 flex flex-col items-center">
-         <div class="w-16 h-16 rounded-2xl bg-gym-neon flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(88,204,2,0.3)]">
-            <svg class="w-8 h-8 text-black" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-         </div>
-         <h1 class="text-2xl font-black tracking-widest text-white mb-2 text-center">WELCOME TO SALV<span class="text-gym-neon">APP</span></h1>
-         <p class="text-xs text-gray-400 text-center mb-8">Enter your unique athlete handle to access your cloud profile.</p>
-         
-         <div class="w-full relative mb-4">
-             <i data-lucide="at-sign" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"></i>
-             <input id="login-handle-input" type="text" placeholder="username" class="w-full bento-input rounded-2xl pl-10 pr-4 py-4 font-bold lowercase text-sm">
-         </div>
-         <button id="login-btn" class="w-full py-4 rounded-2xl font-bold text-black text-sm uppercase tracking-wide bg-gym-neon hover:bg-[#4ab002] transition active:scale-[0.98]">ENTER HUB</button>
-      </div>
-  </div>
-
   <div id="splash-screen" class="fixed inset-0 z-[100] bg-[#000000] flex flex-col items-center justify-center transition-all duration-500 pointer-events-auto">
       <div class="relative flex flex-col items-center">
          <div class="w-20 h-20 rounded-3xl bg-gym-neon flex items-center justify-center animate-pulse relative z-10 shadow-[0_0_50px_rgba(88,204,2,0.2)]">
@@ -94,10 +78,7 @@
 
   <header class="fixed top-0 w-full z-40 px-5 pb-6 bg-gradient-to-b from-black via-black/95 to-transparent pointer-events-none" style="padding-top: max(1.5rem, env(safe-area-inset-top));">
     <div class="max-w-xl mx-auto flex items-center justify-between pointer-events-auto">
-      <div class="flex flex-col">
-          <h1 class="font-black text-2xl tracking-tight text-white leading-none">Salv<span id="header-pro" class="text-gym-neon transition-colors duration-300">app</span></h1>
-          <span id="header-user-display" class="text-[10px] font-bold text-gray-500 mt-1 cursor-pointer flex items-center gap-1" onclick="logout()"><i data-lucide="log-out" class="w-2.5 h-2.5"></i>@guest</span>
-      </div>
+      <h1 class="font-black text-2xl tracking-tight text-white leading-none">Salv<span id="header-pro" class="text-gym-neon transition-colors duration-300">app</span></h1>
       <div class="flex items-center gap-2">
         <button onclick="forceSync()" id="btn-force-sync" class="flex items-center justify-center w-8 h-8 bg-app-card border border-app-border rounded-full text-white shadow-sm hover:bg-[#2c2c2e] active:scale-90 transition">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-gray-400"></i>
@@ -386,54 +367,18 @@
     document.addEventListener('DOMContentLoaded', () => {
         try { if(window.lucide) { window.lucide.createIcons(); } } catch (e) { console.error("Lucide setup failed", e); }
 
-        // Core State
-        let currentUser = localStorage.getItem('cf_user_handle');
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwIVN0YJhldVu8HsilLl0OacRVMVloUdfC_LMRN2BIo-p_kKVqa2HQIix2Qcsa8UWyU/exec";
-        
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                splash.style.opacity = '0';
+                splash.style.pointerEvents = 'none';
+                setTimeout(() => splash.remove(), 500);
+            }
+        }, 1200);
+
         let workouts = [];
         let pics = [];
         let bodyweights = [];
-
-        // Auth Logic
-        const authScreen = document.getElementById('auth-screen');
-        const splashScreen = document.getElementById('splash-screen');
-        
-        if (!currentUser) {
-            splashScreen.classList.add('hidden');
-            authScreen.classList.remove('hidden');
-        } else {
-            document.getElementById('header-user-display').innerHTML = `<i data-lucide="log-out" class="w-2.5 h-2.5"></i>@${currentUser}`;
-            try { lucide.createIcons(); } catch(e){}
-            
-            setTimeout(() => {
-                splashScreen.style.opacity = '0';
-                setTimeout(() => splashScreen.remove(), 500);
-            }, 1000);
-            
-            loadLocalCache();
-            syncWithCloud();
-        }
-
-        document.getElementById('login-btn').addEventListener('click', () => {
-            const val = document.getElementById('login-handle-input').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
-            if(val) {
-                currentUser = val;
-                localStorage.setItem('cf_user_handle', currentUser);
-                authScreen.classList.add('hidden');
-                document.getElementById('header-user-display').innerHTML = `<i data-lucide="log-out" class="w-2.5 h-2.5"></i>@${currentUser}`;
-                try { lucide.createIcons(); } catch(e){}
-                syncWithCloud();
-            } else {
-                showToast("Please enter a handle.");
-            }
-        });
-
-        window.logout = function() {
-            if(confirm("Log out of @" + currentUser + "? Offline data will be cleared from this device.")) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
 
         function loadLocalCache() {
             try { workouts = JSON.parse(localStorage.getItem('cf_workouts')) || []; } catch(e){}
@@ -484,6 +429,8 @@
 
         function calculate1RM(weight, reps) { return parseInt(reps) === 1 ? parseFloat(weight) : Math.round(parseFloat(weight) * (1 + (parseInt(reps) / 30))); }
 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwIVN0YJhldVu8HsilLl0OacRVMVloUdfC_LMRN2BIo-p_kKVqa2HQIix2Qcsa8UWyU/exec";
+
         window.forceSync = function() {
             const btn = document.getElementById('btn-force-sync');
             const icon = btn.querySelector('i');
@@ -494,9 +441,8 @@
         }
 
         async function syncWithCloud() {
-            if(!currentUser) return;
             try {
-                const response = await fetch(`${SCRIPT_URL}?user=${currentUser}`, { method: 'GET', redirect: 'follow' });
+                const response = await fetch(SCRIPT_URL, { method: 'GET', redirect: 'follow' });
                 if (response.ok) {
                     const text = await response.text();
                     try {
@@ -532,8 +478,6 @@
         }
 
         async function syncPostToCloud(payload) {
-            if(!currentUser) return;
-            payload.user = currentUser;
             try {
                 await fetch(SCRIPT_URL, {
                     method: 'POST', mode: 'no-cors',
@@ -1105,11 +1049,6 @@
               if (movements.includes(current)) sel.value = current;
           });
           try { lucide.createIcons(); } catch(e){}
-          
-          document.getElementById('stat-week').style.textShadow = `0 0 10px ${currentThemeColor}80`;
-          document.getElementById('stat-week').parentElement.style.borderColor = `${currentThemeColor}33`;
-          const statBg = document.getElementById('stat-week').parentElement.querySelector('div');
-          if(statBg) statBg.style.background = `linear-gradient(to bottom right, ${currentThemeColor}1a, transparent)`;
         }
 
         window.deleteWorkout = function(id) {
@@ -1258,6 +1197,9 @@
                 btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); 
             });
         }
+
+        loadLocalCache();
+        syncWithCloud();
     });
   </script>
 </body>
