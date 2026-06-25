@@ -332,7 +332,7 @@
 
         <div style="width: 100%; max-width: 360px; margin: 0 auto;">
           <div id="share-card-capture" class="w-[360px] h-[640px] relative shadow-2xl bg-[#0a0f1c] overflow-hidden rounded-[2rem]" style="background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.08);">
-            <div class="absolute inset-0 bg-black/40 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-black/35 pointer-events-none"></div>
             
             <div class="absolute top-6 left-6 right-6 z-20 flex justify-between items-center w-[312px]">
               <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-gym-neon to-[#4ab002] flex items-center justify-center shadow-[0_0_15px_rgba(88,204,2,0.4)] border border-white/10" id="card-pro-logo-container">
@@ -475,54 +475,55 @@
         function calculate1RM(weight, reps) { return parseInt(reps) === 1 ? parseFloat(weight) : Math.round(parseFloat(weight) * (1 + (parseInt(reps) / 30))); }
 
         // --- CLOUD SHEET PIPELINES ---
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyllWFG6_9C_jw_-JEH0ZriqL3_BjD1TWpkgNBRlmZAWHq3jwNTrKhOd6KIpbpLneJw/exec";
+
         async function syncWithCloud() {
             try {
-                // Apps Script GET requests redirect to a usercontent domain. 
-                // We explicitly tell fetch to follow redirects to comply with CORS and fetch the JSON.
-                const response = await fetch("https://script.google.com/macros/s/AKfycbwenOQOCxZ002HWlg9hm1GAcdJbsru6w0K9cANH9cFe2Yj1_IlpaBZLao2pseTqvsjI/exec", {
-                    method: 'GET',
-                    redirect: 'follow'
-                });
+                // GET request to fetch data from Sheets.
+                const response = await fetch(SCRIPT_URL);
                 if (response.ok) {
-                    const text = await response.text();
-                    try {
-                        const data = JSON.parse(text);
-                        if (data && (data.workouts || data.bodyweights || data.pics)) {
-                            if (data.workouts && Array.isArray(data.workouts)) {
-                                workouts = data.workouts;
-                                localStorage.setItem('cf_workouts', JSON.stringify(workouts));
-                            }
-                            if (data.bodyweights && Array.isArray(data.bodyweights)) {
-                                bodyweights = data.bodyweights;
-                                localStorage.setItem('cf_bodyweights', JSON.stringify(bodyweights));
-                            }
-                            if (data.pics && Array.isArray(data.pics)) {
-                                pics = data.pics;
-                                localStorage.setItem('cf_pics', JSON.stringify(pics));
-                            }
-                            updateDashboard();
-                            renderPics();
-                            updateShareDropdowns();
-                            updateWeightHistoryList();
-                            showToast('Cloud database synchronized! ☁️');
-                        }
-                    } catch(err) {
-                        console.log("Parsing fault on live source stream.", err);
+                    const data = await response.json();
+                    let hasUpdates = false;
+
+                    if (data.workouts && Array.isArray(data.workouts) && data.workouts.length > 0) {
+                        workouts = data.workouts;
+                        localStorage.setItem('cf_workouts', JSON.stringify(workouts));
+                        hasUpdates = true;
+                    }
+                    if (data.bodyweights && Array.isArray(data.bodyweights) && data.bodyweights.length > 0) {
+                        bodyweights = data.bodyweights;
+                        localStorage.setItem('cf_bodyweights', JSON.stringify(bodyweights));
+                        hasUpdates = true;
+                    }
+                    if (data.pics && Array.isArray(data.pics) && data.pics.length > 0) {
+                        pics = data.pics;
+                        localStorage.setItem('cf_pics', JSON.stringify(pics));
+                        hasUpdates = true;
+                    }
+
+                    if (hasUpdates) {
+                        updateDashboard();
+                        renderPics();
+                        updateShareDropdowns();
+                        updateWeightHistoryList();
+                        showToast('Cloud sync complete! ☁️');
                     }
                 }
             } catch(e) {
-                console.log("Cloud link running local operations.", e);
+                console.log("Running offline. Cloud fetch suspended.", e);
             }
         }
 
         async function syncPostToCloud(payload) {
             try {
-                // Google Apps Script does not support CORS preflight (OPTIONS) requests.
-                // Sending 'application/json' triggers preflight. Sending 'text/plain' bypasses it.
-                await fetch("https://script.google.com/macros/s/AKfycbwenOQOCxZ002HWlg9hm1GAcdJbsru6w0K9cANH9cFe2Yj1_IlpaBZLao2pseTqvsjI/exec", {
+                // POST request using 'no-cors'. 
+                // The browser will not let us read Google's response, but it guarantees the data reaches the sheet.
+                await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    redirect: 'follow',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain' 
+                    },
                     body: JSON.stringify(payload)
                 });
             } catch(e) {
