@@ -9,8 +9,8 @@
   <meta name="theme-color" content="#000000">
   <title>Salvapp</title>
   
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJz48cmVjdCBmaWxsPScjNThjYzAyJyB3aWR0aD0nMTAwJyBoZWlnaHQ9JzEwMCcgcng9JzIyJy8+PHRleHQgeD0nNTAnIHk9JzcyJyBmb250LXNpemU9JzY1JyBmb250LXdlaWdodD0nOTAwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPScjMGEwZjFjJyBmb250LWZhbWlseT0nc2Fucy1zZXJpZic+4pqhPC90ZXh0Pjwvc3ZnPg==">
-  <link rel="apple-touch-icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAD2UlEQVR4nO3dTU7dQBRE4UuUERPmEbvJnMVmznZYRwZGjmX7tvvPeVB1vhVY4qi61Ujw9PzyGsCZH4/+AHxdxIEUcSBFHEgRB1LEgRRxIEUcSBEHUsSBFHEgRB1LEgRRxIEUcSBFHEgRB1LEgRRxIEUcd3l7/3j0J4wijlu8vX/8+f3r0V8xijiQIo75NGYjiGM6gavGijjm05iNII65lGYjiGOipQyZ2QjimEVsMxbEMZPSbARxTCE5G0Ec49YyxGYjiAMFxDFEeDaCOEaoXjVWxDGB5GwEcXTTPlAWxNFD/kBZEMcQ4dkI4uhgMhtBHK22ZWjPRhBHE5/NWBBHJ/nZCOKo5zYbQRyVdmU4zEYQBwqI45rnbARxXDK8aqyIo43PbARxlDnPRhBHwbEMq9kI4qjnVkYQR8b8QFkQxwkOlAVx7LEZK+K45jkbQRw7zMYWcfxzWobtbARxoIA4PjEbR8QRwVUjQRwp89kI4ghmI+ceR1YGsxHEgQLrOJiNMt84KOOSaRxcQmuYxpFhNrYc42A2KtnFUSiD2dixiwP1vOJgNpoYxcFVo5VRHAXMximXOJiNDhZxlMtgNjIWcaCPfhzMRjfxOLhqjFCO47IMZqNMOY4yyrgkGwcHyjjNODhQptCMA1M8Pb+8PvobJrv1QLGanJ+P/oD5yj8/7iL1vI6VwTKsZiPc4kAToziYjVZGcaCVSxzMRgeXONDBIg5mo49FHOgj+EK68z9fvcQ2Rj+OEU1hiZURHCsoII6U+WwEcUwhWUYQR4Zf3gZxjFOdjSCOQcJlBHGc4kxZEEc/7dkI4jhiNlbE0Ul+NoI4dipnw6GMIA4UEEczk9kI4tiqOVN8ygjiQAFxfGI2joijlllZQRwLHr5OEUcVw9kI4gj+0kuOOJAijgu2sxHEwVW0wD2OMufZCPM4+MvXZdZxoMw3Dmbjkm8cBZSxIA6kTOPg30TWMI0jQxlbjnHw8FXJMY4Ms7FjF0c2G5RxZBcH6nnFwWw08YoDTYiD2UgZxXF6plBGgVEcaOUSB7PRwSWOI8q4ZBEH7+V9LOI4YjZqOMZBGZX04+BM6aYfxw6zUU88jt1sUEYT8TgwQjkOZmOQchwYJBsHszFONo4tyuhjEQf6aMaxPVOYjW6acawoY4RgHLyXzyIYx4rZGKQWxzoblDFOLQ5MpBkHszGFVBzLmUIZs0jFgbl04mA2ptOJA9OZxMFs3EEkjqCMGyjEwXv5Tb59HBwo93l6fnl99Dfgi/r2y4H7EAdSxIEUcSBFHEgRB1LEgRRxIEUcSBEHUsSBFHEgRB1LEgRRxI/QXy5gCcXS2wAQAAAABJRU5ErkJggg==">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%2358cc02'/%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z' fill='%23000'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%2358cc02'/%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z' fill='%23000'/%3E%3C/svg%3E">
   
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -66,7 +66,7 @@
   </style>
 </head>
 
-<body class="min-h-screen w-full antialiased pb-32">
+<body class="min-h-screen w-full antialiased" style="padding-bottom: calc(7rem + env(safe-area-inset-bottom));">
 
   <div id="auth-screen" class="fixed inset-0 z-[200] bg-[#000000] flex flex-col items-center justify-center p-6 hidden pointer-events-auto">
       <div class="w-full max-w-sm bento-card p-8 flex flex-col items-center">
@@ -92,7 +92,7 @@
       </div>
   </div>
 
-  <header class="fixed top-0 w-full z-40 px-5 pt-6 pb-4 bg-gradient-to-b from-black via-black to-transparent pointer-events-none">
+  <header class="fixed top-0 w-full z-40 px-5 pb-6 bg-gradient-to-b from-black via-black/95 to-transparent pointer-events-none" style="padding-top: max(1.5rem, env(safe-area-inset-top));">
     <div class="max-w-xl mx-auto flex items-center justify-between pointer-events-auto">
       <div class="flex flex-col">
           <h1 class="font-black text-2xl tracking-tight text-white leading-none">Salv<span id="header-pro" class="text-gym-neon transition-colors duration-300">app</span></h1>
@@ -116,7 +116,7 @@
     <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] rounded-xl scale-95 transition-transform duration-300 object-contain">
   </div>
 
-  <main class="max-w-xl mx-auto px-5 pt-28">
+  <main class="max-w-xl mx-auto px-5" style="padding-top: calc(6rem + env(safe-area-inset-top));">
     
     <section id="tab-tracker" class="space-y-6 animate-fade-in">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
@@ -367,7 +367,7 @@
 
   </main>
 
-  <nav class="fixed bottom-6 left-4 right-4 max-w-sm mx-auto nav-pill z-50 rounded-full py-3 px-6 shadow-2xl">
+  <nav class="fixed left-4 right-4 max-w-sm mx-auto nav-pill z-50 rounded-full py-3 px-6 shadow-2xl" style="bottom: max(1.5rem, env(safe-area-inset-bottom));">
     <div class="flex justify-between items-center">
       <button class="nav-item nav-active flex flex-col items-center gap-1" data-tab="tracker"><i data-lucide="dumbbell" class="w-5 h-5"></i><span class="text-[9px] font-bold">Log</span></button>
       <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="progress"><i data-lucide="trending-up" class="w-5 h-5"></i><span class="text-[9px] font-bold">Chart</span></button>
@@ -1105,6 +1105,11 @@
               if (movements.includes(current)) sel.value = current;
           });
           try { lucide.createIcons(); } catch(e){}
+          
+          document.getElementById('stat-week').style.textShadow = `0 0 10px ${currentThemeColor}80`;
+          document.getElementById('stat-week').parentElement.style.borderColor = `${currentThemeColor}33`;
+          const statBg = document.getElementById('stat-week').parentElement.querySelector('div');
+          if(statBg) statBg.style.background = `linear-gradient(to bottom right, ${currentThemeColor}1a, transparent)`;
         }
 
         window.deleteWorkout = function(id) {
