@@ -6,11 +6,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Salvapp">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#f5f5f7">
   <title>Salvapp</title>
   
-  <link rel="icon" type="image/svg+xml" href="icon.svg">
-  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="icon-180.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="icon-120.png">
   <link rel="manifest" href="manifest.json">
   
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -25,7 +27,7 @@
             extend: { 
                 fontFamily: { sans: ['Montserrat', 'sans-serif'] }, 
                 colors: { 
-                    app: { bg: '#000000', card: '#1c1c1e', input: '#2c2c2e', border: '#333336' },
+                    app: { bg: '#f5f5f7', card: '#ffffff', input: '#f2f2f7', border: '#d2d2d7' },
                     gym: { neon: '#58cc02' } 
                 } 
             } 
@@ -34,14 +36,16 @@
   </script>
 
   <style>
-    body { background-color: #000000; color: #f8fafc; font-family: 'Montserrat', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; }
+    body { background-color: #f5f5f7; color: #1d1d1f; font-family: 'Montserrat', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; }
     
-    .bento-card { background-color: #1c1c1e; border: 1px solid #333336; border-radius: 24px; transition: transform 0.2s ease, border-color 0.2s ease; }
+    .bento-card { background-color: #ffffff; border: 1px solid #e5e5ea; border-radius: 20px; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     .bento-card:active { transform: scale(0.995); }
-    .bento-input { background-color: #2c2c2e; border: 1px solid transparent; color: #ffffff; transition: all 0.2s ease; border-radius: 16px; }
-    .bento-input:focus { border-color: var(--theme-accent, #58cc02); background-color: #323234; outline: none; box-shadow: 0 0 0 3px rgba(88,204,2,0.1); }
+    .bento-card:hover { border-color: #d2d2d7; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .bento-input { background-color: #f2f2f7; border: 1px solid transparent; color: #1d1d1f; transition: all 0.2s ease; border-radius: 14px; }
+    .bento-input:focus { border-color: var(--theme-accent, #58cc02); background-color: #ffffff; outline: none; box-shadow: 0 0 0 3px rgba(88,204,2,0.15); }
+    .bento-input::placeholder { color: #aeaeb2; }
 
-    .nav-pill { background-color: rgba(22, 22, 24, 0.92); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
+    .nav-pill { background-color: rgba(255,255,255,0.88); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
     .nav-item { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; }
     .nav-item:active { transform: scale(0.92); }
     .nav-active { color: #58cc02; }
@@ -56,27 +60,27 @@
     .lightbox-enter { opacity: 1 !important; pointer-events: auto !important; z-index: 100 !important; }
     .lightbox-img-enter { transform: scale(1) !important; }
 
-    .liquid-selector { position: relative; display: flex; background: #000000; border-radius: 12px; padding: 4px; border: 1px solid #333336; }
-    .liquid-pill { position: absolute; top: 4px; bottom: 4px; border-radius: 8px; background: #333336; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.3s ease; z-index: 1; }
+    .liquid-selector { position: relative; display: flex; background: #f2f2f7; border-radius: 12px; padding: 4px; border: 1px solid #e5e5ea; }
+    .liquid-pill { position: absolute; top: 4px; bottom: 4px; border-radius: 8px; background: #ffffff; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.3s ease; z-index: 1; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
     .liquid-btn { position: relative; z-index: 2; flex: 1; padding: 8px 0; text-align: center; font-size: 11px; font-weight: 700; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.05em; transition: color 0.2s; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .liquid-btn.active { color: #fff; }
+    .liquid-btn.active { color: #1d1d1f; }
     
-    .text-shadow-heavy { text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
-    .custom-range { -webkit-appearance: none; width: 100%; background: #2c2c2e; height: 6px; border-radius: 9999px; outline: none; border: 1px solid #333336; }
-    .custom-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #58cc02; cursor: pointer; border: 2px solid white; transition: transform 0.15s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .text-shadow-heavy { text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+    .custom-range { -webkit-appearance: none; width: 100%; background: #e5e5ea; height: 6px; border-radius: 9999px; outline: none; border: none; }
+    .custom-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #58cc02; cursor: pointer; border: 2px solid white; transition: transform 0.15s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
     .custom-range::-webkit-slider-thumb:active { transform: scale(1.2); }
 
     .animate-fade-in { animation: fadeIn 0.3s ease forwards; }
     @keyframes fadeIn { 0% { opacity: 0; transform: translateY(4px); } 100% { opacity: 1; transform: translateY(0); } }
 
-    .skeleton { background: linear-gradient(90deg, #1c1c1e 25%, #2c2c2e 50%, #1c1c1e 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+    .skeleton { background: linear-gradient(90deg, #e5e5ea 25%, #f2f2f7 50%, #e5e5ea 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
     select, input, button { -webkit-appearance: none; }
-    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
+    input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; }
     input[type="number"]::-webkit-inner-spin-button { display: none; }
 
-    .glass { background: rgba(28, 28, 30, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.06); }
+    .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(0,0,0,0.06); }
 
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
   </style>
@@ -84,25 +88,25 @@
 
 <body class="min-h-screen w-full antialiased" style="padding-bottom: calc(7rem + env(safe-area-inset-bottom));">
 
-  <div id="splash-screen" class="fixed inset-0 z-[100] bg-[#000000] flex flex-col items-center justify-center transition-all duration-500 pointer-events-auto">
+  <div id="splash-screen" class="fixed inset-0 z-[100] bg-[#f5f5f7] flex flex-col items-center justify-center transition-all duration-500 pointer-events-auto">
       <div class="relative flex flex-col items-center">
-         <div class="w-20 h-20 rounded-3xl bg-gym-neon flex items-center justify-center animate-pulse relative z-10 shadow-[0_0_50px_rgba(88,204,2,0.2)]">
-            <svg class="w-10 h-10 text-black" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+         <div class="w-20 h-20 rounded-3xl bg-[#1d1d1f] flex items-center justify-center animate-pulse relative z-10 shadow-[0_0_50px_rgba(88,204,2,0.15)]">
+            <svg class="w-10 h-10 text-gym-neon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
          </div>
       </div>
   </div>
 
-  <header class="fixed top-0 w-full z-40 px-5 pb-6 bg-gradient-to-b from-black via-black/95 to-transparent pointer-events-none" style="padding-top: max(1.5rem, env(safe-area-inset-top));">
+  <header class="fixed top-0 w-full z-40 px-5 pb-6 bg-gradient-to-b from-[#f5f5f7] via-[#f5f5f7]/95 to-transparent pointer-events-none" style="padding-top: max(1.5rem, env(safe-area-inset-top));">
     <div class="max-w-xl mx-auto flex items-center justify-between pointer-events-auto">
       <div class="flex flex-col">
-          <h1 class="font-black text-2xl tracking-tight text-white leading-none mt-1">Salv<span id="header-pro" class="text-gym-neon transition-colors duration-300">app</span></h1>
+          <h1 class="font-black text-2xl tracking-tight text-[#1d1d1f] leading-none mt-1">Salv<span id="header-pro" class="text-gym-neon transition-colors duration-300">app</span></h1>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="forceSync()" id="btn-force-sync" class="flex items-center justify-center w-8 h-8 bg-app-card border border-app-border rounded-full text-white shadow-sm hover:bg-[#2c2c2e] active:scale-90 transition">
-            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-gray-400"></i>
+        <button onclick="forceSync()" id="btn-force-sync" class="flex items-center justify-center w-8 h-8 bg-white border border-[#e5e5ea] rounded-full text-[#1d1d1f] shadow-sm hover:bg-[#f2f2f7] active:scale-90 transition">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-[#8e8e93]"></i>
         </button>
-        <div class="flex items-center gap-1.5 bg-app-card border border-app-border rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-sm"><span class="text-orange-500">🔥</span> <span id="streak-count">0</span></div>
-        <div class="flex items-center gap-1.5 bg-app-card border border-app-border rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-sm">
+        <div class="flex items-center gap-1.5 bg-white border border-[#e5e5ea] rounded-full px-3 py-1.5 text-xs font-bold text-[#1d1d1f] shadow-sm"><span class="text-orange-500">🔥</span> <span id="streak-count">0</span></div>
+        <div class="flex items-center gap-1.5 bg-white border border-[#e5e5ea] rounded-full px-3 py-1.5 text-xs font-bold text-[#1d1d1f] shadow-sm">
            <svg class="w-3.5 h-3.5 text-gym-neon flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
            <span id="xp-count">0</span>
         </div>
@@ -110,48 +114,48 @@
     </div>
   </header>
 
-  <div id="lightbox" class="fixed inset-0 z-[100] bg-black/95 opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
+  <div id="lightbox" class="fixed inset-0 z-[100] bg-[#1d1d1f]/95 opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
     <button class="absolute top-8 right-6 text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition active:scale-90"><i data-lucide="x" class="w-6 h-6"></i></button>
     <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] rounded-xl scale-95 transition-transform duration-300 object-contain">
   </div>
 
-  <main class="max-w-xl mx-auto px-5" style="padding-top: calc(6rem + env(safe-area-inset-top));">
+  <main class="max-w-xl mx-auto px-4" style="padding-top: calc(6rem + env(safe-area-inset-top));">
     
     <section id="tab-tracker" class="space-y-6 animate-fade-in">
       <div class="grid grid-cols-2 gap-3 md:gap-4">
-        <div class="bento-card p-5 flex flex-col justify-between"><div class="flex justify-between items-start"><i data-lucide="activity" class="w-5 h-5 text-blue-500 opacity-80"></i><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Lifts</span></div><p id="stat-total" class="text-3xl font-black text-white mt-2 truncate">0</p></div>
-        <div class="bento-card p-5 flex flex-col justify-between border-gym-neon/30 relative overflow-hidden"><div class="absolute inset-0 bg-gym-neon/5"></div><div class="flex justify-between items-start relative z-10"><i data-lucide="flame" class="w-5 h-5 text-gym-neon"></i><span class="text-[10px] font-bold text-gym-neon uppercase tracking-wider">Weekly</span></div><p id="stat-week" class="text-3xl font-black text-white relative z-10 truncate">0</p></div>
-        <div class="bento-card p-5 flex flex-col justify-between"><div class="flex justify-between items-start"><i data-lucide="layers" class="w-5 h-5 text-purple-500 opacity-80"></i><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Volume (kg)</span></div><p id="stat-volume" class="text-3xl font-black text-white mt-2 truncate">0</p></div>
-        <div class="bento-card p-5 flex flex-col justify-between"><div class="flex justify-between items-start"><i data-lucide="trophy" class="w-5 h-5 text-yellow-500 opacity-80"></i><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">PRs</span></div><p id="stat-prs" class="text-3xl font-black text-white mt-2 truncate">0</p></div>
+        <div class="bento-card p-5 flex flex-col justify-between"><div class="flex justify-between items-start"><i data-lucide="activity" class="w-5 h-5 text-blue-500 opacity-80"></i><span class="text-[10px] font-bold text-[#8e8e93] uppercase tracking-wider">Total Lifts</span></div><p id="stat-total" class="text-3xl font-black text-[#1d1d1f] mt-2 truncate">0</p></div>
+        <div class="bento-card p-5 flex flex-col justify-between border-gym-neon/30 relative overflow-hidden"><div class="absolute inset-0 bg-gym-neon/[0.03]"></div><div class="flex justify-between items-start relative z-10"><i data-lucide="flame" class="w-5 h-5 text-gym-neon"></i><span class="text-[10px] font-bold text-gym-neon uppercase tracking-wider">Weekly</span></div><p id="stat-week" class="text-3xl font-black text-[#1d1d1f] relative z-10 truncate">0</p></div>
+        <div class="bento-card p-5 flex flex-col justify-between"><div class="flex justify-between items-start"><i data-lucide="layers" class="w-5 h-5 text-purple-500 opacity-80"></i><span class="text-[10px] font-bold text-[#8e8e93] uppercase tracking-wider">Volume (kg)</span></div><p id="stat-volume" class="text-3xl font-black text-[#1d1d1f] mt-2 truncate">0</p></div>
+        <div class="bento-card p-5 flex flex-col justify-between"><div class="flex justify-between items-start"><i data-lucide="trophy" class="w-5 h-5 text-yellow-500 opacity-80"></i><span class="text-[10px] font-bold text-[#8e8e93] uppercase tracking-wider">PRs</span></div><p id="stat-prs" class="text-3xl font-black text-[#1d1d1f] mt-2 truncate">0</p></div>
       </div>
 
       <div class="bento-card p-6" id="week-calendar-card">
         <div class="flex items-center justify-between mb-3">
-          <h2 class="font-bold text-lg text-white">This Week</h2>
-          <span id="week-calendar-label" class="text-[10px] font-bold text-gray-500 uppercase tracking-wider"></span>
+          <h2 class="font-bold text-lg text-[#1d1d1f]">This Week</h2>
+          <span id="week-calendar-label" class="text-[10px] font-bold text-[#8e8e93] uppercase tracking-wider"></span>
         </div>
         <div id="week-calendar" class="grid grid-cols-7 gap-1.5"></div>
       </div>
 
       <div class="bento-card p-6">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="font-bold text-xl text-white">Log Training</h2>
-            <div class="bg-[#000] rounded-xl p-1 border border-app-border flex">
-                <button id="btn-mode-lift" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-lg bg-[#333336] text-white transition">Lifts</button>
-                <button id="btn-mode-wod" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-lg text-gray-500 transition">WODs</button>
+            <h2 class="font-bold text-xl text-[#1d1d1f]">Log Training</h2>
+            <div class="bg-[#f2f2f7] rounded-xl p-1 border border-[#e5e5ea] flex">
+                <button id="btn-mode-lift" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-lg bg-white text-[#1d1d1f] shadow-sm transition">Lifts</button>
+                <button id="btn-mode-wod" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-lg text-[#8e8e93] transition">WODs</button>
             </div>
         </div>
 
         <form id="lift-form" class="space-y-4">
           <div id="input-lift-group">
-            <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">MOVEMENT / LIFT</label>
+            <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">MOVEMENT / LIFT</label>
             <select id="movement-select" class="w-full bento-input rounded-2xl px-4 py-3 font-bold cursor-pointer text-sm">
               <option value="Back Squat">Back Squat</option><option value="Front Squat">Front Squat</option><option value="Deadlift">Deadlift</option><option value="Sumo Deadlift">Sumo Deadlift</option><option value="Romanian Deadlift">Romanian Deadlift</option><option value="Clean">Clean</option><option value="Power Clean">Power Clean</option><option value="Clean & Jerk">Clean & Jerk</option><option value="Snatch">Snatch</option><option value="Power Snatch">Power Snatch</option><option value="Bench Press">Bench Press</option><option value="Overhead Press">Overhead Press</option><option value="Push Press">Push Press</option><option value="Thruster">Thruster</option><option value="Pull-Up">Pull-Up</option><option value="Muscle-Up">Muscle-Up</option>
             </select>
           </div>
           
           <div id="input-wod-group" class="hidden">
-            <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">BENCHMARK / HERO WOD</label>
+            <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">BENCHMARK / HERO WOD</label>
             <select id="wod-select" class="w-full bento-input rounded-2xl px-4 py-3 font-bold cursor-pointer text-sm">
               <option value="Fran">Fran (21-15-9 Thrusters/Pull-ups)</option>
               <option value="Murph">Murph (Run, 100 Pull, 200 Push, 300 Squat, Run)</option>
@@ -165,15 +169,15 @@
 
           <div class="grid grid-cols-3 gap-2 md:gap-3">
               <div>
-                  <label id="lbl-weight" class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">WEIGHT / SCORE</label>
+                  <label id="lbl-weight" class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">WEIGHT / SCORE</label>
                   <input id="lift-weight" type="text" placeholder="e.g. 100" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required>
               </div>
               <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">REPS / ROUNDS</label>
+                  <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">REPS / ROUNDS</label>
                   <input id="lift-reps" type="number" min="1" value="1" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required>
               </div>
               <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">RPE</label>
+                  <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">RPE</label>
                   <select id="lift-rpe" class="w-full bento-input rounded-2xl px-4 py-3 font-bold cursor-pointer text-sm">
                     <option value="">--</option>
                     <option value="6">6 (Light)</option>
@@ -186,81 +190,141 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">DATE</label>
+                  <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">DATE</label>
                   <input id="lift-date" type="date" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required>
               </div>
               <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">NOTES</label>
+                  <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">NOTES</label>
                   <input id="lift-notes" type="text" placeholder="Rx? Scaled?" class="w-full bento-input rounded-2xl px-4 py-3 font-bold">
               </div>
           </div>
-          <button type="submit" class="w-full py-4 mt-4 rounded-2xl font-bold text-black text-sm uppercase tracking-wide bg-gym-neon hover:bg-[#4ab002] transition active:scale-[0.98]">Save Training</button>
+          <button type="submit" class="w-full py-4 mt-4 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-gym-neon hover:bg-[#4ab002] transition active:scale-[0.98] shadow-[0_4px_16px_rgba(88,204,2,0.3)]">Save Training</button>
         </form>
       </div>
 
       <div class="mb-10">
-        <div class="flex items-center justify-between mb-4 px-2"><h2 class="font-bold text-lg text-white">Recent Activity</h2><select id="history-filter" class="bg-app-input border border-app-border rounded-xl px-3 py-2 text-xs font-bold text-white outline-none cursor-pointer"><option value="all">All Entries</option></select></div>
-        <div id="history-list" class="space-y-3"></div>
+        <div class="flex items-center justify-between mb-4 px-2"><h2 class="font-bold text-lg text-[#1d1d1f]">Recent Activity</h2><select id="history-filter" class="bg-[#f2f2f7] border border-[#e5e5ea] rounded-xl px-3 py-2 text-xs font-bold text-[#1d1d1f] outline-none cursor-pointer"><option value="all">All Entries</option></select></div>
+        <div id="history-list" class="space-y-2"></div>
       </div>
     </section>
 
     <section id="tab-health" class="space-y-6 hidden">
       <div class="bento-card p-6">
-        <h2 class="font-bold text-xl text-white mb-6 flex items-center gap-2"><i data-lucide="apple" class="w-5 h-5 text-red-500"></i> Nutrition & Macros</h2>
+        <h2 class="font-bold text-xl text-[#1d1d1f] mb-6 flex items-center gap-2"><i data-lucide="apple" class="w-5 h-5 text-red-500"></i> Nutrition & Macros</h2>
         <form id="macro-form" class="space-y-4">
             <div class="grid grid-cols-4 gap-2">
-                <div class="text-center"><label class="text-[9px] font-bold text-gray-400 block mb-1">PRO (g)</label><input id="mac-pro" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center" placeholder="0"></div>
-                <div class="text-center"><label class="text-[9px] font-bold text-gray-400 block mb-1">CARB (g)</label><input id="mac-carb" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center" placeholder="0"></div>
-                <div class="text-center"><label class="text-[9px] font-bold text-gray-400 block mb-1">FAT (g)</label><input id="mac-fat" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center" placeholder="0"></div>
-                <div class="text-center"><label class="text-[9px] font-bold text-gray-400 block mb-1">CALS</label><input id="mac-cal" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center text-gym-neon" placeholder="0"></div>
+                <div class="text-center"><label class="text-[9px] font-bold text-[#8e8e93] block mb-1">PRO (g)</label><input id="mac-pro" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center" placeholder="0"></div>
+                <div class="text-center"><label class="text-[9px] font-bold text-[#8e8e93] block mb-1">CARB (g)</label><input id="mac-carb" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center" placeholder="0"></div>
+                <div class="text-center"><label class="text-[9px] font-bold text-[#8e8e93] block mb-1">FAT (g)</label><input id="mac-fat" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center" placeholder="0"></div>
+                <div class="text-center"><label class="text-[9px] font-bold text-[#8e8e93] block mb-1">CALS</label><input id="mac-cal" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center text-gym-neon" placeholder="0"></div>
             </div>
-            <button type="submit" class="w-full py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wide bg-[#333336] transition active:scale-95">Log Daily Intake</button>
+            <button type="submit" class="w-full py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wide bg-gym-neon hover:bg-[#4ab002] transition active:scale-95 shadow-[0_2px_8px_rgba(88,204,2,0.25)]">Log Daily Intake</button>
         </form>
       </div>
 
       <div class="bento-card p-6">
-        <h2 class="font-bold text-xl text-white mb-4 flex items-center gap-2"><i data-lucide="scale" class="w-5 h-5 text-blue-500"></i> Body Weight <span id="latest-weight-display" class="text-base font-bold text-blue-400 ml-auto">-- kg</span></h2>
+        <h2 class="font-bold text-xl text-[#1d1d1f] mb-4 flex items-center gap-2"><i data-lucide="utensils-crossed" class="w-5 h-5 text-orange-500"></i> Food Checker</h2>
+        <div class="bg-[#f2f2f7] rounded-xl p-4 mb-4 border border-[#e5e5ea]">
+          <div class="grid grid-cols-2 gap-4 text-center">
+            <div><p class="text-[9px] font-bold text-[#8e8e93] uppercase tracking-wider">Protein Goal</p><p id="food-protein-target" class="text-lg font-black text-orange-500">--g</p></div>
+            <div><p class="text-[9px] font-bold text-[#8e8e93] uppercase tracking-wider">Calorie Goal</p><p id="food-cal-target" class="text-lg font-black text-orange-500">-- kcal</p></div>
+          </div>
+        </div>
+        <div class="relative mb-3">
+          <input id="food-search" type="text" placeholder="Search any food..." class="w-full bento-input rounded-xl px-4 py-3 font-bold text-sm" autocomplete="off">
+          <div id="food-results" class="hidden absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-[#e5e5ea] rounded-xl max-h-52 overflow-y-auto shadow-xl"></div>
+        </div>
+        <div class="flex gap-1.5 mb-4 overflow-x-auto pb-1" id="food-categories">
+          <button class="food-cat-btn active px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#1d1d1f] text-white" data-cat="all">All</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="meat">Meat</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="fish">Fish</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="dairy">Dairy</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="grains">Grains</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="fruits">Fruits</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="veggies">Veggies</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="legumes">Nuts</button>
+        </div>
+        <div id="food-selected" class="hidden bg-[#f2f2f7] rounded-xl p-4 border border-[#e5e5ea] mb-4">
+          <div class="flex items-center justify-between mb-3">
+            <span id="food-selected-name" class="font-bold text-sm text-[#1d1d1f]">--</span>
+            <span id="food-selected-macros" class="text-xs font-bold text-[#8e8e93]">--</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex-1">
+              <label class="text-[9px] font-bold text-[#8e8e93] block mb-1">Serving (g)</label>
+              <div class="flex items-center gap-2">
+                <button id="food-serving-minus" class="w-8 h-8 rounded-lg bg-white border border-[#e5e5ea] text-[#1d1d1f] font-bold flex items-center justify-center active:scale-95 text-lg shadow-sm">−</button>
+                <input id="food-serving-grams" type="number" value="100" min="10" max="2000" step="10" class="w-16 bento-input rounded-lg px-2 py-2 font-bold text-center text-sm">
+                <button id="food-serving-plus" class="w-8 h-8 rounded-lg bg-white border border-[#e5e5ea] text-[#1d1d1f] font-bold flex items-center justify-center active:scale-95 text-lg shadow-sm">+</button>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-[9px] font-bold text-[#8e8e93]">This serving</p>
+              <p id="food-serving-macros" class="text-sm font-black text-[#1d1d1f]">0g | 0 kcal</p>
+            </div>
+          </div>
+          <button id="btn-log-food" class="w-full mt-3 py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wide bg-orange-500 hover:bg-orange-600 transition active:scale-95 shadow-[0_2px_8px_rgba(249,115,22,0.25)]">Log Food</button>
+        </div>
+        <div id="food-today-log">
+          <h3 class="text-sm font-bold text-[#1d1d1f] mb-3 flex items-center justify-between">
+            <span><i data-lucide="clipboard-list" class="w-3.5 h-3.5 inline mr-1 text-orange-500"></i>Today's Intake</span>
+            <span id="food-item-count" class="text-[10px] text-[#8e8e93] font-bold">0 items</span>
+          </h3>
+          <div id="food-log-list" class="space-y-2 max-h-64 overflow-y-auto"><p class="text-[#8e8e93] text-xs font-bold text-center py-4">No food logged today.</p></div>
+          <div id="food-daily-summary" class="hidden mt-3 pt-3 border-t border-[#e5e5ea] space-y-2">
+            <div class="flex justify-between text-xs font-bold"><span class="text-[#8e8e93]">Protein</span><span id="food-total-protein" class="text-orange-500">0g</span></div>
+            <div class="w-full h-2 bg-[#e5e5ea] rounded-full overflow-hidden"><div id="food-protein-bar" class="h-full bg-orange-500 rounded-full transition-all" style="width:0%"></div></div>
+            <div class="flex justify-between text-xs font-bold mt-2"><span class="text-[#8e8e93]">Calories</span><span id="food-total-cal" class="text-orange-500">0 kcal</span></div>
+            <div class="w-full h-2 bg-[#e5e5ea] rounded-full overflow-hidden"><div id="food-cal-bar" class="h-full bg-orange-500 rounded-full transition-all" style="width:0%"></div></div>
+            <div class="flex justify-between text-xs font-bold text-[#8e8e93] mt-2"><span>Carbs</span><span id="food-total-carbs">0g</span></div>
+            <div class="flex justify-between text-xs font-bold text-[#8e8e93]"><span>Fat</span><span id="food-total-fat">0g</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bento-card p-6">
+        <h2 class="font-bold text-xl text-[#1d1d1f] mb-4 flex items-center gap-2"><i data-lucide="scale" class="w-5 h-5 text-blue-500"></i> Body Weight <span id="latest-weight-display" class="text-base font-bold text-blue-500 ml-auto">-- kg</span></h2>
         <form id="weight-log-form" class="flex gap-3 items-end mb-4">
           <div class="flex-1">
             <input id="body-weight-input" type="number" step="0.1" min="1" placeholder="75.0 kg" class="w-full bento-input rounded-xl px-4 py-3 font-bold" required>
           </div>
-          <button type="submit" class="px-6 py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wider bg-[#333336] hover:bg-[#3a3a3c] transition active:scale-95 h-[46px]">Log</button>
+          <button type="submit" class="px-6 py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wider bg-gym-neon hover:bg-[#4ab002] transition active:scale-95 h-[46px] shadow-[0_2px_8px_rgba(88,204,2,0.25)]">Log</button>
         </form>
-        <div id="weight-history-list" class="space-y-2 mt-4 pt-4 border-t border-app-border"></div>
+        <div id="weight-history-list" class="space-y-2 mt-4 pt-4 border-t border-[#e5e5ea]"></div>
       </div>
 
       <div class="bento-card p-6">
-        <h2 class="font-bold text-xl text-white mb-4 flex items-center gap-2"><i data-lucide="percent" class="w-5 h-5 text-purple-500"></i> Body Fat Estimate</h2>
+        <h2 class="font-bold text-xl text-[#1d1d1f] mb-4 flex items-center gap-2"><i data-lucide="percent" class="w-5 h-5 text-purple-500"></i> Body Fat Estimate</h2>
         <div class="grid grid-cols-2 gap-3">
-          <div><label class="text-[10px] font-bold text-gray-400 block mb-1 pl-1">HEIGHT (cm)</label><input id="bf-height" type="number" placeholder="175" class="w-full bento-input rounded-xl px-4 py-3 font-bold"></div>
-          <div><label class="text-[10px] font-bold text-gray-400 block mb-1 pl-1">NECK (cm)</label><input id="bf-neck" type="number" placeholder="38" class="w-full bento-input rounded-xl px-4 py-3 font-bold"></div>
-          <div><label class="text-[10px] font-bold text-gray-400 block mb-1 pl-1">WAIST (cm)</label><input id="bf-waist" type="number" placeholder="80" class="w-full bento-input rounded-xl px-4 py-3 font-bold"></div>
-          <div class="flex items-end"><button id="btn-calc-bf" class="w-full py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wider bg-[#333336] hover:bg-[#3a3a3c] transition active:scale-95">Calculate</button></div>
+          <div><label class="text-[10px] font-bold text-[#8e8e93] block mb-1 pl-1">HEIGHT (cm)</label><input id="bf-height" type="number" placeholder="175" class="w-full bento-input rounded-xl px-4 py-3 font-bold"></div>
+          <div><label class="text-[10px] font-bold text-[#8e8e93] block mb-1 pl-1">NECK (cm)</label><input id="bf-neck" type="number" placeholder="38" class="w-full bento-input rounded-xl px-4 py-3 font-bold"></div>
+          <div><label class="text-[10px] font-bold text-[#8e8e93] block mb-1 pl-1">WAIST (cm)</label><input id="bf-waist" type="number" placeholder="80" class="w-full bento-input rounded-xl px-4 py-3 font-bold"></div>
+          <div class="flex items-end"><button id="btn-calc-bf" class="w-full py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wider bg-gym-neon hover:bg-[#4ab002] transition active:scale-95 shadow-[0_2px_8px_rgba(88,204,2,0.25)]">Calculate</button></div>
         </div>
-        <div id="bf-result" class="hidden mt-3 bg-app-input rounded-xl p-4 text-center border border-app-border"><span class="text-sm font-bold text-gray-400">Estimated Body Fat</span><p class="text-2xl font-black text-purple-400 mt-1"><span id="bf-percent">0</span>%</p></div>
+        <div id="bf-result" class="hidden mt-3 bg-[#f2f2f7] rounded-xl p-4 text-center border border-[#e5e5ea]"><span class="text-sm font-bold text-[#8e8e93]">Estimated Body Fat</span><p class="text-2xl font-black text-purple-500 mt-1"><span id="bf-percent">0</span>%</p></div>
       </div>
 
       <div class="bento-card p-6">
-        <h2 class="font-bold text-xl text-white mb-4 flex items-center gap-2"><i data-lucide="bell" class="w-5 h-5 text-yellow-500"></i> Workout Reminders</h2>
+        <h2 class="font-bold text-xl text-[#1d1d1f] mb-4 flex items-center gap-2"><i data-lucide="bell" class="w-5 h-5 text-yellow-500"></i> Workout Reminders</h2>
         <div class="flex items-center justify-between">
-          <span class="text-sm font-bold text-gray-300">Daily training reminder</span>
-          <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="toggle-notifications" class="sr-only peer"><div class="w-11 h-6 bg-[#333336] rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gym-neon"></div></label>
+          <span class="text-sm font-bold text-[#1d1d1f]">Daily training reminder</span>
+          <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="toggle-notifications" class="sr-only peer"><div class="w-11 h-6 bg-[#d2d2d7] rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gym-neon"></div></label>
         </div>
-        <p class="text-[10px] text-gray-500 mt-3 font-medium">You'll get a local reminder to log your training each day at 7 PM.</p>
+        <p class="text-[10px] text-[#8e8e93] mt-3 font-medium">You'll get a local reminder to log your training each day at 7 PM.</p>
       </div>
 
       <div class="bento-card p-6 mb-10 border-t-4 border-blue-500">
-        <h2 class="font-bold text-xl text-white mb-2 flex items-center gap-2">Mobility Prep</h2>
-        <p class="text-xs text-gray-400 mb-4">Check off your daily movement preps to minimize injury risk.</p>
+        <h2 class="font-bold text-xl text-[#1d1d1f] mb-2 flex items-center gap-2">Mobility Prep</h2>
+        <p class="text-xs text-[#8e8e93] mb-4">Check off your daily movement preps to minimize injury risk.</p>
         <div class="space-y-3">
-            <label class="flex items-center gap-3 p-3 bg-app-input rounded-xl border border-app-border cursor-pointer">
-                <input id="mob-hips" type="checkbox" class="w-5 h-5 accent-blue-500 bg-[#000] border-[#333336] rounded"><span class="text-sm font-bold text-white">Hips & Glutes (Pigeon, Couch)</span>
+            <label class="flex items-center gap-3 p-3 bg-[#f2f2f7] rounded-xl border border-[#e5e5ea] cursor-pointer">
+                <input id="mob-hips" type="checkbox" class="w-5 h-5 accent-blue-500 rounded"><span class="text-sm font-bold text-[#1d1d1f]">Hips & Glutes (Pigeon, Couch)</span>
             </label>
-            <label class="flex items-center gap-3 p-3 bg-app-input rounded-xl border border-app-border cursor-pointer">
-                <input id="mob-shoulders" type="checkbox" class="w-5 h-5 accent-blue-500 bg-[#000] border-[#333336] rounded"><span class="text-sm font-bold text-white">Shoulders (Banded pass-throughs)</span>
+            <label class="flex items-center gap-3 p-3 bg-[#f2f2f7] rounded-xl border border-[#e5e5ea] cursor-pointer">
+                <input id="mob-shoulders" type="checkbox" class="w-5 h-5 accent-blue-500 rounded"><span class="text-sm font-bold text-[#1d1d1f]">Shoulders (Banded pass-throughs)</span>
             </label>
-            <label class="flex items-center gap-3 p-3 bg-app-input rounded-xl border border-app-border cursor-pointer">
-                <input id="mob-ankles" type="checkbox" class="w-5 h-5 accent-blue-500 bg-[#000] border-[#333336] rounded"><span class="text-sm font-bold text-white">Ankles & Calves (Squat hold)</span>
+            <label class="flex items-center gap-3 p-3 bg-[#f2f2f7] rounded-xl border border-[#e5e5ea] cursor-pointer">
+                <input id="mob-ankles" type="checkbox" class="w-5 h-5 accent-blue-500 rounded"><span class="text-sm font-bold text-[#1d1d1f]">Ankles & Calves (Squat hold)</span>
             </label>
         </div>
       </div>
@@ -268,33 +332,33 @@
 
     <section id="tab-progress" class="space-y-6 hidden">
       <div class="bento-card p-6">
-        <div class="flex items-center justify-between mb-6"><h2 class="font-bold text-xl text-white">Strength Curve</h2><select id="chart-movement-filter" class="bg-app-input border border-app-border rounded-xl px-3 py-1.5 text-xs font-bold text-gym-neon outline-none cursor-pointer"></select></div>
+        <div class="flex items-center justify-between mb-6"><h2 class="font-bold text-xl text-[#1d1d1f]">Strength Curve</h2><select id="chart-movement-filter" class="bg-[#f2f2f7] border border-[#e5e5ea] rounded-xl px-3 py-1.5 text-xs font-bold text-gym-neon outline-none cursor-pointer"></select></div>
         <div class="relative h-[250px] w-full"><canvas id="progressChart"></canvas></div>
       </div>
 
       <div class="bento-card p-6">
-        <h2 class="font-bold text-xl text-white mb-6 flex items-center gap-2"><i data-lucide="trending-down" class="w-5 h-5 text-blue-500"></i> Weight Trend</h2>
+        <h2 class="font-bold text-xl text-[#1d1d1f] mb-6 flex items-center gap-2"><i data-lucide="trending-down" class="w-5 h-5 text-blue-500"></i> Weight Trend</h2>
         <div class="relative h-[220px] w-full"><canvas id="weightTrendChart"></canvas></div>
       </div>
 
       <div class="mb-10">
-        <h2 class="font-bold text-lg mb-4 text-white flex items-center gap-2 px-2"><i data-lucide="trophy" class="w-5 h-5 text-yellow-500"></i> PR Hall of Fame</h2>
+        <h2 class="font-bold text-lg mb-4 text-[#1d1d1f] flex items-center gap-2 px-2"><i data-lucide="trophy" class="w-5 h-5 text-yellow-500"></i> PR Hall of Fame</h2>
         <div id="pr-list" class="grid grid-cols-2 gap-3 md:gap-4"></div>
       </div>
     </section>
 
     <section id="tab-studio" class="space-y-6 hidden">
-      <div class="flex bg-app-card p-1 rounded-xl border border-app-border">
-          <button id="btn-studio-share" class="flex-1 py-2 text-xs font-bold uppercase rounded-lg bg-[#333336] text-white transition">Story Creator</button>
-          <button id="btn-studio-gallery" class="flex-1 py-2 text-xs font-bold uppercase rounded-lg text-gray-500 transition">Gallery Vault</button>
+      <div class="flex bg-white p-1 rounded-xl border border-[#e5e5ea] shadow-sm">
+          <button id="btn-studio-share" class="flex-1 py-2 text-xs font-bold uppercase rounded-lg bg-[#1d1d1f] text-white transition">Story Creator</button>
+          <button id="btn-studio-gallery" class="flex-1 py-2 text-xs font-bold uppercase rounded-lg text-[#8e8e93] transition">Gallery Vault</button>
       </div>
 
       <div id="view-story">
           <div class="bento-card p-6 flex flex-col items-center border-gym-neon/30 relative overflow-hidden mb-6">
-            <div class="absolute inset-0 bg-gradient-to-br from-gym-neon/5 to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-gym-neon/[0.03] to-transparent pointer-events-none"></div>
             <div class="w-full flex justify-between items-center mb-4 relative z-10">
-                <h2 class="font-bold text-xl text-white">Live Preview</h2>
-                <div class="flex gap-2 text-gray-400 text-xs font-bold items-center"><i data-lucide="move" class="w-4 h-4"></i> Drag / Pinch</div>
+                <h2 class="font-bold text-xl text-[#1d1d1f]">Live Preview</h2>
+                <div class="flex gap-2 text-[#8e8e93] text-xs font-bold items-center"><i data-lucide="move" class="w-4 h-4"></i> Drag / Pinch</div>
             </div>
             
             <div class="w-full overflow-x-auto pb-4 flex justify-center relative z-10">
@@ -308,28 +372,28 @@
                 <div id="share-content-container" class="absolute left-6 right-6 z-10 transition-transform duration-75 will-change-transform" style="top: 50%; transform: translateY(-50%); width: 312px; transform-origin: center center; pointer-events: none;"></div>
               </div>
             </div>
-            <button id="btn-download-share" disabled class="w-full py-4 mt-2 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition flex justify-center items-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed relative z-10"><i data-lucide="download" class="w-5 h-5"></i> SAVE FULL HD STORY</button>
+            <button id="btn-download-share" disabled class="w-full py-4 mt-2 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[#8e8e93] transition flex justify-center items-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed relative z-10"><i data-lucide="download" class="w-5 h-5"></i> SAVE FULL HD STORY</button>
           </div>
 
           <div class="bento-card p-6 mb-6">
-            <h3 class="text-sm font-bold text-white mb-4 border-b border-app-border pb-3">1. Content & Style</h3>
+            <h3 class="text-sm font-bold text-[#1d1d1f] mb-4 border-b border-[#e5e5ea] pb-3">1. Content & Style</h3>
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">WORKOUT</label> 
+                      <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">WORKOUT</label> 
                       <select id="share-workout-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer"><option value="">Choose item...</option></select>
                     </div>
                     <div>
-                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">STYLE</label> 
+                      <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">STYLE</label> 
                       <select id="share-style-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer"><option value="style1">Strava Activity</option><option value="style2">Story Highlight</option><option value="style3">Performance</option><option value="style4">Minimal Bold</option><option value="style5">Athlete Score</option><option value="style6">Classic Grid</option></select>
                     </div>
                 </div>
                 <div class="relative">
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">BACKGROUND IMAGE</label> 
-                  <label class="w-full bento-input rounded-xl px-4 py-3 font-bold flex items-center justify-between cursor-pointer hover:bg-[#333336] transition"><span id="share-upload-text" class="text-xs truncate">Upload Photo...</span><i data-lucide="upload" class="w-4 h-4 text-gym-neon flex-shrink-0" id="share-upload-icon"></i><input type="file" id="share-image-upload" accept="image/*" class="hidden"></label>
+                  <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">BACKGROUND IMAGE</label> 
+                  <label class="w-full bento-input rounded-xl px-4 py-3 font-bold flex items-center justify-between cursor-pointer hover:bg-[#e5e5ea] transition"><span id="share-upload-text" class="text-xs truncate">Upload Photo...</span><i data-lucide="upload" class="w-4 h-4 text-gym-neon flex-shrink-0" id="share-upload-icon"></i><input type="file" id="share-image-upload" accept="image/*" class="hidden"></label>
                 </div>
                 <div>
-                    <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">COLOR ACCENT</label> 
+                    <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">COLOR ACCENT</label> 
                     <div class="liquid-selector" id="theme-selector">
                       <div class="liquid-pill" id="theme-pill" style="width: 33.33%; transform: translateX(0%);"></div>
                       <div class="liquid-btn active" data-theme="neon" data-color="#58cc02" data-index="0">Neon</div>
@@ -341,29 +405,29 @@
           </div>
 
           <div class="bento-card p-6 mb-10">
-            <h3 class="text-sm font-bold text-white mb-4 border-b border-app-border pb-3">2. Text Details</h3>
+            <h3 class="text-sm font-bold text-[#1d1d1f] mb-4 border-b border-[#e5e5ea] pb-3">2. Text Details</h3>
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">INTENSITY TAG</label> 
+                      <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">INTENSITY TAG</label> 
                       <select id="share-tag-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer"><option value="NEW PR 🏆">New PR 🏆</option><option value="HEAVY SINGLE 🔥">Heavy Single 🔥</option><option value="GRIND MODE 😤">Grind Mode 😤</option><option value="LIGHT WORK 💨">Light Work 💨</option><option value="RECOVERY 🔋">Recovery 🔋</option></select>
                     </div>
                     <div>
-                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">ATHLETE</label> 
+                      <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">ATHLETE</label> 
                       <input id="share-athlete-input" type="text" placeholder="@handle" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs">
                     </div>
                     <div>
-                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">LOCATION</label> 
+                      <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">LOCATION</label> 
                       <input id="share-gym-input" type="text" placeholder="Box / Gym" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs">
                     </div>
                 </div>
                 <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">CUSTOM CAPTION</label> 
+                  <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">CUSTOM CAPTION</label> 
                   <input id="share-custom-text-input" type="text" placeholder="e.g., Day 45: Crushed my squat PR!" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs">
                 </div>
-                <details class="group mt-4 border border-app-border rounded-xl bg-app-input">
-                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-4 text-xs text-gray-400"><span>Manual Scale Sliders</span><span class="transition group-open:rotate-180"><i data-lucide="chevron-down" class="w-4 h-4"></i></span></summary>
-                    <div class="p-4 pt-0 space-y-4 border-t border-app-border mt-2">
+                <details class="group mt-4 border border-[#e5e5ea] rounded-xl bg-[#f2f2f7]">
+                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-4 text-xs text-[#8e8e93]"><span>Manual Scale Sliders</span><span class="transition group-open:rotate-180"><i data-lucide="chevron-down" class="w-4 h-4"></i></span></summary>
+                    <div class="p-4 pt-0 space-y-4 border-t border-[#e5e5ea] mt-2">
                         <input type="range" id="share-size-slider" min="30" max="200" value="100" class="custom-range">
                     </div>
                 </details>
@@ -373,11 +437,11 @@
 
       <div id="view-gallery" class="hidden mb-10">
         <div class="bento-card p-6 mb-6">
-            <h2 class="font-bold text-xl text-white mb-5">Add Vault Photo</h2>
+            <h2 class="font-bold text-xl text-[#1d1d1f] mb-5">Add Vault Photo</h2>
             <form id="pic-form" class="space-y-4">
-              <div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">DIRECT URL</label><input id="pic-url" type="url" placeholder="e.g., https://postimg.cc/img.jpg" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-sm" required></div>
-              <div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">NOTES</label><input id="pic-caption" type="text" placeholder="e.g., Week 4 PR!" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-sm"></div>
-              <button id="pic-save-btn" type="submit" class="w-full py-4 mt-2 rounded-xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition active:scale-95">SAVE TO GALLERY</button>
+              <div><label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">DIRECT URL</label><input id="pic-url" type="url" placeholder="e.g., https://postimg.cc/img.jpg" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-sm" required></div>
+              <div><label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">NOTES</label><input id="pic-caption" type="text" placeholder="e.g., Week 4 PR!" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-sm"></div>
+              <button id="pic-save-btn" type="submit" class="w-full py-4 mt-2 rounded-xl font-bold text-white text-sm uppercase tracking-wide bg-gym-neon hover:bg-[#4ab002] transition active:scale-95 shadow-[0_2px_8px_rgba(88,204,2,0.25)]">SAVE TO GALLERY</button>
             </form>
         </div>
         <div id="pic-gallery" class="grid grid-cols-2 gap-3 md:gap-4"></div>
@@ -385,46 +449,46 @@
     </section>
 
     <section id="tab-timer" class="hidden h-full pb-10">
-      <div class="flex bg-app-card p-1 rounded-xl border border-app-border mb-6">
-          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg bg-[#333336] text-white transition" data-mode="stopwatch">Watch</button>
-          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-gray-500 transition" data-mode="amrap">AMRAP</button>
-          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-gray-500 transition" data-mode="emom">EMOM</button>
-          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-gray-500 transition" data-mode="tabata">Tabata</button>
+      <div class="flex bg-white p-1 rounded-xl border border-[#e5e5ea] mb-6 shadow-sm">
+          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg bg-[#1d1d1f] text-white transition" data-mode="stopwatch">Watch</button>
+          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-[#8e8e93] transition" data-mode="amrap">AMRAP</button>
+          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-[#8e8e93] transition" data-mode="emom">EMOM</button>
+          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-[#8e8e93] transition" data-mode="tabata">Tabata</button>
       </div>
 
       <div class="bento-card p-8 text-center flex flex-col items-center justify-center min-h-[50vh] relative overflow-hidden">
         
-        <div id="timer-config-amrap" class="hidden w-full space-y-4 mb-4 z-10 relative bg-[#000] p-4 rounded-2xl border border-app-border">
-            <div><label class="text-[11px] font-bold text-gray-400 block mb-1 text-left">TIME CAP (MINUTES)</label><input id="cfg-amrap-min" type="number" min="1" value="10" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-center"></div>
+        <div id="timer-config-amrap" class="hidden w-full space-y-4 mb-4 z-10 relative bg-[#f2f2f7] p-4 rounded-2xl border border-[#e5e5ea]">
+            <div><label class="text-[11px] font-bold text-[#8e8e93] block mb-1 text-left">TIME CAP (MINUTES)</label><input id="cfg-amrap-min" type="number" min="1" value="10" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-center"></div>
         </div>
 
-        <div id="timer-config-emom" class="hidden w-full space-y-4 mb-4 z-10 relative bg-[#000] p-4 rounded-2xl border border-app-border">
-            <div><label class="text-[11px] font-bold text-gray-400 block mb-1 text-left">EVERY (MINUTES)</label><input id="cfg-emom-every" type="number" min="1" value="1" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-center"></div>
-            <div><label class="text-[11px] font-bold text-gray-400 block mb-1 text-left">FOR (ROUNDS)</label><input id="cfg-emom-rds" type="number" min="1" value="10" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-center"></div>
+        <div id="timer-config-emom" class="hidden w-full space-y-4 mb-4 z-10 relative bg-[#f2f2f7] p-4 rounded-2xl border border-[#e5e5ea]">
+            <div><label class="text-[11px] font-bold text-[#8e8e93] block mb-1 text-left">EVERY (MINUTES)</label><input id="cfg-emom-every" type="number" min="1" value="1" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-center"></div>
+            <div><label class="text-[11px] font-bold text-[#8e8e93] block mb-1 text-left">FOR (ROUNDS)</label><input id="cfg-emom-rds" type="number" min="1" value="10" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-center"></div>
         </div>
 
-        <div id="timer-config-tabata" class="hidden w-full space-y-4 mb-4 z-10 relative bg-[#000] p-4 rounded-2xl border border-app-border">
-            <p class="text-xs text-gray-500 font-bold">Standard 20s WORK / 10s REST x 8 Rounds</p>
+        <div id="timer-config-tabata" class="hidden w-full space-y-4 mb-4 z-10 relative bg-[#f2f2f7] p-4 rounded-2xl border border-[#e5e5ea]">
+            <p class="text-xs text-[#8e8e93] font-bold">Standard 20s WORK / 10s REST x 8 Rounds</p>
         </div>
 
         <div id="timer-status" class="text-xs font-black uppercase tracking-widest text-gym-neon mb-2 hidden z-10 relative">WORK</div>
-        <div id="timer-display" class="timer-font text-8xl md:text-9xl font-black text-white my-4 z-10 relative">00:00<span class="text-4xl text-gray-500 hidden" id="timer-ms">.0</span></div>
-        <div id="timer-round-display" class="text-sm font-bold text-gray-500 mb-8 hidden z-10 relative">ROUND 1/10</div>
+        <div id="timer-display" class="timer-font text-8xl md:text-9xl font-black text-[#1d1d1f] my-4 z-10 relative">00:00<span class="text-4xl text-[#8e8e93] hidden" id="timer-ms">.0</span></div>
+        <div id="timer-round-display" class="text-sm font-bold text-[#8e8e93] mb-8 hidden z-10 relative">ROUND 1/10</div>
 
         <div class="flex gap-4 w-full z-10 relative">
-          <button id="btn-start" class="flex-1 bg-gym-neon text-black font-bold uppercase tracking-wide py-5 rounded-2xl text-lg hover:bg-[#4ab002] transition active:scale-95">START</button>
-          <button id="btn-stop" class="flex-1 bg-red-500 text-white font-bold uppercase tracking-wide py-5 rounded-2xl text-lg hidden active:scale-95">PAUSE</button>
-          <button id="btn-reset" class="bg-[#333336] text-white font-bold uppercase tracking-wide py-5 px-8 rounded-2xl transition active:scale-95">RESET</button>
+          <button id="btn-start" class="flex-1 bg-gym-neon text-white font-bold uppercase tracking-wide py-5 rounded-2xl text-lg hover:bg-[#4ab002] transition active:scale-95 shadow-[0_4px_16px_rgba(88,204,2,0.3)]">START</button>
+          <button id="btn-stop" class="flex-1 bg-red-500 text-white font-bold uppercase tracking-wide py-5 rounded-2xl text-lg hidden active:scale-95 shadow-[0_4px_12px_rgba(239,68,68,0.3)]">PAUSE</button>
+          <button id="btn-reset" class="bg-[#f2f2f7] text-[#1d1d1f] font-bold uppercase tracking-wide py-5 px-8 rounded-2xl transition active:scale-95 border border-[#e5e5ea]">RESET</button>
         </div>
       </div>
 
       <div class="bento-card p-6 mt-6">
-        <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-sm text-white"><i data-lucide="clock" class="w-4 h-4 inline mr-2 text-gym-neon"></i>Saved Sessions</h3><button id="btn-clear-timer-logs" class="text-[9px] font-bold text-red-400 uppercase tracking-wider hover:text-red-300 transition">Clear</button></div>
-        <div id="timer-log-list" class="space-y-2 max-h-48 overflow-y-auto"><p class="text-gray-500 text-xs font-bold text-center py-4">No sessions saved yet.</p></div>
+        <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-sm text-[#1d1d1f]"><i data-lucide="clock" class="w-4 h-4 inline mr-2 text-gym-neon"></i>Saved Sessions</h3><button id="btn-clear-timer-logs" class="text-[9px] font-bold text-red-500 uppercase tracking-wider hover:text-red-600 transition">Clear</button></div>
+        <div id="timer-log-list" class="space-y-2 max-h-48 overflow-y-auto"><p class="text-[#8e8e93] text-xs font-bold text-center py-4">No sessions saved yet.</p></div>
       </div>
       
       <div class="mt-6 flex justify-center">
-          <button class="text-[10px] font-bold text-gray-600 uppercase flex items-center gap-2 border border-gray-800 rounded-full px-4 py-2 hover:bg-gray-900 transition" onclick="alert('Hardware Link: Native Bluetooth integration (Apple Watch/Garmin) requires deployment via native App Store wrap (Swift/React Native). WebKit restricts background HR sensors.')">
+          <button class="text-[10px] font-bold text-[#8e8e93] uppercase flex items-center gap-2 border border-[#d2d2d7] rounded-full px-4 py-2 hover:bg-[#f2f2f7] transition" onclick="alert('Hardware Link: Native Bluetooth integration (Apple Watch/Garmin) requires deployment via native App Store wrap (Swift/React Native). WebKit restricts background HR sensors.')">
               <i data-lucide="watch" class="w-3.5 h-3.5"></i> Sync Smartwatch
           </button>
       </div>
@@ -432,19 +496,19 @@
 
   </main>
 
-  <nav class="fixed left-4 right-4 max-w-sm mx-auto nav-pill z-50 rounded-full py-3 px-6 shadow-2xl" style="bottom: max(1.5rem, env(safe-area-inset-bottom));">
+  <nav class="fixed left-4 right-4 max-w-sm mx-auto nav-pill z-50 rounded-full py-2.5 px-4 shadow-lg" style="bottom: max(1.5rem, env(safe-area-inset-bottom));">
     <div class="flex justify-between items-center">
-      <button class="nav-item nav-active flex flex-col items-center gap-1" data-tab="tracker"><i data-lucide="dumbbell" class="w-5 h-5"></i><span class="text-[9px] font-bold">Train</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="health"><i data-lucide="heart-pulse" class="w-5 h-5"></i><span class="text-[9px] font-bold">Health</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="progress"><i data-lucide="bar-chart-2" class="w-5 h-5"></i><span class="text-[9px] font-bold">Metrics</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="studio"><i data-lucide="aperture" class="w-5 h-5"></i><span class="text-[9px] font-bold">Studio</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="timer"><i data-lucide="timer" class="w-5 h-5"></i><span class="text-[9px] font-bold">Timer</span></button>
+      <button class="nav-item nav-active flex flex-col items-center gap-0.5" data-tab="tracker"><i data-lucide="dumbbell" class="w-5 h-5"></i><span class="text-[8px] font-bold">Train</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-0.5" data-tab="health"><i data-lucide="heart-pulse" class="w-5 h-5"></i><span class="text-[8px] font-bold">Health</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-0.5" data-tab="progress"><i data-lucide="bar-chart-2" class="w-5 h-5"></i><span class="text-[8px] font-bold">Metrics</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-0.5" data-tab="studio"><i data-lucide="aperture" class="w-5 h-5"></i><span class="text-[8px] font-bold">Studio</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-0.5" data-tab="timer"><i data-lucide="timer" class="w-5 h-5"></i><span class="text-[8px] font-bold">Timer</span></button>
     </div>
   </nav>
 
-  <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 bento-card border-gym-neon/50 px-6 py-4 rounded-full font-bold shadow-2xl max-w-[90vw] hidden z-50 flex items-center gap-3 w-max">
-    <div class="bg-gym-neon rounded-full p-1 flex-shrink-0"><i data-lucide="check" class="w-4 h-4 text-black stroke-[4]"></i></div>
-    <span id="toast-msg" class="truncate text-white text-sm">Saved securely!</span>
+  <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 bg-white border border-[#e5e5ea] px-6 py-4 rounded-full font-bold shadow-xl max-w-[90vw] hidden z-50 flex items-center gap-3 w-max">
+    <div class="bg-gym-neon rounded-full p-1 flex-shrink-0"><i data-lucide="check" class="w-4 h-4 text-white stroke-[4]"></i></div>
+    <span id="toast-msg" class="truncate text-[#1d1d1f] text-sm">Saved securely!</span>
   </div>
 
   <script>
@@ -465,12 +529,185 @@
         let bodyweights = [];
         let macros = [];
 
+        const FOOD_DB = [
+          { name:'Chicken Breast', cat:'meat', protein:31, carbs:0, fat:3.6, kcal:165 },
+          { name:'Chicken Thigh', cat:'meat', protein:26, carbs:0, fat:10, kcal:209 },
+          { name:'Ground Beef 90/10', cat:'meat', protein:26, carbs:0, fat:10, kcal:200 },
+          { name:'Ground Beef 80/20', cat:'meat', protein:22, carbs:0, fat:17, kcal:250 },
+          { name:'Sirloin Steak', cat:'meat', protein:27, carbs:0, fat:7, kcal:175 },
+          { name:'Pork Chop', cat:'meat', protein:26, carbs:0, fat:9, kcal:190 },
+          { name:'Turkey Breast', cat:'meat', protein:29, carbs:0, fat:1.5, kcal:135 },
+          { name:'Bacon', cat:'meat', protein:37, carbs:1.4, fat:42, kcal:540 },
+          { name:'Salmon', cat:'fish', protein:25, carbs:0, fat:13, kcal:220 },
+          { name:'Canned Tuna', cat:'fish', protein:26, carbs:0, fat:1, kcal:115 },
+          { name:'Shrimp', cat:'fish', protein:24, carbs:0, fat:0.3, kcal:100 },
+          { name:'Cod', cat:'fish', protein:22, carbs:0, fat:0.5, kcal:95 },
+          { name:'Eggs', cat:'dairy', protein:13, carbs:1.1, fat:10, kcal:155 },
+          { name:'Egg Whites', cat:'dairy', protein:11, carbs:0.7, fat:0, kcal:50 },
+          { name:'Greek Yogurt', cat:'dairy', protein:9, carbs:4, fat:5, kcal:95 },
+          { name:'Cottage Cheese', cat:'dairy', protein:11, carbs:3.5, fat:4.5, kcal:100 },
+          { name:'Milk (Whole)', cat:'dairy', protein:3.3, carbs:4.8, fat:3.3, kcal:64 },
+          { name:'Skim Milk', cat:'dairy', protein:3.4, carbs:5, fat:0.1, kcal:35 },
+          { name:'Cheddar Cheese', cat:'dairy', protein:25, carbs:1.3, fat:33, kcal:408 },
+          { name:'Mozzarella', cat:'dairy', protein:28, carbs:3, fat:22, kcal:318 },
+          { name:'Whey Protein', cat:'dairy', protein:80, carbs:6, fat:3, kcal:380 },
+          { name:'White Rice', cat:'grains', protein:2.7, carbs:28, fat:0.3, kcal:130 },
+          { name:'Brown Rice', cat:'grains', protein:2.6, carbs:23, fat:0.9, kcal:110 },
+          { name:'Oats', cat:'grains', protein:12, carbs:55, fat:5.5, kcal:320 },
+          { name:'Pasta', cat:'grains', protein:5, carbs:25, fat:1, kcal:130 },
+          { name:'Whole Wheat Bread', cat:'grains', protein:9, carbs:43, fat:3, kcal:240 },
+          { name:'Potato', cat:'grains', protein:2, carbs:17, fat:0.1, kcal:77 },
+          { name:'Sweet Potato', cat:'grains', protein:1.6, carbs:20, fat:0.1, kcal:90 },
+          { name:'Quinoa', cat:'grains', protein:4.4, carbs:21, fat:1.9, kcal:120 },
+          { name:'Banana', cat:'fruits', protein:1.1, carbs:22.8, fat:0.3, kcal:90 },
+          { name:'Apple', cat:'fruits', protein:0.3, carbs:14, fat:0.2, kcal:55 },
+          { name:'Blueberries', cat:'fruits', protein:0.7, carbs:14, fat:0.3, kcal:55 },
+          { name:'Strawberries', cat:'fruits', protein:0.7, carbs:7.7, fat:0.3, kcal:33 },
+          { name:'Orange', cat:'fruits', protein:0.9, carbs:12, fat:0.1, kcal:47 },
+          { name:'Grapes', cat:'fruits', protein:0.6, carbs:17, fat:0.1, kcal:65 },
+          { name:'Avocado', cat:'fruits', protein:2, carbs:9, fat:15, kcal:160 },
+          { name:'Broccoli', cat:'veggies', protein:2.8, carbs:7, fat:0.4, kcal:34 },
+          { name:'Spinach', cat:'veggies', protein:2.9, carbs:3.6, fat:0.4, kcal:23 },
+          { name:'Mixed Greens', cat:'veggies', protein:1.5, carbs:3, fat:0.2, kcal:18 },
+          { name:'Bell Peppers', cat:'veggies', protein:1, carbs:6, fat:0.3, kcal:30 },
+          { name:'Tomato', cat:'veggies', protein:0.9, carbs:3.9, fat:0.2, kcal:18 },
+          { name:'Carrot', cat:'veggies', protein:0.9, carbs:10, fat:0.2, kcal:41 },
+          { name:'Onion', cat:'veggies', protein:1.1, carbs:9, fat:0.1, kcal:40 },
+          { name:'Asparagus', cat:'veggies', protein:2.2, carbs:4, fat:0.1, kcal:20 },
+          { name:'Black Beans', cat:'legumes', protein:8.2, carbs:23.7, fat:0.5, kcal:132 },
+          { name:'Lentils', cat:'legumes', protein:9, carbs:20, fat:0.4, kcal:116 },
+          { name:'Chickpeas', cat:'legumes', protein:7.7, carbs:22, fat:1.6, kcal:130 },
+          { name:'Almonds', cat:'legumes', protein:21, carbs:22, fat:49, kcal:575 },
+          { name:'Peanut Butter', cat:'legumes', protein:25, carbs:20, fat:50, kcal:590 },
+          { name:'Walnuts', cat:'legumes', protein:15, carbs:14, fat:65, kcal:650 },
+          { name:'Cashews', cat:'legumes', protein:18, carbs:30, fat:44, kcal:553 },
+          { name:'Olive Oil', cat:'fats', protein:0, carbs:0, fat:100, kcal:884 },
+          { name:'Coconut Oil', cat:'fats', protein:0, carbs:0, fat:100, kcal:862 },
+          { name:'Butter', cat:'fats', protein:0.5, carbs:0, fat:81, kcal:717 },
+          { name:'Honey', cat:'other', protein:0.3, carbs:82, fat:0, kcal:304 },
+          { name:'Maple Syrup', cat:'other', protein:0, carbs:67, fat:0, kcal:260 },
+          { name:'Dark Chocolate 70%', cat:'other', protein:7, carbs:45, fat:31, kcal:480 },
+          { name:'Protein Bar', cat:'other', protein:30, carbs:35, fat:10, kcal:350 }
+        ];
+        let foodLogs = [];
+        try { foodLogs = JSON.parse(localStorage.getItem('cf_food_logs')) || []; } catch(e){}
+
+        function getFoodTargets() {
+          const sorted = [...bodyweights].sort((a, b) => new Date(b.date) - new Date(a.date));
+          const weight = sorted.length > 0 ? sorted[0].mass : 75;
+          return { protein: Math.round(weight * 2), calories: Math.round(weight * 33) };
+        }
+
+        function updateFoodTargets() {
+          const t = getFoodTargets();
+          const elP = document.getElementById('food-protein-target');
+          const elC = document.getElementById('food-cal-target');
+          if (elP) elP.textContent = t.protein + 'g';
+          if (elC) elC.textContent = t.calories + ' kcal';
+        }
+
+        function renderFoodLog() {
+          updateFoodTargets();
+          const today = new Date().toISOString().split('T')[0];
+          const todaysFood = foodLogs.filter(f => f.date === today);
+          const list = document.getElementById('food-log-list');
+          const count = document.getElementById('food-item-count');
+          const summary = document.getElementById('food-daily-summary');
+          if (count) count.textContent = todaysFood.length + ' items';
+          if (todaysFood.length === 0) {
+            if (list) list.innerHTML = '<p class="text-[#8e8e93] text-xs font-bold text-center py-4">No food logged today.</p>';
+            if (summary) summary.classList.add('hidden');
+            return;
+          }
+          if (list) {
+            list.innerHTML = todaysFood.map(f => `
+              <div class="flex items-center justify-between bg-[#f2f2f7] rounded-xl px-4 py-2.5 border border-[#e5e5ea] animate-fade-in">
+                <div class="min-w-0 flex-1"><span class="text-xs font-black text-[#1d1d1f]">${f.name}</span><span class="text-[10px] text-[#8e8e93] font-bold ml-2">${f.grams}g</span></div>
+                <div class="flex items-center gap-3 ml-2">
+                  <span class="text-[10px] font-bold text-orange-500">${f.protein}g P</span>
+                  <span class="text-[10px] font-bold text-[#8e8e93]">${f.kcal} kcal</span>
+                  <button onclick="deleteFoodEntry('${f.id}')" class="text-[#8e8e93] hover:text-red-500 transition p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                </div>
+              </div>
+            `).join('');
+          }
+          const totals = { protein: 0, kcal: 0, carbs: 0, fat: 0 };
+          todaysFood.forEach(f => { totals.protein += f.protein; totals.kcal += f.kcal; totals.carbs += f.carbs; totals.fat += f.fat; });
+          const targets = getFoodTargets();
+          document.getElementById('food-total-protein').textContent = Math.round(totals.protein) + 'g';
+          document.getElementById('food-total-cal').textContent = Math.round(totals.kcal) + ' kcal';
+          document.getElementById('food-total-carbs').textContent = Math.round(totals.carbs) + 'g';
+          document.getElementById('food-total-fat').textContent = Math.round(totals.fat) + 'g';
+          document.getElementById('food-protein-bar').style.width = Math.min((totals.protein / targets.protein) * 100, 100) + '%';
+          document.getElementById('food-cal-bar').style.width = Math.min((totals.kcal / targets.calories) * 100, 100) + '%';
+          if (summary) summary.classList.remove('hidden');
+          try { lucide.createIcons(); } catch(e){}
+        }
+
+        let selectedFood = null, foodSearchTerm = '', foodCategory = 'all';
+        function searchFood() {
+          const term = foodSearchTerm.toLowerCase().trim();
+          const results = FOOD_DB.filter(f => (foodCategory === 'all' || f.cat === foodCategory) && (!term || f.name.toLowerCase().includes(term)));
+          const el = document.getElementById('food-results');
+          if (!el) return;
+          if (!results.length || (!term && foodCategory === 'all')) { el.classList.add('hidden'); return; }
+          el.classList.remove('hidden');
+          el.innerHTML = results.slice(0, 20).map(f => `
+            <div class="food-result-item px-4 py-3 border-b border-[#e5e5ea] last:border-0 hover:bg-[#f2f2f7] cursor-pointer transition flex items-center justify-between" data-food="${f.name}">
+              <div><span class="text-sm font-bold text-[#1d1d1f]">${f.name}</span><span class="text-[9px] text-[#aeaeb2] font-bold ml-2 uppercase">${f.cat}</span></div>
+              <div class="text-right"><span class="text-[10px] font-bold text-orange-500">${f.protein}g P</span><span class="text-[10px] font-bold text-[#8e8e93] ml-2">${f.kcal} kcal</span></div>
+            </div>
+          `).join('');
+          el.querySelectorAll('.food-result-item').forEach(e => e.addEventListener('click', () => selectFood(e.dataset.food)));
+        }
+
+        function selectFood(name) {
+          const food = FOOD_DB.find(f => f.name === name);
+          if (!food) return;
+          selectedFood = food;
+          document.getElementById('food-results').classList.add('hidden');
+          document.getElementById('food-search').value = food.name;
+          document.getElementById('food-selected').classList.remove('hidden');
+          document.getElementById('food-selected-name').textContent = food.name;
+          updateSelectedFoodMacros();
+        }
+
+        function updateSelectedFoodMacros() {
+          if (!selectedFood) return;
+          const g = parseInt(document.getElementById('food-serving-grams').value) || 100;
+          document.getElementById('food-selected-macros').textContent = `${selectedFood.protein}g P · ${selectedFood.kcal} kcal / 100g`;
+          document.getElementById('food-serving-macros').textContent = `${Math.round(selectedFood.protein * g / 100)}g | ${Math.round(selectedFood.kcal * g / 100)} kcal`;
+        }
+
+        function logFood() {
+          if (!selectedFood) { showToast('Search and select a food first'); return; }
+          const g = parseInt(document.getElementById('food-serving-grams').value) || 100;
+          foodLogs.push({
+            id: 'food_' + Date.now(), date: new Date().toISOString().split('T')[0], name: selectedFood.name, grams: g,
+            protein: Math.round(selectedFood.protein * g / 100 * 10) / 10, kcal: Math.round(selectedFood.kcal * g / 100),
+            carbs: Math.round(selectedFood.carbs * g / 100 * 10) / 10, fat: Math.round(selectedFood.fat * g / 100 * 10) / 10
+          });
+          localStorage.setItem('cf_food_logs', JSON.stringify(foodLogs));
+          document.getElementById('food-selected').classList.add('hidden');
+          selectedFood = null;
+          document.getElementById('food-search').value = '';
+          document.getElementById('food-results').classList.add('hidden');
+          renderFoodLog();
+          showToast(`${foodLogs[foodLogs.length-1].name} logged!`);
+        }
+
+        window.deleteFoodEntry = function(id) {
+          foodLogs = foodLogs.filter(f => f.id !== id);
+          localStorage.setItem('cf_food_logs', JSON.stringify(foodLogs));
+          renderFoodLog();
+        };
+
         function loadLocalCache() {
             try { workouts = JSON.parse(localStorage.getItem('cf_workouts')) || []; } catch(e){}
             try { pics = JSON.parse(localStorage.getItem('cf_pics')) || []; } catch(e){}
             try { bodyweights = JSON.parse(localStorage.getItem('cf_bodyweights')) || []; } catch(e){}
             try { macros = JSON.parse(localStorage.getItem('cf_macros')) || []; } catch(e){}
-            updateDashboard(); renderPics(); updateShareDropdowns(); updateWeightHistoryList(); renderWeekCalendar(); renderTimerLogs();
+            updateDashboard(); renderPics(); updateShareDropdowns(); updateWeightHistoryList(); renderWeekCalendar(); renderTimerLogs(); renderFoodLog();
         }
 
         let currentThemeColor = '#58cc02';
@@ -498,6 +735,7 @@
             document.getElementById(`tab-${btn.dataset.tab}`).classList.remove('hidden');
             
             if(btn.dataset.tab === 'progress') { updateChart(); updateWeightTrendChart(); }
+            if(btn.dataset.tab === 'health') renderFoodLog();
             if(btn.dataset.tab === 'studio') updateShareDropdowns();
             window.scrollTo({ top: 0, behavior: 'smooth' });
           });
@@ -505,28 +743,28 @@
 
         // Studio Sub-Tabs
         document.getElementById('btn-studio-share').addEventListener('click', (e) => {
-            e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
-            const gal = document.getElementById('btn-studio-gallery'); gal.classList.replace('text-white', 'text-gray-500'); gal.classList.remove('bg-[#333336]');
+            e.target.classList.replace('text-[#8e8e93]', 'text-white'); e.target.classList.add('bg-[#1d1d1f]');
+            const gal = document.getElementById('btn-studio-gallery'); gal.classList.replace('text-white', 'text-[#8e8e93]'); gal.classList.remove('bg-[#1d1d1f]');
             document.getElementById('view-story').classList.remove('hidden'); document.getElementById('view-gallery').classList.add('hidden');
         });
         document.getElementById('btn-studio-gallery').addEventListener('click', (e) => {
-            e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
-            const shr = document.getElementById('btn-studio-share'); shr.classList.replace('text-white', 'text-gray-500'); shr.classList.remove('bg-[#333336]');
+            e.target.classList.replace('text-[#8e8e93]', 'text-white'); e.target.classList.add('bg-[#1d1d1f]');
+            const shr = document.getElementById('btn-studio-share'); shr.classList.replace('text-white', 'text-[#8e8e93]'); shr.classList.remove('bg-[#1d1d1f]');
             document.getElementById('view-gallery').classList.remove('hidden'); document.getElementById('view-story').classList.add('hidden');
         });
 
         // Lift vs WOD modes
         document.getElementById('btn-mode-lift').addEventListener('click', (e) => {
             e.preventDefault();
-            e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
-            const wodBtn = document.getElementById('btn-mode-wod'); wodBtn.classList.replace('text-white', 'text-gray-500'); wodBtn.classList.remove('bg-[#333336]');
+            e.target.classList.replace('text-[#8e8e93]', 'text-white'); e.target.classList.add('bg-[#1d1d1f]');
+            const wodBtn = document.getElementById('btn-mode-wod'); wodBtn.classList.replace('text-white', 'text-[#8e8e93]'); wodBtn.classList.remove('bg-[#1d1d1f]');
             document.getElementById('input-lift-group').classList.remove('hidden'); document.getElementById('input-wod-group').classList.add('hidden');
             document.getElementById('lbl-weight').textContent = "WEIGHT (KG)";
         });
         document.getElementById('btn-mode-wod').addEventListener('click', (e) => {
             e.preventDefault();
-            e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
-            const liftBtn = document.getElementById('btn-mode-lift'); liftBtn.classList.replace('text-white', 'text-gray-500'); liftBtn.classList.remove('bg-[#333336]');
+            e.target.classList.replace('text-[#8e8e93]', 'text-white'); e.target.classList.add('bg-[#1d1d1f]');
+            const liftBtn = document.getElementById('btn-mode-lift'); liftBtn.classList.replace('text-white', 'text-[#8e8e93]'); liftBtn.classList.remove('bg-[#1d1d1f]');
             document.getElementById('input-wod-group').classList.remove('hidden'); document.getElementById('input-lift-group').classList.add('hidden');
             document.getElementById('lbl-weight').textContent = "SCORE / TIME";
         });
@@ -624,6 +862,7 @@
                 showToast('Scale weight recorded! 🔋');
                 updateWeightHistoryList();
                 if (!document.getElementById('tab-progress').classList.contains('hidden')) updateWeightTrendChart();
+                renderFoodLog();
                 syncPostToCloud(payload);
             });
         }
@@ -653,16 +892,16 @@
             const latestDisplay = document.getElementById('latest-weight-display');
             if (!listContainer) return;
             if (bodyweights.length === 0) {
-                listContainer.innerHTML = '<p class="text-gray-500 text-xs font-bold pl-1">No records.</p>';
+                listContainer.innerHTML = '<p class="text-[#8e8e93] text-xs font-bold pl-1">No records.</p>';
                 if (latestDisplay) latestDisplay.textContent = '-- kg';
                 return;
             }
             const sorted = [...bodyweights].sort((a, b) => new Date(b.date) - new Date(a.date));
             if (latestDisplay) latestDisplay.textContent = sorted[0].mass + ' kg';
             listContainer.innerHTML = sorted.slice(0, 5).map(bw => `
-                <div class="flex justify-between items-center bg-app-input rounded-xl px-4 py-3">
-                    <div><span class="text-sm font-black text-white">${bw.mass} kg</span><span class="text-[10px] text-gray-500 font-bold ml-2">${bw.date}</span></div>
-                    <button onclick="deleteWeight('${bw.id}')" class="text-gray-500 hover:text-red-500 transition p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                <div class="flex justify-between items-center bg-[#f2f2f7] rounded-xl px-4 py-3">
+                    <div><span class="text-sm font-black text-[#1d1d1f]">${bw.mass} kg</span><span class="text-[10px] text-[#8e8e93] font-bold ml-2">${bw.date}</span></div>
+                    <button onclick="deleteWeight('${bw.id}')" class="text-[#8e8e93] hover:text-red-500 transition p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
             `).join('');
             try { lucide.createIcons(); } catch(e){}
@@ -673,6 +912,7 @@
             try { localStorage.setItem('cf_bodyweights', JSON.stringify(bodyweights)); } catch(e){}
             updateWeightHistoryList();
             if (!document.getElementById('tab-progress').classList.contains('hidden')) updateWeightTrendChart();
+            renderFoodLog();
         };
 
         function renderWeekCalendar() {
@@ -689,9 +929,9 @@
                 const dateStr = d.toISOString().split('T')[0];
                 const isToday = dateStr === today.toISOString().split('T')[0];
                 const hasWorkout = workoutDates.has(dateStr);
-                html += `<div class="flex flex-col items-center gap-1 py-1.5 rounded-xl ${isToday ? 'bg-[#333336]' : ''}">
-                    <span class="text-[9px] font-bold ${isToday ? 'text-gym-neon' : 'text-gray-600'} uppercase tracking-wider">${days[i].substring(0,2)}</span>
-                    <span class="text-sm font-black ${isToday ? 'text-white' : 'text-gray-400'}">${d.getDate()}</span>
+                html += `<div class="flex flex-col items-center gap-1 py-1.5 rounded-xl ${isToday ? 'bg-[#e5e5ea]' : ''}">
+                    <span class="text-[9px] font-bold ${isToday ? 'text-gym-neon' : 'text-[#8e8e93]'} uppercase tracking-wider">${days[i].substring(0,2)}</span>
+                    <span class="text-sm font-black ${isToday ? 'text-[#1d1d1f]' : 'text-[#8e8e93]'}">${d.getDate()}</span>
                     ${hasWorkout ? '<div class="w-1.5 h-1.5 rounded-full bg-gym-neon"></div>' : '<div class="w-1.5 h-1.5"></div>'}
                 </div>`;
             }
@@ -706,11 +946,11 @@
           const gallery = document.getElementById('pic-gallery');
           if (!gallery) return;
           if (pics.length === 0) {
-            gallery.innerHTML = '<div class="col-span-2 bento-card p-8 text-center"><i data-lucide="camera-off" class="w-8 h-8 mx-auto text-gray-600 mb-2"></i><p class="text-gray-500 text-sm font-bold">No photos yet.</p></div>';
+            gallery.innerHTML = '<div class="col-span-2 bento-card p-8 text-center"><i data-lucide="camera-off" class="w-8 h-8 mx-auto text-[#8e8e93] mb-2"></i><p class="text-[#8e8e93] text-sm font-bold">No photos yet.</p></div>';
             try { lucide.createIcons(); } catch(e){} return;
           }
           gallery.innerHTML = [...pics].reverse().map(p => `
-            <div class="relative group rounded-3xl overflow-hidden bg-app-input aspect-square shadow-sm flex flex-col cursor-pointer border border-app-border" onclick="openLightbox('${p.url}')">
+            <div class="relative group rounded-3xl overflow-hidden bg-[#f2f2f7] aspect-square shadow-sm flex flex-col cursor-pointer border border-[#e5e5ea]" onclick="openLightbox('${p.url}')">
               <img src="${p.url}" alt="${p.caption}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x400/1e293b/ffffff?text=Error';">
               <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent opacity-90 pointer-events-none z-0"></div>
               <div class="absolute bottom-0 left-0 right-0 p-4 z-10"><p class="text-white text-xs font-bold leading-tight line-clamp-2">${p.caption}</p></div>
@@ -941,7 +1181,7 @@
                 }
             } else {
                 shareBtn.disabled = true; shareBtn.style = "";
-                shareBtn.className = "w-full py-4 mt-2 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed relative z-10";
+                shareBtn.className = "w-full py-4 mt-2 rounded-2xl font-bold text-[#8e8e93] text-sm uppercase tracking-wide bg-[#e5e5ea] transition flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed relative z-10";
             }
 
             const athlete = athleteInput.value || '@athlete';
@@ -1059,15 +1299,15 @@
           const prContainer = document.getElementById('pr-list');
           if (!prContainer) return;
           if (Object.keys(prs).length === 0) {
-              prContainer.innerHTML = '<div class="col-span-2 bento-card p-8 text-center"><p class="text-gray-500 text-sm font-bold">Log a lift to see PRs.</p></div>';
+              prContainer.innerHTML = '<div class="col-span-2 bento-card p-8 text-center"><p class="text-[#8e8e93] text-sm font-bold">Log a lift to see PRs.</p></div>';
           } else {
               prContainer.innerHTML = Object.entries(prs).map(([name, rec]) => `
-                <div class="bg-app-input rounded-3xl p-5 flex flex-col justify-center relative overflow-hidden group border border-app-border">
-                  <div class="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:scale-110 transition duration-500"><i data-lucide="dumbbell" class="w-24 h-24 text-white"></i></div>
-                  <p class="font-bold text-[10px] text-gray-400 uppercase tracking-widest mb-1 truncate relative z-10">${name}</p>
-                  <p class="text-3xl font-black text-white relative z-10 truncate">${rec.weight}<span class="text-sm font-bold text-gray-500 ml-1">kg</span></p>
-                  <div class="mt-3 inline-block bg-[#333336] rounded-lg px-2 py-1 relative z-10 w-max">
-                    <p class="text-[10px] text-white font-bold">1RM: ${calculate1RM(rec.weight, rec.reps)}kg</p>
+                <div class="bg-[#f2f2f7] rounded-3xl p-5 flex flex-col justify-center relative overflow-hidden group border border-[#e5e5ea]">
+                  <div class="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:scale-110 transition duration-500"><i data-lucide="dumbbell" class="w-24 h-24 text-[#1d1d1f]"></i></div>
+                  <p class="font-bold text-[10px] text-[#8e8e93] uppercase tracking-widest mb-1 truncate relative z-10">${name}</p>
+                  <p class="text-3xl font-black text-[#1d1d1f] relative z-10 truncate">${rec.weight}<span class="text-sm font-bold text-[#8e8e93] ml-1">kg</span></p>
+                  <div class="mt-3 inline-block bg-[#e5e5ea] rounded-lg px-2 py-1 relative z-10 w-max">
+                    <p class="text-[10px] text-[#1d1d1f] font-bold">1RM: ${calculate1RM(rec.weight, rec.reps)}kg</p>
                   </div>
                 </div>`).join('');
           }
@@ -1080,18 +1320,19 @@
             <div class="bento-card p-5 flex justify-between items-center group gap-3">
               <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-2">
-                    <span class="font-bold text-white text-lg tracking-tight truncate block">${item.movement}</span>
-                    ${prs[item.movement] && prs[item.movement].id === item.id ? '<span class="text-[9px] bg-white text-black px-2 py-0.5 rounded-full font-black uppercase tracking-widest flex-shrink-0">PR</span>' : ''}
+                    <span class="font-bold text-[#1d1d1f] text-lg tracking-tight truncate block">${item.movement}</span>
+                    ${prs[item.movement] && prs[item.movement].id === item.id ? '<span class="text-[9px] bg-gym-neon text-white px-2 py-0.5 rounded-full font-black uppercase tracking-widest flex-shrink-0">PR</span>' : ''}
                 </div>
                 <div class="flex items-center gap-2 mt-1">
-                    <span class="font-black text-white">${item.weight}</span>
-                    <span class="text-gray-400 text-xs font-bold">× ${item.reps}</span>
+                    <span class="font-black text-[#1d1d1f]">${item.weight}</span>
+                    <span class="text-[#8e8e93] text-xs font-bold">× ${item.reps}</span>
+                    ${item.rpe ? `<span class="text-[10px] font-bold text-gym-neon bg-gym-neon/10 px-2 py-0.5 rounded-full">RPE ${item.rpe}</span>` : ''}
                 </div>
-                ${item.notes ? `<p class="text-xs text-gray-400 mt-3 font-medium bg-app-input p-2 rounded-lg inline-block border border-app-border break-words whitespace-normal w-full">"${item.notes}"</p>` : ''}
+                ${item.notes ? `<p class="text-xs text-[#8e8e93] mt-3 font-medium bg-[#f2f2f7] p-2 rounded-lg inline-block border border-[#e5e5ea] break-words whitespace-normal w-full">"${item.notes}"</p>` : ''}
               </div>
               <div class="flex flex-col items-end gap-3 h-full justify-between flex-shrink-0">
-                <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">${item.date}</span>
-                <button onclick="deleteWorkout('${item.id}')" class="p-2.5 bg-app-input hover:bg-red-500 hover:text-white text-gray-400 rounded-full transition active:scale-95"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                <span class="text-[10px] text-[#8e8e93] font-bold uppercase tracking-widest">${item.date}</span>
+                <button onclick="deleteWorkout('${item.id}')" class="p-2.5 bg-[#f2f2f7] hover:bg-red-500 hover:text-white text-[#8e8e93] rounded-full transition active:scale-95"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
               </div>
             </div>`).join('');
 
@@ -1107,7 +1348,7 @@
           document.getElementById('stat-week').style.textShadow = `0 0 10px ${currentThemeColor}80`;
           document.getElementById('stat-week').parentElement.style.borderColor = `${currentThemeColor}33`;
           const statBg = document.getElementById('stat-week').parentElement.querySelector('div');
-          if(statBg) statBg.style.background = `linear-gradient(to bottom right, ${currentThemeColor}1a, transparent)`;
+          if(statBg) statBg.style.background = `linear-gradient(to bottom right, ${currentThemeColor}08, transparent)`;
         }
 
         window.deleteWorkout = function(id) {
@@ -1147,16 +1388,16 @@
                     labels: labels,
                     datasets: [{
                         label: 'Est 1RM', data: data, borderColor: currentThemeColor, backgroundColor: gradient,
-                        borderWidth: 4, pointBackgroundColor: '#000', pointBorderColor: currentThemeColor,
+                        borderWidth: 4, pointBackgroundColor: '#fff', pointBorderColor: currentThemeColor,
                         pointBorderWidth: 3, pointRadius: 5, pointHoverRadius: 8, fill: true, tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1c1c1e', titleColor: '#fff', bodyColor: currentThemeColor, bodyFont: {weight: 'bold', size: 14}, padding: 12, borderColor: '#333336', borderWidth: 1, displayColors: false } },
+                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#fff', titleColor: '#1d1d1f', bodyColor: currentThemeColor, bodyFont: {weight: 'bold', size: 14}, padding: 12, borderColor: '#e5e5ea', borderWidth: 1, displayColors: false } },
                     scales: {
                         x: { grid: { display: false }, ticks: { color: '#8e8e93', font: { weight: 'bold', size: 10 } } },
-                        y: { grid: { color: '#333336' }, ticks: { color: '#8e8e93', font: { weight: 'bold', size: 10 } } }
+                        y: { grid: { color: '#e5e5ea' }, ticks: { color: '#8e8e93', font: { weight: 'bold', size: 10 } } }
                     }
                 }
             });
@@ -1189,16 +1430,16 @@
                     labels: labels,
                     datasets: [{
                         label: 'Weight (kg)', data: data, borderColor: '#38bdf8', backgroundColor: gradient,
-                        borderWidth: 3, pointBackgroundColor: '#000', pointBorderColor: '#38bdf8',
+                        borderWidth: 3, pointBackgroundColor: '#fff', pointBorderColor: '#38bdf8',
                         pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6, fill: true, tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1c1c1e', titleColor: '#fff', bodyColor: '#38bdf8', bodyFont: {weight: 'bold', size: 14}, padding: 12, borderColor: '#333336', borderWidth: 1, displayColors: false, callbacks: { label: c => c.parsed.y + ' kg' } } },
+                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#fff', titleColor: '#1d1d1f', bodyColor: '#38bdf8', bodyFont: {weight: 'bold', size: 14}, padding: 12, borderColor: '#e5e5ea', borderWidth: 1, displayColors: false, callbacks: { label: c => c.parsed.y + ' kg' } } },
                     scales: {
                         x: { grid: { display: false }, ticks: { color: '#8e8e93', font: { weight: 'bold', size: 10 } } },
-                        y: { grid: { color: '#333336' }, ticks: { color: '#8e8e93', font: { weight: 'bold', size: 10 } } }
+                        y: { grid: { color: '#e5e5ea' }, ticks: { color: '#8e8e93', font: { weight: 'bold', size: 10 } } }
                     }
                 }
             });
@@ -1277,9 +1518,9 @@
             btn.addEventListener('click', (e) => {
                 if(isRunning || isPaused) resetTimer();
                 document.querySelectorAll('.timer-mode-btn').forEach(b => {
-                    b.classList.replace('text-white', 'text-gray-500'); b.classList.remove('bg-[#333336]');
+                    b.classList.replace('text-white', 'text-[#8e8e93]'); b.classList.remove('bg-[#1d1d1f]');
                 });
-                e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
+                e.target.classList.replace('text-[#8e8e93]', 'text-white'); e.target.classList.add('bg-[#1d1d1f]');
                 currentMode = e.target.getAttribute('data-mode');
                 
                 document.getElementById('timer-config-amrap').classList.add('hidden');
@@ -1400,9 +1641,9 @@
                 return;
             }
             list.innerHTML = [...timerLogs].reverse().slice(0, 10).map(t => `
-                <div class="flex items-center justify-between bg-app-input rounded-xl px-4 py-2.5 border border-app-border">
-                    <div><span class="text-xs font-black text-white uppercase">${t.mode}</span><span class="text-[10px] text-gray-500 font-bold ml-2">${t.duration}${t.rounds ? ' · '+t.rounds+' rds' : ''}</span></div>
-                    <span class="text-[10px] text-gray-500 font-bold">${t.date}</span>
+                <div class="flex items-center justify-between bg-[#f2f2f7] rounded-xl px-4 py-2.5 border border-[#e5e5ea]">
+                    <div><span class="text-xs font-black text-[#1d1d1f] uppercase">${t.mode}</span><span class="text-[10px] text-[#8e8e93] font-bold ml-2">${t.duration}${t.rounds ? ' · '+t.rounds+' rds' : ''}</span></div>
+                    <span class="text-[10px] text-[#8e8e93] font-bold">${t.date}</span>
                 </div>
             `).join('');
         }
@@ -1512,6 +1753,32 @@
             }
         }
 
+        // Food Checker Events
+        const foodSearch = document.getElementById('food-search');
+        if (foodSearch) {
+          foodSearch.addEventListener('input', (e) => { foodSearchTerm = e.target.value; searchFood(); });
+          foodSearch.addEventListener('focus', () => { if (foodSearchTerm || foodCategory !== 'all') searchFood(); });
+        }
+        document.querySelectorAll('.food-cat-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.food-cat-btn').forEach(b => { b.classList.remove('active','bg-[#1d1d1f]','text-white'); b.classList.add('bg-[#f2f2f7]','text-[#8e8e93]'); });
+            btn.classList.add('active','bg-[#1d1d1f]','text-white'); btn.classList.remove('bg-[#f2f2f7]','text-[#8e8e93]');
+            foodCategory = btn.dataset.cat; searchFood();
+          });
+        });
+        document.getElementById('food-serving-minus')?.addEventListener('click', () => {
+          const inp = document.getElementById('food-serving-grams'); inp.value = Math.max(10, (parseInt(inp.value)||100) - 25); updateSelectedFoodMacros();
+        });
+        document.getElementById('food-serving-plus')?.addEventListener('click', () => {
+          const inp = document.getElementById('food-serving-grams'); inp.value = Math.min(2000, (parseInt(inp.value)||100) + 25); updateSelectedFoodMacros();
+        });
+        document.getElementById('food-serving-grams')?.addEventListener('input', updateSelectedFoodMacros);
+        document.getElementById('btn-log-food')?.addEventListener('click', logFood);
+        document.addEventListener('click', (e) => {
+          const r = document.getElementById('food-results'), s = document.getElementById('food-search');
+          if (r && s && !e.target.closest('#food-search') && !e.target.closest('#food-results')) r.classList.add('hidden');
+        });
+
         loadLocalCache();
         syncWithCloud();
 
@@ -1551,7 +1818,7 @@
         let pulling = false;
         const pullIndicator = document.createElement('div');
         pullIndicator.id = 'pull-indicator';
-        pullIndicator.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99;display:flex;justify-content:center;align-items:flex-end;padding-bottom:8px;height:60px;background:linear-gradient(to bottom,#000,#0000);color:#58cc02;font-size:12px;font-weight:700;transform:translateY(-100%);transition:transform 0.2s;pointer-events:none';
+        pullIndicator.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99;display:flex;justify-content:center;align-items:flex-end;padding-bottom:8px;height:60px;background:linear-gradient(to bottom,#f5f5f7,#f5f5f700);color:#58cc02;font-size:12px;font-weight:700;transform:translateY(-100%);transition:transform 0.2s;pointer-events:none';
         pullIndicator.textContent = '↓ Pull to sync';
         document.body.appendChild(pullIndicator);
 
