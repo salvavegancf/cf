@@ -9,8 +9,9 @@
   <meta name="theme-color" content="#000000">
   <title>Salvapp</title>
   
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%2358cc02'/%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z' fill='%23000'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%2358cc02'/%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z' fill='%23000'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="manifest" href="manifest.json">
   
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -33,14 +34,16 @@
   </script>
 
   <style>
-    body { background-color: #000000; color: #f8fafc; font-family: 'Montserrat', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+    body { background-color: #000000; color: #f8fafc; font-family: 'Montserrat', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; }
     
-    .bento-card { background-color: #1c1c1e; border: 1px solid #333336; border-radius: 24px; }
-    .bento-input { background-color: #2c2c2e; border: 1px solid transparent; color: #ffffff; transition: all 0.2s ease; }
-    .bento-input:focus { border-color: var(--theme-accent, #58cc02); background-color: #323234; outline: none; }
+    .bento-card { background-color: #1c1c1e; border: 1px solid #333336; border-radius: 24px; transition: transform 0.2s ease, border-color 0.2s ease; }
+    .bento-card:active { transform: scale(0.995); }
+    .bento-input { background-color: #2c2c2e; border: 1px solid transparent; color: #ffffff; transition: all 0.2s ease; border-radius: 16px; }
+    .bento-input:focus { border-color: var(--theme-accent, #58cc02); background-color: #323234; outline: none; box-shadow: 0 0 0 3px rgba(88,204,2,0.1); }
 
-    .nav-pill { background-color: rgba(28, 28, 30, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid #333336; }
-    .nav-item { transition: all 0.2s ease; position: relative; }
+    .nav-pill { background-color: rgba(22, 22, 24, 0.92); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
+    .nav-item { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; }
+    .nav-item:active { transform: scale(0.92); }
     .nav-active { color: #58cc02; }
     .nav-inactive { color: #8e8e93; }
     
@@ -54,15 +57,28 @@
     .lightbox-img-enter { transform: scale(1) !important; }
 
     .liquid-selector { position: relative; display: flex; background: #000000; border-radius: 12px; padding: 4px; border: 1px solid #333336; }
-    .liquid-pill { position: absolute; top: 4px; bottom: 4px; border-radius: 8px; background: #333336; transition: transform 0.3s ease, width 0.3s ease; z-index: 1; }
-    .liquid-btn { position: relative; z-index: 2; flex: 1; padding: 8px 0; text-align: center; font-size: 11px; font-weight: 700; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.05em; transition: color 0.2s; cursor: pointer; }
+    .liquid-pill { position: absolute; top: 4px; bottom: 4px; border-radius: 8px; background: #333336; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.3s ease; z-index: 1; }
+    .liquid-btn { position: relative; z-index: 2; flex: 1; padding: 8px 0; text-align: center; font-size: 11px; font-weight: 700; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.05em; transition: color 0.2s; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     .liquid-btn.active { color: #fff; }
     
-    .text-shadow-heavy { text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
-    
+    .text-shadow-heavy { text-shadow: 0 2px 12px rgba(0,0,0,0.9); }
     .custom-range { -webkit-appearance: none; width: 100%; background: #2c2c2e; height: 6px; border-radius: 9999px; outline: none; border: 1px solid #333336; }
-    .custom-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #58cc02; cursor: pointer; border: 2px solid white; transition: transform 0.1s; }
+    .custom-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #58cc02; cursor: pointer; border: 2px solid white; transition: transform 0.15s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
     .custom-range::-webkit-slider-thumb:active { transform: scale(1.2); }
+
+    .animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+    @keyframes fadeIn { 0% { opacity: 0; transform: translateY(4px); } 100% { opacity: 1; transform: translateY(0); } }
+
+    .skeleton { background: linear-gradient(90deg, #1c1c1e 25%, #2c2c2e 50%, #1c1c1e 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    select, input, button { -webkit-appearance: none; }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
+    input[type="number"]::-webkit-inner-spin-button { display: none; }
+
+    .glass { background: rgba(28, 28, 30, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.06); }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
   </style>
 </head>
 
@@ -102,67 +118,151 @@
   <main class="max-w-xl mx-auto px-5" style="padding-top: calc(6rem + env(safe-area-inset-top));">
     
     <section id="tab-tracker" class="space-y-6 animate-fade-in">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-        <div class="bento-card p-4 flex flex-col justify-between aspect-[4/3]"><div class="flex justify-between items-start"><i data-lucide="activity" class="w-5 h-5 text-blue-500 opacity-80"></i><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Lifts</span></div><p id="stat-total" class="text-3xl font-black text-white mt-2 truncate">0</p></div>
-        <div class="bento-card p-4 flex flex-col justify-between aspect-[4/3] border-gym-neon/30 relative overflow-hidden"><div class="absolute inset-0 bg-gym-neon/5"></div><div class="flex justify-between items-start relative z-10"><i data-lucide="flame" class="w-5 h-5 text-gym-neon"></i><span class="text-[10px] font-bold text-gym-neon uppercase tracking-wider">Week</span></div><p id="stat-week" class="text-3xl font-black text-white relative z-10 truncate">0</p></div>
-        <div class="bento-card p-4 flex flex-col justify-between aspect-[4/3]"><div class="flex justify-between items-start"><i data-lucide="layers" class="w-5 h-5 text-purple-500 opacity-80"></i><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Vol</span></div><p id="stat-volume" class="text-3xl font-black text-white mt-2 truncate">0</p></div>
-        <div class="bento-card p-4 flex flex-col justify-between aspect-[4/3]"><div class="flex justify-between items-start"><i data-lucide="medal" class="w-5 h-5 text-yellow-500 opacity-80"></i><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">PRs</span></div><p id="stat-prs" class="text-3xl font-black text-white mt-2 truncate">0</p></div>
+      <div class="grid grid-cols-2 gap-3 md:gap-4">
+        <div class="bento-card p-5 flex flex-col justify-between"><div class="flex justify-between items-start"><i data-lucide="activity" class="w-5 h-5 text-blue-500 opacity-80"></i><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Lifts</span></div><p id="stat-total" class="text-3xl font-black text-white mt-2 truncate">0</p></div>
+        <div class="bento-card p-5 flex flex-col justify-between border-gym-neon/30 relative overflow-hidden"><div class="absolute inset-0 bg-gym-neon/5"></div><div class="flex justify-between items-start relative z-10"><i data-lucide="flame" class="w-5 h-5 text-gym-neon"></i><span class="text-[10px] font-bold text-gym-neon uppercase tracking-wider">Weekly</span></div><p id="stat-week" class="text-3xl font-black text-white relative z-10 truncate">0</p></div>
+        <div class="bento-card p-5 flex flex-col justify-between"><div class="flex justify-between items-start"><i data-lucide="layers" class="w-5 h-5 text-purple-500 opacity-80"></i><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Volume (kg)</span></div><p id="stat-volume" class="text-3xl font-black text-white mt-2 truncate">0</p></div>
+        <div class="bento-card p-5 flex flex-col justify-between"><div class="flex justify-between items-start"><i data-lucide="trophy" class="w-5 h-5 text-yellow-500 opacity-80"></i><span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">PRs</span></div><p id="stat-prs" class="text-3xl font-black text-white mt-2 truncate">0</p></div>
       </div>
 
-      <div class="grid grid-cols-1 gap-6">
-        <div class="bento-card p-6">
-          <h2 class="font-bold text-xl text-white mb-6">Log Workout</h2>
-          <form id="lift-form" class="space-y-4">
-            <div>
-              <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">MOVEMENT</label>
-              <select id="movement-select" class="w-full bento-input rounded-2xl px-4 py-3 font-bold cursor-pointer">
-                <option value="Back Squat">Back Squat</option>
-                <option value="Front Squat">Front Squat</option>
-                <option value="Deadlift">Deadlift</option>
-                <option value="Sumo Deadlift">Sumo Deadlift</option>
-                <option value="Romanian Deadlift">Romanian Deadlift</option>
-                <option value="Clean">Clean</option>
-                <option value="Power Clean">Power Clean</option>
-                <option value="Clean & Jerk">Clean & Jerk</option>
-                <option value="Snatch">Snatch</option>
-                <option value="Power Snatch">Power Snatch</option>
-                <option value="Bench Press">Bench Press</option>
-                <option value="Overhead Press">Overhead Press</option>
-                <option value="Push Press">Push Press</option>
-                <option value="Thruster">Thruster</option>
-                <option value="Pull-Up">Pull-Up</option>
-                <option value="Muscle-Up">Muscle-Up</option>
-              </select>
+      <div class="bento-card p-6" id="week-calendar-card">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-bold text-lg text-white">This Week</h2>
+          <span id="week-calendar-label" class="text-[10px] font-bold text-gray-500 uppercase tracking-wider"></span>
+        </div>
+        <div id="week-calendar" class="grid grid-cols-7 gap-1.5"></div>
+      </div>
+
+      <div class="bento-card p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="font-bold text-xl text-white">Log Training</h2>
+            <div class="bg-[#000] rounded-xl p-1 border border-app-border flex">
+                <button id="btn-mode-lift" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-lg bg-[#333336] text-white transition">Lifts</button>
+                <button id="btn-mode-wod" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-lg text-gray-500 transition">WODs</button>
             </div>
-            <div class="grid grid-cols-2 gap-3 md:gap-4"><div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">WEIGHT (KG)</label><input id="lift-weight" type="number" step="0.5" min="0" placeholder="0.0" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required></div><div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">REPS</label><input id="lift-reps" type="number" min="1" value="1" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required></div></div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4"><div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">DATE</label><input id="lift-date" type="date" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required></div><div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">NOTES</label><input id="lift-notes" type="text" placeholder="Rx? Scaled?" class="w-full bento-input rounded-2xl px-4 py-3 font-bold"></div></div>
-            <button type="submit" class="w-full py-4 mt-4 rounded-2xl font-bold text-black text-sm uppercase tracking-wide bg-gym-neon hover:bg-[#4ab002] transition active:scale-[0.98]">Save to Sheet</button>
-          </form>
         </div>
 
-        <div class="bento-card p-6">
-          <h2 class="font-bold text-xl text-white mb-4 flex items-center gap-2"><i data-lucide="scale" class="w-5 h-5 text-blue-500"></i> Body Weight</h2>
-          <form id="weight-log-form" class="grid grid-cols-3 gap-3 items-end mb-4">
-            <div class="col-span-2">
-              <label class="text-[11px] font-bold text-gray-400 mb-1.5 block pl-1">MASS (KG)</label>
-              <input id="body-weight-input" type="number" step="0.1" min="1" placeholder="75.0" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required>
-            </div>
-            <button type="submit" class="py-3 md:py-4 rounded-2xl font-bold text-white text-xs uppercase bg-[#333336] hover:bg-[#3a3a3c] transition active:scale-95 h-[46px] md:h-[50px]">Log</button>
-          </form>
-
-          <div class="border-t border-app-border pt-4">
-            <div class="flex justify-between items-center mb-3 px-1">
-              <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">History</span>
-              <span id="latest-weight-display" class="text-xs font-bold text-gym-neon">-- kg</span>
-            </div>
-            <div id="weight-history-list" class="space-y-2 max-h-[140px] overflow-y-auto pr-1"></div>
+        <form id="lift-form" class="space-y-4">
+          <div id="input-lift-group">
+            <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">MOVEMENT / LIFT</label>
+            <select id="movement-select" class="w-full bento-input rounded-2xl px-4 py-3 font-bold cursor-pointer text-sm">
+              <option value="Back Squat">Back Squat</option><option value="Front Squat">Front Squat</option><option value="Deadlift">Deadlift</option><option value="Sumo Deadlift">Sumo Deadlift</option><option value="Romanian Deadlift">Romanian Deadlift</option><option value="Clean">Clean</option><option value="Power Clean">Power Clean</option><option value="Clean & Jerk">Clean & Jerk</option><option value="Snatch">Snatch</option><option value="Power Snatch">Power Snatch</option><option value="Bench Press">Bench Press</option><option value="Overhead Press">Overhead Press</option><option value="Push Press">Push Press</option><option value="Thruster">Thruster</option><option value="Pull-Up">Pull-Up</option><option value="Muscle-Up">Muscle-Up</option>
+            </select>
           </div>
-        </div>
+          
+          <div id="input-wod-group" class="hidden">
+            <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">BENCHMARK / HERO WOD</label>
+            <select id="wod-select" class="w-full bento-input rounded-2xl px-4 py-3 font-bold cursor-pointer text-sm">
+              <option value="Fran">Fran (21-15-9 Thrusters/Pull-ups)</option>
+              <option value="Murph">Murph (Run, 100 Pull, 200 Push, 300 Squat, Run)</option>
+              <option value="Cindy">Cindy (AMRAP 20: 5 Pull, 10 Push, 15 Squat)</option>
+              <option value="Grace">Grace (30 Clean & Jerks for time)</option>
+              <option value="Isabel">Isabel (30 Snatches for time)</option>
+              <option value="Helen">Helen (3 Rnds: 400m Run, 21 KB Swing, 12 Pull-ups)</option>
+              <option value="Custom WOD">Custom WOD</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 md:gap-3">
+              <div>
+                  <label id="lbl-weight" class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">WEIGHT / SCORE</label>
+                  <input id="lift-weight" type="text" placeholder="e.g. 100" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required>
+              </div>
+              <div>
+                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">REPS / ROUNDS</label>
+                  <input id="lift-reps" type="number" min="1" value="1" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required>
+              </div>
+              <div>
+                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">RPE</label>
+                  <select id="lift-rpe" class="w-full bento-input rounded-2xl px-4 py-3 font-bold cursor-pointer text-sm">
+                    <option value="">--</option>
+                    <option value="6">6 (Light)</option>
+                    <option value="7">7 (Moderate)</option>
+                    <option value="8">8 (Hard)</option>
+                    <option value="9">9 (Very Hard)</option>
+                    <option value="10">10 (Max)</option>
+                  </select>
+              </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+              <div>
+                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">DATE</label>
+                  <input id="lift-date" type="date" class="w-full bento-input rounded-2xl px-4 py-3 font-bold" required>
+              </div>
+              <div>
+                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">NOTES</label>
+                  <input id="lift-notes" type="text" placeholder="Rx? Scaled?" class="w-full bento-input rounded-2xl px-4 py-3 font-bold">
+              </div>
+          </div>
+          <button type="submit" class="w-full py-4 mt-4 rounded-2xl font-bold text-black text-sm uppercase tracking-wide bg-gym-neon hover:bg-[#4ab002] transition active:scale-[0.98]">Save Training</button>
+        </form>
       </div>
 
       <div class="mb-10">
-        <div class="flex items-center justify-between mb-4 px-2"><h2 class="font-bold text-lg text-white">Activity</h2><select id="history-filter" class="bg-app-input border border-app-border rounded-xl px-3 py-2 text-xs font-bold text-white outline-none cursor-pointer"><option value="all">All Movements</option></select></div>
+        <div class="flex items-center justify-between mb-4 px-2"><h2 class="font-bold text-lg text-white">Recent Activity</h2><select id="history-filter" class="bg-app-input border border-app-border rounded-xl px-3 py-2 text-xs font-bold text-white outline-none cursor-pointer"><option value="all">All Entries</option></select></div>
         <div id="history-list" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <section id="tab-health" class="space-y-6 hidden">
+      <div class="bento-card p-6">
+        <h2 class="font-bold text-xl text-white mb-6 flex items-center gap-2"><i data-lucide="apple" class="w-5 h-5 text-red-500"></i> Nutrition & Macros</h2>
+        <form id="macro-form" class="space-y-4">
+            <div class="grid grid-cols-4 gap-2">
+                <div class="text-center"><label class="text-[9px] font-bold text-gray-400 block mb-1">PRO (g)</label><input id="mac-pro" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center" placeholder="0"></div>
+                <div class="text-center"><label class="text-[9px] font-bold text-gray-400 block mb-1">CARB (g)</label><input id="mac-carb" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center" placeholder="0"></div>
+                <div class="text-center"><label class="text-[9px] font-bold text-gray-400 block mb-1">FAT (g)</label><input id="mac-fat" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center" placeholder="0"></div>
+                <div class="text-center"><label class="text-[9px] font-bold text-gray-400 block mb-1">CALS</label><input id="mac-cal" type="number" class="w-full bento-input rounded-xl px-2 py-3 font-bold text-center text-gym-neon" placeholder="0"></div>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wide bg-[#333336] transition active:scale-95">Log Daily Intake</button>
+        </form>
+      </div>
+
+      <div class="bento-card p-6">
+        <h2 class="font-bold text-xl text-white mb-4 flex items-center gap-2"><i data-lucide="scale" class="w-5 h-5 text-blue-500"></i> Body Weight <span id="latest-weight-display" class="text-base font-bold text-blue-400 ml-auto">-- kg</span></h2>
+        <form id="weight-log-form" class="flex gap-3 items-end mb-4">
+          <div class="flex-1">
+            <input id="body-weight-input" type="number" step="0.1" min="1" placeholder="75.0 kg" class="w-full bento-input rounded-xl px-4 py-3 font-bold" required>
+          </div>
+          <button type="submit" class="px-6 py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wider bg-[#333336] hover:bg-[#3a3a3c] transition active:scale-95 h-[46px]">Log</button>
+        </form>
+        <div id="weight-history-list" class="space-y-2 mt-4 pt-4 border-t border-app-border"></div>
+      </div>
+
+      <div class="bento-card p-6">
+        <h2 class="font-bold text-xl text-white mb-4 flex items-center gap-2"><i data-lucide="percent" class="w-5 h-5 text-purple-500"></i> Body Fat Estimate</h2>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="text-[10px] font-bold text-gray-400 block mb-1 pl-1">HEIGHT (cm)</label><input id="bf-height" type="number" placeholder="175" class="w-full bento-input rounded-xl px-4 py-3 font-bold"></div>
+          <div><label class="text-[10px] font-bold text-gray-400 block mb-1 pl-1">NECK (cm)</label><input id="bf-neck" type="number" placeholder="38" class="w-full bento-input rounded-xl px-4 py-3 font-bold"></div>
+          <div><label class="text-[10px] font-bold text-gray-400 block mb-1 pl-1">WAIST (cm)</label><input id="bf-waist" type="number" placeholder="80" class="w-full bento-input rounded-xl px-4 py-3 font-bold"></div>
+          <div class="flex items-end"><button id="btn-calc-bf" class="w-full py-3 rounded-xl font-bold text-white text-xs uppercase tracking-wider bg-[#333336] hover:bg-[#3a3a3c] transition active:scale-95">Calculate</button></div>
+        </div>
+        <div id="bf-result" class="hidden mt-3 bg-app-input rounded-xl p-4 text-center border border-app-border"><span class="text-sm font-bold text-gray-400">Estimated Body Fat</span><p class="text-2xl font-black text-purple-400 mt-1"><span id="bf-percent">0</span>%</p></div>
+      </div>
+
+      <div class="bento-card p-6">
+        <h2 class="font-bold text-xl text-white mb-4 flex items-center gap-2"><i data-lucide="bell" class="w-5 h-5 text-yellow-500"></i> Workout Reminders</h2>
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-bold text-gray-300">Daily training reminder</span>
+          <label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="toggle-notifications" class="sr-only peer"><div class="w-11 h-6 bg-[#333336] rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gym-neon"></div></label>
+        </div>
+        <p class="text-[10px] text-gray-500 mt-3 font-medium">You'll get a local reminder to log your training each day at 7 PM.</p>
+      </div>
+
+      <div class="bento-card p-6 mb-10 border-t-4 border-blue-500">
+        <h2 class="font-bold text-xl text-white mb-2 flex items-center gap-2">Mobility Prep</h2>
+        <p class="text-xs text-gray-400 mb-4">Check off your daily movement preps to minimize injury risk.</p>
+        <div class="space-y-3">
+            <label class="flex items-center gap-3 p-3 bg-app-input rounded-xl border border-app-border cursor-pointer">
+                <input id="mob-hips" type="checkbox" class="w-5 h-5 accent-blue-500 bg-[#000] border-[#333336] rounded"><span class="text-sm font-bold text-white">Hips & Glutes (Pigeon, Couch)</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 bg-app-input rounded-xl border border-app-border cursor-pointer">
+                <input id="mob-shoulders" type="checkbox" class="w-5 h-5 accent-blue-500 bg-[#000] border-[#333336] rounded"><span class="text-sm font-bold text-white">Shoulders (Banded pass-throughs)</span>
+            </label>
+            <label class="flex items-center gap-3 p-3 bg-app-input rounded-xl border border-app-border cursor-pointer">
+                <input id="mob-ankles" type="checkbox" class="w-5 h-5 accent-blue-500 bg-[#000] border-[#333336] rounded"><span class="text-sm font-bold text-white">Ankles & Calves (Squat hold)</span>
+            </label>
+        </div>
       </div>
     </section>
 
@@ -178,194 +278,155 @@
       </div>
 
       <div class="mb-10">
-        <h2 class="font-bold text-lg mb-4 text-white flex items-center gap-2 px-2"><i data-lucide="trophy" class="w-5 h-5 text-yellow-500"></i> Hall of Fame</h2>
+        <h2 class="font-bold text-lg mb-4 text-white flex items-center gap-2 px-2"><i data-lucide="trophy" class="w-5 h-5 text-yellow-500"></i> PR Hall of Fame</h2>
         <div id="pr-list" class="grid grid-cols-2 gap-3 md:gap-4"></div>
       </div>
     </section>
 
-    <section id="tab-pics" class="space-y-6 hidden">
-      <div class="bento-card p-6">
-        <h2 class="font-bold text-xl text-white mb-5">Add Photo</h2>
-        <form id="pic-form" class="space-y-4">
-          <div id="pic-preview-box" class="hidden w-full aspect-square rounded-[1.5rem] overflow-hidden bg-app-input relative border border-app-border transition-all">
-            <img id="pic-preview-img" src="" class="w-full h-full object-cover">
-            <div id="pic-preview-error" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0f1c]/90 hidden z-10">
-              <i data-lucide="image-off" class="w-10 h-10 text-red-500 mb-3"></i><p class="text-xs text-red-400 font-bold px-6 text-center leading-relaxed">Invalid Image Link.</p>
-            </div>
-          </div>
-          <div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">DIRECT URL</label><input id="pic-url" type="url" placeholder="e.g., https://postimg.cc/img.jpg" class="w-full bento-input rounded-2xl px-4 py-3 font-bold text-sm" required></div>
-          <div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">NOTES</label><input id="pic-caption" type="text" placeholder="e.g., Week 4 PR!" class="w-full bento-input rounded-2xl px-4 py-3 font-bold text-sm"></div>
-          <button id="pic-save-btn" type="submit" disabled class="w-full py-4 mt-4 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition opacity-50 cursor-not-allowed">ENTER URL</button>
-        </form>
+    <section id="tab-studio" class="space-y-6 hidden">
+      <div class="flex bg-app-card p-1 rounded-xl border border-app-border">
+          <button id="btn-studio-share" class="flex-1 py-2 text-xs font-bold uppercase rounded-lg bg-[#333336] text-white transition">Story Creator</button>
+          <button id="btn-studio-gallery" class="flex-1 py-2 text-xs font-bold uppercase rounded-lg text-gray-500 transition">Gallery Vault</button>
       </div>
-      <div class="mb-10">
-        <h2 class="font-bold text-lg mb-4 text-white px-2">Gallery</h2>
-        <div id="pic-gallery" class="grid grid-cols-2 gap-3 md:gap-4"></div>
-      </div>
-    </section>
 
-    <section id="tab-share" class="space-y-6 hidden">
-      
-      <div class="bento-card p-6 flex flex-col items-center border-gym-neon/30 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-gym-neon/5 to-transparent pointer-events-none"></div>
-        <div class="w-full flex justify-between items-center mb-4 relative z-10">
-            <h2 class="font-bold text-xl text-white">Live Preview</h2>
-            <div class="flex gap-2 text-gray-400 text-xs font-bold items-center"><i data-lucide="move" class="w-4 h-4"></i> Drag / Pinch</div>
-        </div>
-        
-        <div class="w-full overflow-x-auto pb-4 flex justify-center relative z-10">
-          <div id="share-card-capture" class="w-[360px] h-[640px] flex-shrink-0 relative bg-black overflow-hidden rounded-[24px]" style="touch-action: none; cursor: grab;">
+      <div id="view-story">
+          <div class="bento-card p-6 flex flex-col items-center border-gym-neon/30 relative overflow-hidden mb-6">
+            <div class="absolute inset-0 bg-gradient-to-br from-gym-neon/5 to-transparent pointer-events-none"></div>
+            <div class="w-full flex justify-between items-center mb-4 relative z-10">
+                <h2 class="font-bold text-xl text-white">Live Preview</h2>
+                <div class="flex gap-2 text-gray-400 text-xs font-bold items-center"><i data-lucide="move" class="w-4 h-4"></i> Drag / Pinch</div>
+            </div>
             
-            <img id="capture-bg-img" src="" class="absolute inset-0 w-full h-full object-cover hidden z-0 pointer-events-none" alt="Background">
-            
-            <div class="absolute inset-0 bg-black/40 pointer-events-none z-0"></div>
-            
-            <div class="absolute top-6 left-6 right-6 z-20 flex justify-between items-center w-[312px] pointer-events-none">
-              <div class="w-9 h-9 rounded-xl bg-gym-neon flex items-center justify-center" id="card-pro-logo-container">
-                 <svg id="card-pro-logo" class="text-black" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <div class="w-full overflow-x-auto pb-4 flex justify-center relative z-10">
+              <div id="share-card-capture" class="w-[360px] h-[640px] flex-shrink-0 relative bg-black overflow-hidden rounded-[24px]" style="touch-action: none; cursor: grab;">
+                <img id="capture-bg-img" src="" class="absolute inset-0 w-full h-full object-cover hidden z-0 pointer-events-none" alt="Background">
+                <div class="absolute inset-0 bg-black/40 pointer-events-none z-0"></div>
+                <div class="absolute top-6 left-6 right-6 z-20 flex justify-between items-center w-[312px] pointer-events-none">
+                  <div class="w-9 h-9 rounded-xl bg-gym-neon flex items-center justify-center" id="card-pro-logo-container"><svg id="card-pro-logo" class="text-black" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                  <div id="card-intensity-badge" class="text-gym-neon text-[10px] font-black uppercase tracking-widest text-shadow-heavy transition-colors duration-300">NEW PR 🏆</div>
+                </div>
+                <div id="share-content-container" class="absolute left-6 right-6 z-10 transition-transform duration-75 will-change-transform" style="top: 50%; transform: translateY(-50%); width: 312px; transform-origin: center center; pointer-events: none;"></div>
               </div>
-              <div id="card-intensity-badge" class="text-gym-neon text-[10px] font-black uppercase tracking-widest text-shadow-heavy transition-colors duration-300">NEW PR 🏆</div>
             </div>
-
-            <div id="share-content-container" class="absolute left-6 right-6 z-10 transition-transform duration-75" style="top: 50%; transform: translateY(-50%); width: 312px; transform-origin: center center; pointer-events: none;">
-               </div>
+            <button id="btn-download-share" disabled class="w-full py-4 mt-2 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition flex justify-center items-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed relative z-10"><i data-lucide="download" class="w-5 h-5"></i> SAVE FULL HD STORY</button>
           </div>
-        </div>
 
-        <button id="btn-download-share" disabled class="w-full py-4 mt-2 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition flex justify-center items-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed relative z-10">
-          <i data-lucide="download" class="w-5 h-5"></i> SAVE TO CAMERA ROLL
-        </button>
-      </div>
-
-      <div class="bento-card p-6">
-        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-app-border pb-3"><span class="bg-[#333336] text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">1</span> Content & Photo</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="relative">
-              <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">WHICH WORKOUT?</label> 
-              <select id="share-workout-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer">
-                <option value="">Choose item...</option>
-              </select>
-            </div>
-            <div class="relative">
-              <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">BACKGROUND IMAGE</label> 
-              <label class="w-full bento-input rounded-xl px-4 py-3 font-bold flex items-center justify-between cursor-pointer hover:bg-[#333336] transition">
-                  <span id="share-upload-text" class="text-xs truncate">Upload Photo...</span>
-                  <i data-lucide="upload" class="w-4 h-4 text-gym-neon flex-shrink-0" id="share-upload-icon"></i>
-                  <input type="file" id="share-image-upload" accept="image/*" class="hidden">
-              </label>
-            </div>
-        </div>
-      </div>
-
-      <div class="bento-card p-6">
-        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-app-border pb-3"><span class="bg-[#333336] text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">2</span> Design & Style</h3>
-        <div class="space-y-4">
-            <div>
-              <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">OVERLAY THEME</label> 
-              <select id="share-style-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer">
-                <option value="style1">Grid Overlay (Default)</option>
-                <option value="style2">Bottom Minimal Row</option>
-                <option value="style3">Centered Glass Card</option>
-                <option value="style4">Large Typographic Accent</option>
-                <option value="style5">Left Align Minimalist</option>
-                <option value="style6">HUD Banner Overlay</option>
-              </select>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">ACCENT COLOR</label> 
-                  <div class="liquid-selector" id="theme-selector">
-                    <div class="liquid-pill" id="theme-pill" style="width: 33.33%; transform: translateX(0%);"></div>
-                    <div class="liquid-btn active" data-theme="neon" data-color="#58cc02" data-index="0">Neon</div>
-                    <div class="liquid-btn" data-theme="ice" data-color="#38bdf8" data-index="1">Ice</div>
-                    <div class="liquid-btn" data-theme="fire" data-color="#f97316" data-index="2">Fire</div>
-                  </div>
+          <div class="bento-card p-6 mb-6">
+            <h3 class="text-sm font-bold text-white mb-4 border-b border-app-border pb-3">1. Content & Style</h3>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">WORKOUT</label> 
+                      <select id="share-workout-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer"><option value="">Choose item...</option></select>
+                    </div>
+                    <div>
+                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">STYLE</label> 
+                      <select id="share-style-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer"><option value="style1">Strava Activity</option><option value="style2">Story Highlight</option><option value="style3">Performance</option><option value="style4">Minimal Bold</option><option value="style5">Athlete Score</option><option value="style6">Classic Grid</option></select>
+                    </div>
+                </div>
+                <div class="relative">
+                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">BACKGROUND IMAGE</label> 
+                  <label class="w-full bento-input rounded-xl px-4 py-3 font-bold flex items-center justify-between cursor-pointer hover:bg-[#333336] transition"><span id="share-upload-text" class="text-xs truncate">Upload Photo...</span><i data-lucide="upload" class="w-4 h-4 text-gym-neon flex-shrink-0" id="share-upload-icon"></i><input type="file" id="share-image-upload" accept="image/*" class="hidden"></label>
                 </div>
                 <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">DATA POSITION</label> 
-                  <div class="liquid-selector" id="layout-selector">
-                    <div class="liquid-pill" id="layout-pill" style="width: 33.33%; transform: translateX(100%);"></div>
-                    <div class="liquid-btn layout-btn" data-align="top" data-index="0">Top</div>
-                    <div class="liquid-btn layout-btn active" data-align="center" data-index="1">Mid</div>
-                    <div class="liquid-btn layout-btn" data-align="bottom" data-index="2">Bot</div>
-                  </div>
+                    <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">COLOR ACCENT</label> 
+                    <div class="liquid-selector" id="theme-selector">
+                      <div class="liquid-pill" id="theme-pill" style="width: 33.33%; transform: translateX(0%);"></div>
+                      <div class="liquid-btn active" data-theme="neon" data-color="#58cc02" data-index="0">Neon</div>
+                      <div class="liquid-btn" data-theme="ice" data-color="#38bdf8" data-index="1">Ice</div>
+                      <div class="liquid-btn" data-theme="fire" data-color="#f97316" data-index="2">Fire</div>
+                    </div>
                 </div>
             </div>
-        </div>
-      </div>
+          </div>
 
-      <div class="bento-card p-6 mb-10">
-        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2 border-b border-app-border pb-3"><span class="bg-[#333336] text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">3</span> Text Details</h3>
-        <div class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">INTENSITY TAG</label> 
-                  <select id="share-tag-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer">
-                    <option value="NEW PR 🏆">New PR 🏆</option>
-                    <option value="HEAVY SINGLE 🔥">Heavy Single 🔥</option>
-                    <option value="GRIND MODE 😤">Grind Mode 😤</option>
-                    <option value="LIGHT WORK 💨">Light Work 💨</option>
-                    <option value="RECOVERY 🔋">Recovery 🔋</option>
-                  </select>
+          <div class="bento-card p-6 mb-10">
+            <h3 class="text-sm font-bold text-white mb-4 border-b border-app-border pb-3">2. Text Details</h3>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">INTENSITY TAG</label> 
+                      <select id="share-tag-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer"><option value="NEW PR 🏆">New PR 🏆</option><option value="HEAVY SINGLE 🔥">Heavy Single 🔥</option><option value="GRIND MODE 😤">Grind Mode 😤</option><option value="LIGHT WORK 💨">Light Work 💨</option><option value="RECOVERY 🔋">Recovery 🔋</option></select>
+                    </div>
+                    <div>
+                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">ATHLETE</label> 
+                      <input id="share-athlete-input" type="text" placeholder="@handle" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs">
+                    </div>
+                    <div>
+                      <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">LOCATION</label> 
+                      <input id="share-gym-input" type="text" placeholder="Box / Gym" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs">
+                    </div>
                 </div>
                 <div>
                   <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">CUSTOM CAPTION</label> 
                   <input id="share-custom-text-input" type="text" placeholder="e.g., Day 45: Crushed my squat PR!" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs">
                 </div>
+                <details class="group mt-4 border border-app-border rounded-xl bg-app-input">
+                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-4 text-xs text-gray-400"><span>Manual Scale Sliders</span><span class="transition group-open:rotate-180"><i data-lucide="chevron-down" class="w-4 h-4"></i></span></summary>
+                    <div class="p-4 pt-0 space-y-4 border-t border-app-border mt-2">
+                        <input type="range" id="share-size-slider" min="30" max="200" value="100" class="custom-range">
+                    </div>
+                </details>
             </div>
-            
-            <div class="grid grid-cols-2 gap-4 pt-2">
-                <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">ATHLETE HANDLE</label> 
-                  <input id="share-athlete-input" type="text" placeholder="@handle" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs">
-                </div>
-                <div>
-                  <label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">LOCATION</label> 
-                  <input id="share-gym-input" type="text" placeholder="Gym name" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs">
-                </div>
-            </div>
+          </div>
+      </div>
 
-            <details class="group mt-4 border border-app-border rounded-xl bg-app-input">
-                <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-4 text-xs text-gray-400">
-                    <span>Advanced Nudge Settings (X/Y/Scale)</span>
-                    <span class="transition group-open:rotate-180"><i data-lucide="chevron-down" class="w-4 h-4"></i></span>
-                </summary>
-                <div class="p-4 pt-0 space-y-4 border-t border-app-border mt-2">
-                    <div>
-                      <div class="flex justify-between items-center mb-1.5 px-1">
-                        <label class="text-[11px] font-bold text-gray-400 uppercase">Vertical Offset (Y-Axis)</label>
-                        <span id="nudge-val-display" class="text-xs text-gym-neon font-mono font-bold">0px</span>
-                      </div>
-                      <input type="range" id="share-nudge-slider" min="-500" max="500" value="0" class="custom-range">
-                    </div>
-                    <div>
-                      <div class="flex justify-between items-center mb-1.5 px-1">
-                        <label class="text-[11px] font-bold text-gray-400 uppercase">Horizontal Offset (X-Axis)</label>
-                        <span id="x-nudge-val-display" class="text-xs text-gym-neon font-mono font-bold">0px</span>
-                      </div>
-                      <input type="range" id="share-x-nudge-slider" min="-300" max="300" value="0" class="custom-range">
-                    </div>
-                    <div>
-                      <div class="flex justify-between items-center mb-1.5 px-1">
-                        <label class="text-[11px] font-bold text-gray-400 uppercase">Scale Size</label>
-                        <span id="size-val-display" class="text-xs text-gym-neon font-mono font-bold">100%</span>
-                      </div>
-                      <input type="range" id="share-size-slider" min="30" max="200" value="100" class="custom-range">
-                    </div>
-                </div>
-            </details>
+      <div id="view-gallery" class="hidden mb-10">
+        <div class="bento-card p-6 mb-6">
+            <h2 class="font-bold text-xl text-white mb-5">Add Vault Photo</h2>
+            <form id="pic-form" class="space-y-4">
+              <div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">DIRECT URL</label><input id="pic-url" type="url" placeholder="e.g., https://postimg.cc/img.jpg" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-sm" required></div>
+              <div><label class="text-[11px] font-bold text-gray-400 mb-2 block pl-1">NOTES</label><input id="pic-caption" type="text" placeholder="e.g., Week 4 PR!" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-sm"></div>
+              <button id="pic-save-btn" type="submit" class="w-full py-4 mt-2 rounded-xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition active:scale-95">SAVE TO GALLERY</button>
+            </form>
         </div>
+        <div id="pic-gallery" class="grid grid-cols-2 gap-3 md:gap-4"></div>
       </div>
     </section>
 
-    <section id="tab-timer" class="hidden h-full">
-      <div class="bento-card p-8 text-center flex flex-col items-center justify-center min-h-[60vh]">
-        <div id="timer-display" class="timer-font text-8xl md:text-9xl font-black text-white mt-8 mb-12">00:00<span class="text-4xl text-gray-500">.0</span></div>
-        <div class="flex gap-4 w-full">
+    <section id="tab-timer" class="hidden h-full pb-10">
+      <div class="flex bg-app-card p-1 rounded-xl border border-app-border mb-6">
+          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg bg-[#333336] text-white transition" data-mode="stopwatch">Watch</button>
+          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-gray-500 transition" data-mode="amrap">AMRAP</button>
+          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-gray-500 transition" data-mode="emom">EMOM</button>
+          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-gray-500 transition" data-mode="tabata">Tabata</button>
+      </div>
+
+      <div class="bento-card p-8 text-center flex flex-col items-center justify-center min-h-[50vh] relative overflow-hidden">
+        
+        <div id="timer-config-amrap" class="hidden w-full space-y-4 mb-4 z-10 relative bg-[#000] p-4 rounded-2xl border border-app-border">
+            <div><label class="text-[11px] font-bold text-gray-400 block mb-1 text-left">TIME CAP (MINUTES)</label><input id="cfg-amrap-min" type="number" min="1" value="10" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-center"></div>
+        </div>
+
+        <div id="timer-config-emom" class="hidden w-full space-y-4 mb-4 z-10 relative bg-[#000] p-4 rounded-2xl border border-app-border">
+            <div><label class="text-[11px] font-bold text-gray-400 block mb-1 text-left">EVERY (MINUTES)</label><input id="cfg-emom-every" type="number" min="1" value="1" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-center"></div>
+            <div><label class="text-[11px] font-bold text-gray-400 block mb-1 text-left">FOR (ROUNDS)</label><input id="cfg-emom-rds" type="number" min="1" value="10" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-center"></div>
+        </div>
+
+        <div id="timer-config-tabata" class="hidden w-full space-y-4 mb-4 z-10 relative bg-[#000] p-4 rounded-2xl border border-app-border">
+            <p class="text-xs text-gray-500 font-bold">Standard 20s WORK / 10s REST x 8 Rounds</p>
+        </div>
+
+        <div id="timer-status" class="text-xs font-black uppercase tracking-widest text-gym-neon mb-2 hidden z-10 relative">WORK</div>
+        <div id="timer-display" class="timer-font text-8xl md:text-9xl font-black text-white my-4 z-10 relative">00:00<span class="text-4xl text-gray-500 hidden" id="timer-ms">.0</span></div>
+        <div id="timer-round-display" class="text-sm font-bold text-gray-500 mb-8 hidden z-10 relative">ROUND 1/10</div>
+
+        <div class="flex gap-4 w-full z-10 relative">
           <button id="btn-start" class="flex-1 bg-gym-neon text-black font-bold uppercase tracking-wide py-5 rounded-2xl text-lg hover:bg-[#4ab002] transition active:scale-95">START</button>
-          <button id="btn-stop" class="flex-1 bg-red-500 text-white font-bold uppercase tracking-wide py-5 rounded-2xl text-lg hidden active:scale-95">STOP</button>
+          <button id="btn-stop" class="flex-1 bg-red-500 text-white font-bold uppercase tracking-wide py-5 rounded-2xl text-lg hidden active:scale-95">PAUSE</button>
           <button id="btn-reset" class="bg-[#333336] text-white font-bold uppercase tracking-wide py-5 px-8 rounded-2xl transition active:scale-95">RESET</button>
         </div>
+      </div>
+
+      <div class="bento-card p-6 mt-6">
+        <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-sm text-white"><i data-lucide="clock" class="w-4 h-4 inline mr-2 text-gym-neon"></i>Saved Sessions</h3><button id="btn-clear-timer-logs" class="text-[9px] font-bold text-red-400 uppercase tracking-wider hover:text-red-300 transition">Clear</button></div>
+        <div id="timer-log-list" class="space-y-2 max-h-48 overflow-y-auto"><p class="text-gray-500 text-xs font-bold text-center py-4">No sessions saved yet.</p></div>
+      </div>
+      
+      <div class="mt-6 flex justify-center">
+          <button class="text-[10px] font-bold text-gray-600 uppercase flex items-center gap-2 border border-gray-800 rounded-full px-4 py-2 hover:bg-gray-900 transition" onclick="alert('Hardware Link: Native Bluetooth integration (Apple Watch/Garmin) requires deployment via native App Store wrap (Swift/React Native). WebKit restricts background HR sensors.')">
+              <i data-lucide="watch" class="w-3.5 h-3.5"></i> Sync Smartwatch
+          </button>
       </div>
     </section>
 
@@ -373,10 +434,10 @@
 
   <nav class="fixed left-4 right-4 max-w-sm mx-auto nav-pill z-50 rounded-full py-3 px-6 shadow-2xl" style="bottom: max(1.5rem, env(safe-area-inset-bottom));">
     <div class="flex justify-between items-center">
-      <button class="nav-item nav-active flex flex-col items-center gap-1" data-tab="tracker"><i data-lucide="dumbbell" class="w-5 h-5"></i><span class="text-[9px] font-bold">Log</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="progress"><i data-lucide="trending-up" class="w-5 h-5"></i><span class="text-[9px] font-bold">Chart</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="pics"><i data-lucide="image" class="w-5 h-5"></i><span class="text-[9px] font-bold">Pics</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="share"><i data-lucide="share-2" class="w-5 h-5"></i><span class="text-[9px] font-bold">Story</span></button>
+      <button class="nav-item nav-active flex flex-col items-center gap-1" data-tab="tracker"><i data-lucide="dumbbell" class="w-5 h-5"></i><span class="text-[9px] font-bold">Train</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="health"><i data-lucide="heart-pulse" class="w-5 h-5"></i><span class="text-[9px] font-bold">Health</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="progress"><i data-lucide="bar-chart-2" class="w-5 h-5"></i><span class="text-[9px] font-bold">Metrics</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="studio"><i data-lucide="aperture" class="w-5 h-5"></i><span class="text-[9px] font-bold">Studio</span></button>
       <button class="nav-item nav-inactive flex flex-col items-center gap-1" data-tab="timer"><i data-lucide="timer" class="w-5 h-5"></i><span class="text-[9px] font-bold">Timer</span></button>
     </div>
   </nav>
@@ -402,12 +463,14 @@
         let workouts = [];
         let pics = [];
         let bodyweights = [];
+        let macros = [];
 
         function loadLocalCache() {
             try { workouts = JSON.parse(localStorage.getItem('cf_workouts')) || []; } catch(e){}
             try { pics = JSON.parse(localStorage.getItem('cf_pics')) || []; } catch(e){}
             try { bodyweights = JSON.parse(localStorage.getItem('cf_bodyweights')) || []; } catch(e){}
-            updateDashboard(); renderPics(); updateShareDropdowns(); updateWeightHistoryList();
+            try { macros = JSON.parse(localStorage.getItem('cf_macros')) || []; } catch(e){}
+            updateDashboard(); renderPics(); updateShareDropdowns(); updateWeightHistoryList(); renderWeekCalendar(); renderTimerLogs();
         }
 
         let currentThemeColor = '#58cc02';
@@ -431,13 +494,41 @@
             style.innerHTML = `.nav-active::after { background: ${currentThemeColor} !important; box-shadow: 0 0 8px ${currentThemeColor} !important; }`;
             btn.appendChild(style);
             
-            ['tracker', 'timer', 'progress', 'pics', 'share'].forEach(tab => { document.getElementById(`tab-${tab}`).classList.add('hidden'); });
+            ['tracker', 'health', 'progress', 'studio', 'timer'].forEach(tab => { document.getElementById(`tab-${tab}`).classList.add('hidden'); });
             document.getElementById(`tab-${btn.dataset.tab}`).classList.remove('hidden');
             
             if(btn.dataset.tab === 'progress') { updateChart(); updateWeightTrendChart(); }
-            if(btn.dataset.tab === 'share') updateShareDropdowns();
+            if(btn.dataset.tab === 'studio') updateShareDropdowns();
             window.scrollTo({ top: 0, behavior: 'smooth' });
           });
+        });
+
+        // Studio Sub-Tabs
+        document.getElementById('btn-studio-share').addEventListener('click', (e) => {
+            e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
+            const gal = document.getElementById('btn-studio-gallery'); gal.classList.replace('text-white', 'text-gray-500'); gal.classList.remove('bg-[#333336]');
+            document.getElementById('view-story').classList.remove('hidden'); document.getElementById('view-gallery').classList.add('hidden');
+        });
+        document.getElementById('btn-studio-gallery').addEventListener('click', (e) => {
+            e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
+            const shr = document.getElementById('btn-studio-share'); shr.classList.replace('text-white', 'text-gray-500'); shr.classList.remove('bg-[#333336]');
+            document.getElementById('view-gallery').classList.remove('hidden'); document.getElementById('view-story').classList.add('hidden');
+        });
+
+        // Lift vs WOD modes
+        document.getElementById('btn-mode-lift').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
+            const wodBtn = document.getElementById('btn-mode-wod'); wodBtn.classList.replace('text-white', 'text-gray-500'); wodBtn.classList.remove('bg-[#333336]');
+            document.getElementById('input-lift-group').classList.remove('hidden'); document.getElementById('input-wod-group').classList.add('hidden');
+            document.getElementById('lbl-weight').textContent = "WEIGHT (KG)";
+        });
+        document.getElementById('btn-mode-wod').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
+            const liftBtn = document.getElementById('btn-mode-lift'); liftBtn.classList.replace('text-white', 'text-gray-500'); liftBtn.classList.remove('bg-[#333336]');
+            document.getElementById('input-wod-group').classList.remove('hidden'); document.getElementById('input-lift-group').classList.add('hidden');
+            document.getElementById('lbl-weight').textContent = "SCORE / TIME";
         });
 
         const dateInput = document.getElementById('lift-date');
@@ -450,9 +541,14 @@
           setTimeout(() => { t.classList.remove('toast-enter'); t.classList.add('hidden'); }, 3000);
         }
 
-        function calculate1RM(weight, reps) { return parseInt(reps) === 1 ? parseFloat(weight) : Math.round(parseFloat(weight) * (1 + (parseInt(reps) / 30))); }
+        function calculate1RM(weight, reps) { 
+            const w = parseFloat(weight);
+            if(isNaN(w)) return "--";
+            return parseInt(reps) === 1 ? w : Math.round(w * (1 + (parseInt(reps) / 30))); 
+        }
 
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwIVN0YJhldVu8HsilLl0OacRVMVloUdfC_LMRN2BIo-p_kKVqa2HQIix2Qcsa8UWyU/exec";
+        // --- UPDATED SINGLE USER DATABASE URL ---
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzyWKtVol7NxnTW8NCUnnFwIo2w5H9SRnFZZwJRdN_CrXfv_0H6BXuV3t_Zv2LBqMAoLg/exec";
 
         window.forceSync = function() {
             const btn = document.getElementById('btn-force-sync');
@@ -473,26 +569,20 @@
                         let hasUpdates = false;
 
                         if (data.workouts && Array.isArray(data.workouts)) {
-                            workouts = data.workouts;
-                            localStorage.setItem('cf_workouts', JSON.stringify(workouts));
-                            hasUpdates = true;
+                            workouts = data.workouts; localStorage.setItem('cf_workouts', JSON.stringify(workouts)); hasUpdates = true;
                         }
                         if (data.bodyweights && Array.isArray(data.bodyweights)) {
-                            bodyweights = data.bodyweights;
-                            localStorage.setItem('cf_bodyweights', JSON.stringify(bodyweights));
-                            hasUpdates = true;
+                            bodyweights = data.bodyweights; localStorage.setItem('cf_bodyweights', JSON.stringify(bodyweights)); hasUpdates = true;
                         }
                         if (data.pics && Array.isArray(data.pics)) {
-                            pics = data.pics;
-                            localStorage.setItem('cf_pics', JSON.stringify(pics));
-                            hasUpdates = true;
+                            pics = data.pics; localStorage.setItem('cf_pics', JSON.stringify(pics)); hasUpdates = true;
+                        }
+                        if (data.macros && Array.isArray(data.macros)) {
+                            macros = data.macros; localStorage.setItem('cf_macros', JSON.stringify(macros)); hasUpdates = true;
                         }
 
                         if (hasUpdates) {
-                            updateDashboard();
-                            renderPics();
-                            updateShareDropdowns();
-                            updateWeightHistoryList();
+                            updateDashboard(); renderPics(); updateShareDropdowns(); updateWeightHistoryList();
                             showToast('Cloud database synchronized! ☁️');
                         }
                     } catch(err) { console.log("Parsing fault.", err); }
@@ -527,15 +617,33 @@
                 e.preventDefault();
                 const mass = parseFloat(document.getElementById('body-weight-input').value);
                 const today = new Date().toISOString().split('T')[0];
-                
                 const payload = { id: 'bw_' + Date.now(), date: today, mass: mass, type: 'weight' };
                 bodyweights.push(payload);
                 localStorage.setItem('cf_bodyweights', JSON.stringify(bodyweights));
-                
                 weightForm.reset(); 
                 showToast('Scale weight recorded! 🔋');
                 updateWeightHistoryList();
                 if (!document.getElementById('tab-progress').classList.contains('hidden')) updateWeightTrendChart();
+                syncPostToCloud(payload);
+            });
+        }
+        
+        const macroForm = document.getElementById('macro-form');
+        if (macroForm) {
+            macroForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const today = new Date().toISOString().split('T')[0];
+                const payload = { 
+                    id: 'mac_' + Date.now(), date: today, type: 'macro',
+                    protein: document.getElementById('mac-pro').value || 0,
+                    carbs: document.getElementById('mac-carb').value || 0,
+                    fats: document.getElementById('mac-fat').value || 0,
+                    calories: document.getElementById('mac-cal').value || 0
+                };
+                macros.push(payload);
+                localStorage.setItem('cf_macros', JSON.stringify(macros));
+                macroForm.reset(); 
+                showToast('Macros logged! 🥩');
                 syncPostToCloud(payload);
             });
         }
@@ -544,22 +652,16 @@
             const listContainer = document.getElementById('weight-history-list');
             const latestDisplay = document.getElementById('latest-weight-display');
             if (!listContainer) return;
-            
             if (bodyweights.length === 0) {
-                listContainer.innerHTML = '<p class="text-gray-500 text-xs font-bold pl-1">No weight records logged.</p>';
+                listContainer.innerHTML = '<p class="text-gray-500 text-xs font-bold pl-1">No records.</p>';
                 if (latestDisplay) latestDisplay.textContent = '-- kg';
                 return;
             }
-            
             const sorted = [...bodyweights].sort((a, b) => new Date(b.date) - new Date(a.date));
             if (latestDisplay) latestDisplay.textContent = sorted[0].mass + ' kg';
-            
             listContainer.innerHTML = sorted.slice(0, 5).map(bw => `
                 <div class="flex justify-between items-center bg-app-input rounded-xl px-4 py-3">
-                    <div>
-                        <span class="text-sm font-black text-white">${bw.mass} kg</span>
-                        <span class="text-[10px] text-gray-500 font-bold ml-2">${bw.date}</span>
-                    </div>
+                    <div><span class="text-sm font-black text-white">${bw.mass} kg</span><span class="text-[10px] text-gray-500 font-bold ml-2">${bw.date}</span></div>
                     <button onclick="deleteWeight('${bw.id}')" class="text-gray-500 hover:text-red-500 transition p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
             `).join('');
@@ -573,41 +675,32 @@
             if (!document.getElementById('tab-progress').classList.contains('hidden')) updateWeightTrendChart();
         };
 
-        const picUrlInput = document.getElementById('pic-url');
-        const picCaptionInput = document.getElementById('pic-caption');
-        const picPreviewBox = document.getElementById('pic-preview-box');
-        const picPreviewImg = document.getElementById('pic-preview-img');
-        const picPreviewError = document.getElementById('pic-preview-error');
-        const picSaveBtn = document.getElementById('pic-save-btn');
-
-        function updatePicPreview() {
-            const url = picUrlInput.value.trim();
-            if(url) {
-                picPreviewBox.classList.remove('hidden'); picPreviewImg.src = url;
-                picSaveBtn.textContent = 'CHECKING...'; picSaveBtn.disabled = true;
-                picSaveBtn.className = "w-full py-4 mt-4 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition";
-            } else {
-                picPreviewBox.classList.add('hidden'); picSaveBtn.textContent = 'ENTER URL'; picSaveBtn.disabled = true;
-                picSaveBtn.className = "w-full py-4 mt-4 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition opacity-50 cursor-not-allowed";
+        function renderWeekCalendar() {
+            const grid = document.getElementById('week-calendar');
+            const label = document.getElementById('week-calendar-label');
+            if (!grid) return;
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const today = new Date();
+            const startOfWeek = new Date(today); startOfWeek.setDate(today.getDate() - today.getDay());
+            const workoutDates = new Set(workouts.map(w => w.date));
+            let html = '';
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(startOfWeek); d.setDate(startOfWeek.getDate() + i);
+                const dateStr = d.toISOString().split('T')[0];
+                const isToday = dateStr === today.toISOString().split('T')[0];
+                const hasWorkout = workoutDates.has(dateStr);
+                html += `<div class="flex flex-col items-center gap-1 py-1.5 rounded-xl ${isToday ? 'bg-[#333336]' : ''}">
+                    <span class="text-[9px] font-bold ${isToday ? 'text-gym-neon' : 'text-gray-600'} uppercase tracking-wider">${days[i].substring(0,2)}</span>
+                    <span class="text-sm font-black ${isToday ? 'text-white' : 'text-gray-400'}">${d.getDate()}</span>
+                    ${hasWorkout ? '<div class="w-1.5 h-1.5 rounded-full bg-gym-neon"></div>' : '<div class="w-1.5 h-1.5"></div>'}
+                </div>`;
             }
+            grid.innerHTML = html;
+            if (label) label.textContent = `${today.toLocaleString('default', { month: 'long' })} ${today.getFullYear()}`;
         }
 
-        if(picUrlInput) picUrlInput.addEventListener('input', updatePicPreview);
-        if(picPreviewImg) {
-            picPreviewImg.addEventListener('load', () => {
-                picPreviewImg.classList.remove('hidden'); picPreviewError.classList.add('hidden');
-                picSaveBtn.disabled = false; picSaveBtn.textContent = 'SAVE TO GALLERY';
-                picSaveBtn.style.backgroundColor = currentThemeColor;
-                picSaveBtn.style.color = "#000";
-                picSaveBtn.className = "w-full py-4 mt-4 rounded-2xl font-bold text-black text-sm uppercase tracking-wide transition active:scale-[0.98]";
-            });
-            picPreviewImg.addEventListener('error', () => {
-                if(picUrlInput.value.trim() === '') return;
-                picPreviewImg.classList.add('hidden'); picPreviewError.classList.remove('hidden');
-                picSaveBtn.disabled = true; picSaveBtn.textContent = 'INVALID LINK'; picSaveBtn.style = "";
-                picSaveBtn.className = "w-full py-4 mt-4 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-red-500/50 cursor-not-allowed transition";
-            });
-        }
+        const picUrlInput = document.getElementById('pic-url');
+        const picSaveBtn = document.getElementById('pic-save-btn');
 
         function renderPics() {
           const gallery = document.getElementById('pic-gallery');
@@ -632,11 +725,11 @@
         const picForm = document.getElementById('pic-form');
         if(picForm) {
             picForm.addEventListener('submit', (e) => {
-              e.preventDefault(); if(picSaveBtn.disabled) return; 
-              const payload = { id: 'pic_' + Date.now(), url: picUrlInput.value, caption: picCaptionInput.value || 'Progress Photo', type: 'pic' };
+              e.preventDefault();
+              const payload = { id: 'pic_' + Date.now(), url: picUrlInput.value, caption: document.getElementById('pic-caption').value || 'Photo', type: 'pic' };
               pics.push(payload);
               try { localStorage.setItem('cf_pics', JSON.stringify(pics)); } catch(e){}
-              renderPics(); picForm.reset(); updatePicPreview(); showToast('Photo Added! 📸');
+              renderPics(); picForm.reset(); showToast('Photo Added! 📸');
               syncPostToCloud(payload);
             });
         }
@@ -649,7 +742,6 @@
         const shareBtn = document.getElementById('btn-download-share');
         const shareImageUpload = document.getElementById('share-image-upload');
         const shareUploadText = document.getElementById('share-upload-text');
-        const shareUploadIcon = document.getElementById('share-upload-icon');
         
         const athleteInput = document.getElementById('share-athlete-input');
         const gymInput = document.getElementById('share-gym-input');
@@ -677,13 +769,9 @@
                 themePill.style.transform = `translateX(${index * 100}%)`;
                 currentThemeColor = color;
                 
-                headerPro.style.color = color; shareUploadIcon.style.color = color;
+                headerPro.style.color = color;
                 cardIntensityBadge.style.color = color;
-                
-                const logoContainer = document.getElementById('card-pro-logo-container');
-                if (logoContainer) {
-                    logoContainer.style.background = color;
-                }
+                document.getElementById('card-pro-logo-container').style.background = color;
                 
                 const styleSheet = document.createElement('style');
                 styleSheet.innerHTML = `.custom-range::-webkit-slider-thumb { background: ${color} !important; }`;
@@ -712,29 +800,16 @@
             let transformString = `scale(${scaleTextValue / 100})`;
             if (macroAlignment === 'top') {
                 shareContentContainer.style.top = '84px'; shareContentContainer.style.bottom = 'auto';
-                transformString += ` translateY(${pixelNudgeValue}px) translateX(${horizontalNudgeValue}px)`;
+                transformString += ` translateY(${Math.round(pixelNudgeValue)}px) translateX(${Math.round(horizontalNudgeValue)}px)`;
             } else if (macroAlignment === 'bottom') {
                 shareContentContainer.style.top = 'auto'; shareContentContainer.style.bottom = '32px';
-                transformString += ` translateY(${pixelNudgeValue}px) translateX(${horizontalNudgeValue}px)`;
+                transformString += ` translateY(${Math.round(pixelNudgeValue)}px) translateX(${Math.round(horizontalNudgeValue)}px)`;
             } else {
                 shareContentContainer.style.top = '50%'; shareContentContainer.style.bottom = 'auto';
-                transformString += ` translateY(calc(-50% + ${pixelNudgeValue}px)) translateX(${horizontalNudgeValue}px)`;
+                transformString += ` translateY(calc(-50% + ${Math.round(pixelNudgeValue)}px)) translateX(${Math.round(horizontalNudgeValue)}px)`;
             }
             shareContentContainer.style.transform = transformString;
         }
-
-        const layoutBtns = document.querySelectorAll('.layout-btn');
-        const layoutPill = document.getElementById('layout-pill');
-        layoutBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                if(navigator.vibrate) navigator.vibrate(20);
-                layoutBtns.forEach(b => b.classList.remove('active')); btn.classList.add('active');
-                const index = btn.getAttribute('data-index');
-                macroAlignment = btn.getAttribute('data-align');
-                layoutPill.style.transform = `translateX(${index * 100}%)`;
-                repositionShareContainer();
-            });
-        });
 
         if (shareNudgeSlider) {
             shareNudgeSlider.addEventListener('input', (e) => {
@@ -764,115 +839,68 @@
         let initialDistance = null;
         let startScale = 100;
 
-        function getDistance(touches) {
-            return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
-        }
+        function getDistance(touches) { return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY); }
 
         captureArea.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
-                isDragging = true;
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                startNudgeX = horizontalNudgeValue;
-                startNudgeY = pixelNudgeValue;
+                isDragging = true; startX = e.touches[0].clientX; startY = e.touches[0].clientY; startNudgeX = horizontalNudgeValue; startNudgeY = pixelNudgeValue;
             } else if (e.touches.length === 2) {
-                isDragging = false;
-                initialDistance = getDistance(e.touches);
-                startScale = scaleTextValue;
+                isDragging = false; initialDistance = getDistance(e.touches); startScale = scaleTextValue;
             }
         }, {passive: false});
 
         captureArea.addEventListener('touchmove', (e) => {
             if (isDragging && e.touches.length === 1) {
                 e.preventDefault(); 
-                const dx = e.touches[0].clientX - startX;
-                const dy = e.touches[0].clientY - startY;
-                
+                const dx = e.touches[0].clientX - startX; const dy = e.touches[0].clientY - startY;
                 horizontalNudgeValue = Math.min(Math.max(startNudgeX + dx, -300), 300);
                 pixelNudgeValue = Math.min(Math.max(startNudgeY + dy, -500), 500);
-                
-                shareXNudgeSlider.value = horizontalNudgeValue;
-                shareNudgeSlider.value = pixelNudgeValue;
-                xNudgeValDisplay.textContent = (horizontalNudgeValue > 0 ? '+' : '') + Math.round(horizontalNudgeValue) + 'px';
-                nudgeValDisplay.textContent = (pixelNudgeValue > 0 ? '+' : '') + Math.round(pixelNudgeValue) + 'px';
-                
+                if(shareXNudgeSlider) shareXNudgeSlider.value = horizontalNudgeValue;
+                if(shareNudgeSlider) shareNudgeSlider.value = pixelNudgeValue;
+                if(xNudgeValDisplay) xNudgeValDisplay.textContent = (horizontalNudgeValue > 0 ? '+' : '') + Math.round(horizontalNudgeValue) + 'px';
+                if(nudgeValDisplay) nudgeValDisplay.textContent = (pixelNudgeValue > 0 ? '+' : '') + Math.round(pixelNudgeValue) + 'px';
                 repositionShareContainer();
             } else if (e.touches.length === 2 && initialDistance) {
                 e.preventDefault(); 
                 const currentDistance = getDistance(e.touches);
                 const scaleChange = (currentDistance / initialDistance);
-                
                 scaleTextValue = Math.min(Math.max(startScale * scaleChange, 30), 200);
-                
-                shareSizeSlider.value = scaleTextValue;
-                sizeValDisplay.textContent = Math.round(scaleTextValue) + '%';
-                
+                if(shareSizeSlider) shareSizeSlider.value = scaleTextValue;
+                if(sizeValDisplay) sizeValDisplay.textContent = Math.round(scaleTextValue) + '%';
                 repositionShareContainer();
             }
         }, {passive: false});
 
-        captureArea.addEventListener('touchend', () => {
-            isDragging = false;
-            initialDistance = null;
-        });
-
-        captureArea.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            startNudgeX = horizontalNudgeValue;
-            startNudgeY = pixelNudgeValue;
-            captureArea.style.cursor = 'grabbing';
-        });
-
+        captureArea.addEventListener('touchend', () => { isDragging = false; initialDistance = null; });
+        captureArea.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX; startY = e.clientY; startNudgeX = horizontalNudgeValue; startNudgeY = pixelNudgeValue; captureArea.style.cursor = 'grabbing'; });
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            
+            const dx = e.clientX - startX; const dy = e.clientY - startY;
             horizontalNudgeValue = Math.min(Math.max(startNudgeX + dx, -300), 300);
             pixelNudgeValue = Math.min(Math.max(startNudgeY + dy, -500), 500);
-
-            shareXNudgeSlider.value = horizontalNudgeValue;
-            shareNudgeSlider.value = pixelNudgeValue;
-            xNudgeValDisplay.textContent = (horizontalNudgeValue > 0 ? '+' : '') + Math.round(horizontalNudgeValue) + 'px';
-            nudgeValDisplay.textContent = (pixelNudgeValue > 0 ? '+' : '') + Math.round(pixelNudgeValue) + 'px';
-
+            if(shareXNudgeSlider) shareXNudgeSlider.value = horizontalNudgeValue;
+            if(shareNudgeSlider) shareNudgeSlider.value = pixelNudgeValue;
+            if(xNudgeValDisplay) xNudgeValDisplay.textContent = (horizontalNudgeValue > 0 ? '+' : '') + Math.round(horizontalNudgeValue) + 'px';
+            if(nudgeValDisplay) nudgeValDisplay.textContent = (pixelNudgeValue > 0 ? '+' : '') + Math.round(pixelNudgeValue) + 'px';
             repositionShareContainer();
         });
-
-        window.addEventListener('mouseup', () => {
-            isDragging = false;
-            captureArea.style.cursor = 'grab';
-        });
-
+        window.addEventListener('mouseup', () => { isDragging = false; captureArea.style.cursor = 'grab'; });
         captureArea.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const delta = e.deltaY > 0 ? -5 : 5;
+            e.preventDefault(); const delta = e.deltaY > 0 ? -5 : 5;
             scaleTextValue = Math.min(Math.max(scaleTextValue + delta, 30), 200);
-            
-            shareSizeSlider.value = scaleTextValue;
-            sizeValDisplay.textContent = Math.round(scaleTextValue) + '%';
-            
+            if(shareSizeSlider) shareSizeSlider.value = scaleTextValue;
+            if(sizeValDisplay) sizeValDisplay.textContent = Math.round(scaleTextValue) + '%';
             repositionShareContainer();
         }, {passive: false});
 
-        athleteInput.addEventListener('input', (e) => { 
-            localStorage.setItem('cf_athlete', e.target.value);
-            updateSharePreview();
-        });
-        gymInput.addEventListener('input', (e) => { 
-            localStorage.setItem('cf_gym', e.target.value);
-            updateSharePreview();
-        });
-        tagSelect.addEventListener('change', (e) => { 
-            cardIntensityBadge.textContent = e.target.value; 
-        });
+        athleteInput.addEventListener('input', (e) => { localStorage.setItem('cf_athlete', e.target.value); updateSharePreview(); });
+        gymInput.addEventListener('input', (e) => { localStorage.setItem('cf_gym', e.target.value); updateSharePreview(); });
+        tagSelect.addEventListener('change', (e) => { cardIntensityBadge.textContent = e.target.value; });
 
         function updateShareDropdowns() {
             if (!shareWorkoutSelect) return;
             shareWorkoutSelect.innerHTML = '<option value="">Choose workout...</option>';
-            [...workouts].reverse().slice(0, 20).forEach(w => { shareWorkoutSelect.innerHTML += `<option value="${w.id}">${w.date} - ${w.movement} (${w.weight}kg)</option>`; });
+            [...workouts].reverse().slice(0, 20).forEach(w => { shareWorkoutSelect.innerHTML += `<option value="${w.id}">${w.date} - ${w.movement} (${w.weight})</option>`; });
             updateSharePreview();
         }
 
@@ -907,134 +935,34 @@
             if (wid) {
                 const w = workouts.find(x => x.id === wid);
                 if (w) {
-                    movement = w.movement;
-                    date = w.date;
-                    weight = w.weight;
-                    reps = w.reps;
-                    est1RM = calculate1RM(w.weight, w.reps);
-                    shareBtn.disabled = false; 
-                    shareBtn.style.backgroundColor = currentThemeColor; 
-                    shareBtn.style.color = "#000";
+                    movement = w.movement; date = w.date; weight = w.weight; reps = w.reps; est1RM = calculate1RM(w.weight, w.reps);
+                    shareBtn.disabled = false; shareBtn.style.backgroundColor = currentThemeColor; shareBtn.style.color = "#000";
                     shareBtn.className = "w-full py-4 mt-2 rounded-2xl font-bold text-sm uppercase tracking-wide transition active:scale-95 relative z-10";
                 }
             } else {
-                shareBtn.disabled = true; 
-                shareBtn.style = "";
+                shareBtn.disabled = true; shareBtn.style = "";
                 shareBtn.className = "w-full py-4 mt-2 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[#333336] transition flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed relative z-10";
             }
 
+            const athlete = athleteInput.value || '@athlete';
+            const location = gymInput.value || 'Location';
+            const dayName = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
             let htmlContent = "";
 
-            if (style === 'style1') { 
-                htmlContent = `
-                   <div class="grid grid-cols-2 gap-y-4 gap-x-2 w-full mt-4 bg-black/70 p-5 rounded-2xl border border-white/10 text-shadow-heavy" style="font-family: 'Montserrat', sans-serif;">
-                      <div class="pb-1">
-                         <p class="text-[9px] font-extrabold text-gray-300 opacity-80 uppercase tracking-widest mb-1">Workout</p>
-                         <p class="text-base font-black text-white leading-normal">${movement}</p>
-                      </div>
-                      <div class="pb-1">
-                         <p class="text-[9px] font-extrabold text-gray-300 opacity-80 uppercase tracking-widest mb-1">Date</p>
-                         <p class="text-base font-black text-white leading-normal">${date}</p>
-                      </div>
-                      <div class="pb-1">
-                         <p class="text-[9px] font-extrabold text-gray-300 opacity-80 uppercase tracking-widest mb-1">Weight</p>
-                         <p class="text-3xl font-black text-white leading-normal">${weight}<span class="text-xs ml-0.5 font-bold text-gray-200">kg</span></p>
-                      </div>
-                      <div class="pb-1">
-                         <p class="text-[9px] font-extrabold text-gray-300 opacity-80 uppercase tracking-widest mb-1">Reps Logged</p>
-                         <p class="text-3xl font-black text-white leading-normal">${reps}</p>
-                      </div>
-                      <div class="col-span-2 border-t border-white/10 pt-3 mt-1 flex justify-between items-start">
-                         <div>
-                            <p class="text-[9px] font-extrabold text-gray-300 opacity-80 uppercase tracking-widest mb-1">Calculated 1RM</p>
-                            <p class="text-lg font-black text-white leading-normal">${est1RM} <span class="text-xs font-bold text-gray-300">kg</span></p>
-                         </div>
-                         ${customText ? `<div class="text-right max-w-[150px]"><p class="text-[9px] font-extrabold uppercase tracking-widest mb-1" style="color:${currentThemeColor}">Note</p><p class="text-xs font-bold text-white leading-normal break-words">${customText}</p></div>` : ''}
-                      </div>
-                   </div>
-                `;
-            } else if (style === 'style2') { 
-                htmlContent = `
-                   <div class="w-full bg-black/75 p-4 rounded-xl border border-white/5 text-[10px] font-bold text-white text-shadow-heavy flex flex-wrap justify-between items-center gap-2" style="font-family: 'Montserrat', sans-serif;">
-                      <span class="flex items-center gap-1" style="color:${currentThemeColor}">
-                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                         ${movement}
-                      </span>
-                      <span>${weight}kg × ${reps}</span>
-                      <span>1RM: ${est1RM}kg</span>
-                      <span class="text-gray-300 font-medium">${date}</span>
-                      ${customText ? `<span class="w-full border-t border-white/10 pt-2 mt-1 text-gray-200 italic font-normal text-left break-words whitespace-normal">${customText}</span>` : ''}
-                   </div>
-                `;
-            } else if (style === 'style3') { 
-                htmlContent = `
-                   <div class="w-full bg-[#131b2c]/95 border border-white/10 p-5 rounded-[2rem] shadow-2xl text-center text-shadow-heavy" style="font-family: 'Montserrat', sans-serif;">
-                      <p class="text-[10px] font-extrabold tracking-[0.2em] uppercase mb-1" style="color:${currentThemeColor}">${movement}</p>
-                      <h3 class="text-4xl font-black text-white tracking-tighter mb-2 leading-normal">${weight} <span class="text-lg text-gray-400 font-bold">kg</span></h3>
-                      <div class="flex justify-around items-center text-xs border-t border-white/10 pt-3 mt-3 font-semibold text-gray-300">
-                         <div><p class="text-[8px] text-gray-500 uppercase tracking-wider">Reps</p><p class="font-black text-white text-sm leading-normal">${reps}</p></div>
-                         <div class="h-6 w-[1px] bg-white/15"></div>
-                         <div><p class="text-[8px] text-gray-500 uppercase tracking-wider">1RM</p><p class="font-black text-white text-sm leading-normal">${est1RM}kg</p></div>
-                         <div class="h-6 w-[1px] bg-white/15"></div>
-                         <div><p class="text-[8px] text-gray-500 uppercase tracking-wider">Date</p><p class="font-black text-white text-sm leading-normal">${date.substring(5)}</p></div>
-                      </div>
-                      ${customText ? `<p class="mt-3 text-xs text-white/95 italic font-semibold break-words">"${customText}"</p>` : ''}
-                   </div>
-                `;
-            } else if (style === 'style4') { 
-                htmlContent = `
-                   <div class="w-full text-center py-6 text-shadow-heavy" style="font-family: 'Montserrat', sans-serif;">
-                      <span class="text-[10px] font-black uppercase tracking-[0.3em] drop-shadow-md" style="color:${currentThemeColor}">${movement}</span>
-                      <h1 class="text-7xl font-extrabold text-white tracking-tight leading-normal my-2">${weight}<span class="text-2xl font-bold ml-1 text-gray-300">KG</span></h1>
-                      <p class="text-sm font-bold text-gray-200 uppercase tracking-widest leading-normal">${reps} reps | est 1rm ${est1RM}kg</p>
-                      ${customText ? `<p class="mt-4 text-xs font-semibold text-gray-300 tracking-wider border-t border-white/10 pt-2 w-2/3 mx-auto break-words leading-normal">${customText}</p>` : ''}
-                   </div>
-                `;
-            } else if (style === 'style5') { 
-                htmlContent = `
-                   <div class="w-full bg-gradient-to-r from-black/80 to-transparent p-5 rounded-l-2xl text-shadow-heavy text-left" style="border-left: 4px solid ${currentThemeColor}; font-family: 'Montserrat', sans-serif;">
-                      <p class="text-[9px] font-black uppercase tracking-widest mb-1" style="color:${currentThemeColor}">${date}</p>
-                      <h2 class="text-2xl font-black text-white uppercase leading-normal">${movement}</h2>
-                      <div class="flex gap-4 mt-3 font-extrabold text-white">
-                         <div><span class="text-xs text-gray-400 block font-bold uppercase tracking-wider">Weight</span><span class="text-lg leading-normal">${weight}kg</span></div>
-                         <div><span class="text-xs text-gray-400 block font-bold uppercase tracking-wider">Reps</span><span class="text-lg leading-normal">${reps}</span></div>
-                         <div><span class="text-xs text-gray-400 block font-bold uppercase tracking-wider">1RM</span><span class="text-lg leading-normal">${est1RM}kg</span></div>
-                      </div>
-                      ${customText ? `<p class="mt-3 text-xs text-gray-300 border-t border-white/10 pt-2 italic break-words leading-normal">"${customText}"</p>` : ''}
-                   </div>
-                `;
-            } else { 
-                htmlContent = `
-                   <div class="w-full bg-black/85 border border-white/10 p-4 rounded-2xl flex justify-between items-center text-shadow-heavy text-left" style="font-family: 'Montserrat', sans-serif;">
-                      <div>
-                         <h4 class="text-sm font-black text-white leading-normal max-w-[160px]">${movement}</h4>
-                         <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest leading-normal">${date}</span>
-                      </div>
-                      <div class="text-right">
-                         <h4 class="text-lg font-black leading-normal" style="color:${currentThemeColor}">${weight}kg</h4>
-                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-normal">${reps} reps • 1RM ${est1RM}kg</span>
-                      </div>
-                   </div>
-                   ${customText ? `<div class="w-full text-center mt-2 bg-black/60 py-2 px-3 rounded-full border border-white/5 text-[10px] text-gray-200 font-bold break-words leading-normal">${customText}</div>` : ''}
-                `;
+            if (style === 'style1') {
+                htmlContent = `<div class="w-full text-left" style="font-family: 'Montserrat', sans-serif;"><div class="bg-black/70 p-5 rounded-3xl border border-white/10 backdrop-blur-sm"><div class="flex items-center gap-2 mb-3"><div class="w-2 h-2 rounded-full" style="background:${currentThemeColor}"></div><span class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color:${currentThemeColor}">${movement}</span></div><div class="flex items-end justify-between mb-4"><span class="text-5xl font-black text-white tracking-tight">${weight}</span><span class="text-sm font-bold text-gray-400 mb-2">${reps} reps</span></div><div class="flex gap-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider"><span>1RM ${est1RM}kg</span><span>${dayName}</span></div>${customText ? `<div class="mt-3 pt-3 border-t border-white/10 text-xs font-semibold text-gray-300">${customText}</div>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><p class="text-xs font-black text-white">${athlete}</p><p class="text-[9px] font-bold text-gray-400">${location}</p></div></div></div>`;
+            } else if (style === 'style2') {
+                htmlContent = `<div class="w-full text-center" style="font-family: 'Montserrat', sans-serif;"><div class="bg-black/60 p-6 rounded-3xl border border-white/10 backdrop-blur-sm"><span class="text-[11px] font-black uppercase tracking-[0.25em]" style="color:${currentThemeColor}">${movement}</span><div class="text-7xl font-black text-white my-3 tracking-tight">${weight}</div><div class="flex justify-center gap-6 text-[11px]"><div><span class="text-gray-500 font-bold block uppercase tracking-wider">Reps</span><span class="text-white font-black text-lg">${reps}</span></div><div><span class="text-gray-500 font-bold block uppercase tracking-wider">1RM</span><span class="text-white font-black text-lg">${est1RM}</span></div></div>${customText ? `<p class="mt-4 text-xs text-gray-300 italic pt-3 border-t border-white/10">${customText}</p>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center justify-center gap-3"><div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="text-xs font-black text-white">${athlete}</span><span class="text-[9px] text-gray-400 font-bold">· ${location}</span></div></div>`;
+            } else if (style === 'style3') {
+                htmlContent = `<div class="w-full" style="font-family: 'Montserrat', sans-serif;"><div class="bg-gradient-to-br from-black/80 to-black/60 p-5 rounded-3xl border border-white/10"><div class="flex justify-between items-start mb-4"><div><p class="text-[9px] font-black uppercase tracking-[0.2em]" style="color:${currentThemeColor}">${movement}</p><p class="text-[10px] font-bold text-gray-500 mt-0.5">${dayName}</p></div><div class="text-right"><p class="text-4xl font-black text-white tracking-tight">${weight}</p><p class="text-[10px] font-bold text-gray-400">${reps} reps</p></div></div><div class="flex gap-3"><div class="flex-1 bg-white/5 rounded-xl p-3 text-center"><p class="text-[8px] font-bold text-gray-500 uppercase tracking-wider">1RM</p><p class="text-sm font-black text-white">${est1RM}</p></div><div class="flex-1 bg-white/5 rounded-xl p-3 text-center"><p class="text-[8px] font-bold text-gray-500 uppercase tracking-wider">Volume</p><p class="text-sm font-black text-white">${parseInt(weight) * parseInt(reps) || 0}</p></div></div>${customText ? `<p class="mt-3 text-[10px] text-gray-300 font-semibold text-center pt-2 border-t border-white/10">"${customText}"</p>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center gap-3"><div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="text-xs font-black text-white">${athlete}</span><span class="text-[9px] text-gray-400 font-bold">· ${location}</span></div></div>`;
+            } else if (style === 'style4') {
+                htmlContent = `<div class="w-full" style="font-family: 'Montserrat', sans-serif;"><div class="text-center py-4"><span class="text-[10px] font-black uppercase tracking-[0.3em]" style="color:${currentThemeColor}">${movement}</span><div class="text-7xl font-black text-white my-2 tracking-tight">${weight}<span class="text-2xl text-gray-500 font-bold ml-1">kg</span></div><p class="text-xs font-bold text-gray-400">${reps} reps · Est 1RM ${est1RM}kg</p>${customText ? `<p class="mt-4 text-xs text-gray-300 font-medium border-t border-white/10 pt-3 mx-4">${customText}</p>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center justify-center gap-3"><div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="text-xs font-black text-white">${athlete}</span><span class="text-[9px] text-gray-400 font-bold">· ${dayName}</span></div></div>`;
+            } else if (style === 'style5') {
+                htmlContent = `<div class="w-full" style="font-family: 'Montserrat', sans-serif;"><div class="bg-black/70 p-5 rounded-3xl border border-white/10" style="border-left: 4px solid ${currentThemeColor};"><div class="flex items-start justify-between"><div><p class="text-[9px] font-black uppercase tracking-widest" style="color:${currentThemeColor}">${movement}</p><p class="text-3xl font-black text-white mt-1 tracking-tight">${weight} <span class="text-sm font-bold text-gray-400">kg</span></p></div><div class="text-right"><p class="text-[10px] font-bold text-gray-500">${reps} reps</p><p class="text-[10px] font-bold text-gray-500">1RM ${est1RM}</p></div></div>${customText ? `<p class="mt-3 text-[10px] text-gray-300 font-medium pt-2 border-t border-white/10">${customText}</p>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center gap-3"><div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><p class="text-xs font-black text-white">${athlete}</p><p class="text-[8px] font-bold text-gray-400 uppercase tracking-wider">${location} · ${dayName}</p></div></div></div>`;
+            } else {
+                htmlContent = `<div class="w-full" style="font-family: 'Montserrat', sans-serif;"><div class="flex items-stretch gap-2"><div class="flex-1 bg-black/70 p-4 rounded-2xl border border-white/10 text-center"><p class="text-[8px] font-black uppercase tracking-widest text-gray-500">Load</p><p class="text-xl font-black text-white">${weight}</p></div><div class="flex-1 bg-black/70 p-4 rounded-2xl border border-white/10 text-center"><p class="text-[8px] font-black uppercase tracking-widest text-gray-500">Reps</p><p class="text-xl font-black text-white">${reps}</p></div><div class="flex-1 bg-black/70 p-4 rounded-2xl border border-white/10 text-center"><p class="text-[8px] font-black uppercase tracking-widest text-gray-500">1RM</p><p class="text-xl font-black text-white">${est1RM}</p></div></div><div class="mt-2 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center justify-between"><div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full" style="background:${currentThemeColor}"></div><span class="text-[10px] font-bold uppercase tracking-wider" style="color:${currentThemeColor}">${movement}</span></div><div class="flex items-center gap-2"><span class="text-[10px] font-bold text-gray-400">${dayName}</span><div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div></div></div></div>`;
             }
-
-            htmlContent += `
-               <div class="mt-4 bg-black/75 p-3 rounded-xl border border-white/10 block w-full text-left" style="font-family: 'Montserrat', sans-serif;">
-                  <div class="flex items-center gap-2">
-                     <div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shrink-0">
-                         <svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                     </div>
-                     <div class="flex flex-col min-w-0" style="line-height: 1.3;">
-                         <span class="text-[11px] font-black text-white text-shadow-heavy block leading-normal truncate">${athleteInput.value || '@athlete'}</span>
-                         <span class="text-[8px] font-bold text-gray-300 uppercase tracking-wider text-shadow-heavy block leading-normal mt-0.5 truncate">
-                            <svg class="inline mr-0.5 w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            ${gymInput.value || 'Location'}
-                         </span>
-                     </div>
-                  </div>
-               </div>
-            `;
 
             shareContentContainer.innerHTML = htmlContent;
             repositionShareContainer();
@@ -1056,60 +984,49 @@
                 try { lucide.createIcons(); } catch(err){}
 
                 await document.fonts.ready;
+                
+                const originalScrollY = window.scrollY;
+                window.scrollTo(0, 0);
 
-                html2canvas(captureTarget, {
-                    backgroundColor: '#000000', 
-                    logging: false,
-                    scale: 3, 
-                    useCORS: true,
-                    allowTaint: true
-                }).then(canvas => {
-                    canvas.toBlob(async (blob) => {
-                        if(!blob) throw new Error("Canvas generation failed.");
-                        
-                        const fileName = `salvapp_story_${Date.now()}.png`;
-                        const file = new File([blob], fileName, { type: 'image/png' });
+                setTimeout(() => {
+                    html2canvas(captureTarget, {
+                        backgroundColor: '#000000', 
+                        logging: false, scale: 3, useCORS: true,
+                        width: 360, height: 640, windowWidth: 360, windowHeight: 640
+                    }).then(canvas => {
+                        window.scrollTo(0, originalScrollY);
+                        canvas.toBlob(async (blob) => {
+                            if(!blob) throw new Error("Canvas generation failed.");
+                            const fileName = `salvapp_story_${Date.now()}.png`;
+                            const file = new File([blob], fileName, { type: 'image/png' });
 
-                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                            try {
-                                await navigator.share({
-                                    files: [file],
-                                    title: 'Salvapp Story',
-                                    text: 'Check out my latest lift!'
-                                });
-                                showToast('Story shared! ⚡');
-                            } catch (shareErr) {
-                                if (shareErr.name !== 'AbortError') {
-                                    triggerStandardDownload(blob, fileName);
+                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                                try {
+                                    await navigator.share({ files: [file], title: 'Salvapp Story', text: 'Check out my latest lift!' });
+                                    showToast('Story shared! ⚡');
+                                } catch (shareErr) {
+                                    if (shareErr.name !== 'AbortError') triggerStandardDownload(blob, fileName);
                                 }
-                            }
-                        } else {
-                            triggerStandardDownload(blob, fileName);
-                        }
-                        
-                        downloadBtn.disabled = false;
-                        downloadBtn.innerHTML = originalText;
-                        try { lucide.createIcons(); } catch(err){}
-                        
-                    }, 'image/png', 1.0);
-                }).catch(err => {
-                    console.error('Export error:', err);
-                    downloadBtn.disabled = false;
-                    downloadBtn.innerHTML = originalText;
-                    try { lucide.createIcons(); } catch(ex){}
-                    showToast('Export failed. Try a different image link.');
-                });
+                            } else triggerStandardDownload(blob, fileName);
+                            
+                            downloadBtn.disabled = false; downloadBtn.innerHTML = originalText;
+                            try { lucide.createIcons(); } catch(err){}
+                        }, 'image/png', 1.0);
+                    }).catch(err => {
+                        window.scrollTo(0, originalScrollY);
+                        console.error('Export error:', err);
+                        downloadBtn.disabled = false; downloadBtn.innerHTML = originalText;
+                        try { lucide.createIcons(); } catch(ex){}
+                        showToast('Export failed. Try a different image link.');
+                    });
+                }, 200);
             });
         }
 
         function triggerStandardDownload(blob, fileName) {
             const objUrl = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.download = fileName;
-            link.href = objUrl;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const link = document.createElement('a'); link.download = fileName; link.href = objUrl;
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
             setTimeout(() => URL.revokeObjectURL(objUrl), 1000);
             showToast('High-fidelity story saved! 📸');
         }
@@ -1118,17 +1035,25 @@
           document.getElementById('stat-total').textContent = workouts.length;
           const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
           document.getElementById('stat-week').textContent = workouts.filter(w => new Date(w.date) >= weekStart).length;
-          const vol = workouts.reduce((sum, w) => sum + (parseFloat(w.weight) * parseInt(w.reps)), 0);
+          const vol = workouts.reduce((sum, w) => sum + (parseFloat(w.weight) * parseInt(w.reps) || 0), 0);
           document.getElementById('stat-volume').innerHTML = vol >= 1000 ? (vol/1000).toFixed(1) + 'k' : vol;
-          document.getElementById('xp-count').textContent = workouts.length * 10;
           
           const days = new Set(workouts.map(w => w.date));
           let streak = 0, d = new Date();
           while(days.has(d.toISOString().split('T')[0])) { streak++; d.setDate(d.getDate() - 1); }
           document.getElementById('streak-count').textContent = streak;
 
+          const totalUniqueDays = new Set(workouts.map(w => w.date)).size;
+          const xp = workouts.length * 10 + streak * 25 + totalUniqueDays * 5;
+          document.getElementById('xp-count').textContent = xp;
+
           const prs = {};
-          workouts.forEach(w => { const wNum = parseFloat(w.weight); if (!prs[w.movement] || wNum > parseFloat(prs[w.movement].weight)) prs[w.movement] = w; });
+          workouts.forEach(w => { 
+              const wNum = parseFloat(w.weight); 
+              if(!isNaN(wNum)) {
+                  if (!prs[w.movement] || wNum > parseFloat(prs[w.movement].weight)) prs[w.movement] = w; 
+              }
+          });
           document.getElementById('stat-prs').textContent = Object.keys(prs).length;
 
           const prContainer = document.getElementById('pr-list');
@@ -1159,7 +1084,7 @@
                     ${prs[item.movement] && prs[item.movement].id === item.id ? '<span class="text-[9px] bg-white text-black px-2 py-0.5 rounded-full font-black uppercase tracking-widest flex-shrink-0">PR</span>' : ''}
                 </div>
                 <div class="flex items-center gap-2 mt-1">
-                    <span class="font-black text-white">${item.weight}kg</span>
+                    <span class="font-black text-white">${item.weight}</span>
                     <span class="text-gray-400 text-xs font-bold">× ${item.reps}</span>
                 </div>
                 ${item.notes ? `<p class="text-xs text-gray-400 mt-3 font-medium bg-app-input p-2 rounded-lg inline-block border border-app-border break-words whitespace-normal w-full">"${item.notes}"</p>` : ''}
@@ -1173,17 +1098,22 @@
           const movements = [...new Set(workouts.map(w => w.movement))];
           ['history-filter', 'chart-movement-filter'].forEach(id => {
               const sel = document.getElementById(id); const current = sel.value;
-              sel.innerHTML = id === 'chart-movement-filter' ? '' : '<option value="all">All Movements</option>';
+              sel.innerHTML = id === 'chart-movement-filter' ? '' : '<option value="all">All Entries</option>';
               movements.forEach(m => sel.innerHTML += `<option value="${m}">${m}</option>`);
               if (movements.includes(current)) sel.value = current;
           });
           try { lucide.createIcons(); } catch(e){}
+          
+          document.getElementById('stat-week').style.textShadow = `0 0 10px ${currentThemeColor}80`;
+          document.getElementById('stat-week').parentElement.style.borderColor = `${currentThemeColor}33`;
+          const statBg = document.getElementById('stat-week').parentElement.querySelector('div');
+          if(statBg) statBg.style.background = `linear-gradient(to bottom right, ${currentThemeColor}1a, transparent)`;
         }
 
         window.deleteWorkout = function(id) {
             workouts = workouts.filter(w => w.id !== id);
             try { localStorage.setItem('cf_workouts', JSON.stringify(workouts)); } catch(e){}
-            updateDashboard(); updateChart(); updateShareDropdowns();
+            updateDashboard(); updateChart(); updateShareDropdowns(); renderWeekCalendar();
         };
 
         const histFilter = document.getElementById('history-filter');
@@ -1203,7 +1133,7 @@
             if (progressChartInstance) progressChartInstance.destroy();
             if (!movement || workouts.length === 0 || typeof Chart === 'undefined') return;
 
-            const dataPoints = workouts.filter(w => w.movement === movement).sort((a, b) => new Date(a.date) - new Date(b.date));
+            const dataPoints = workouts.filter(w => w.movement === movement && !isNaN(parseFloat(w.weight))).sort((a, b) => new Date(a.date) - new Date(b.date));
             const labels = dataPoints.map(d => { const dt = new Date(d.date + 'T00:00:00'); return `${dt.getMonth()+1}/${dt.getDate()}`; });
             const data = dataPoints.map(d => calculate1RM(d.weight, d.reps));
 
@@ -1216,14 +1146,14 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Est 1RM (kg)', data: data, borderColor: currentThemeColor, backgroundColor: gradient,
+                        label: 'Est 1RM', data: data, borderColor: currentThemeColor, backgroundColor: gradient,
                         borderWidth: 4, pointBackgroundColor: '#000', pointBorderColor: currentThemeColor,
                         pointBorderWidth: 3, pointRadius: 5, pointHoverRadius: 8, fill: true, tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1c1c1e', titleColor: '#fff', bodyColor: currentThemeColor, bodyFont: {weight: 'bold', size: 14}, padding: 12, borderColor: '#333336', borderWidth: 1, displayColors: false, callbacks: { label: c => c.parsed.y + ' kg' } } },
+                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1c1c1e', titleColor: '#fff', bodyColor: currentThemeColor, bodyFont: {weight: 'bold', size: 14}, padding: 12, borderColor: '#333336', borderWidth: 1, displayColors: false } },
                     scales: {
                         x: { grid: { display: false }, ticks: { color: '#8e8e93', font: { weight: 'bold', size: 10 } } },
                         y: { grid: { color: '#333336' }, ticks: { color: '#8e8e93', font: { weight: 'bold', size: 10 } } }
@@ -1283,52 +1213,384 @@
               btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto text-black"></i>'; 
               try { lucide.createIcons(); } catch(err){}
 
+              const isWodMode = !document.getElementById('input-wod-group').classList.contains('hidden');
+              const movementVal = isWodMode ? document.getElementById('wod-select').value : document.getElementById('movement-select').value;
               const dateVal = document.getElementById('lift-date').value || new Date().toISOString().split('T')[0];
+              
+              const rpeVal = document.getElementById('lift-rpe').value;
               const payload = {
-                type: 'workout',
-                id: 'cf_' + Date.now(), date: dateVal, timestamp: dateVal,
-                movement: document.getElementById('movement-select').value,
-                weight: document.getElementById('lift-weight').value,
-                reps: document.getElementById('lift-reps').value, notes: document.getElementById('lift-notes').value
+                type: 'workout', id: 'cf_' + Date.now(), date: dateVal, timestamp: dateVal,
+                movement: movementVal, weight: document.getElementById('lift-weight').value,
+                reps: document.getElementById('lift-reps').value, rpe: rpeVal, notes: document.getElementById('lift-notes').value
               };
 
               workouts.push(payload);
               try { localStorage.setItem('cf_workouts', JSON.stringify(workouts)); } catch(err){}
-              updateDashboard(); updateChart(); updateShareDropdowns();
+              updateDashboard(); updateChart(); updateShareDropdowns(); renderWeekCalendar();
+              checkForPR(payload);
               showToast('Logged & Synced! ⚡');
               btn.disabled = false; btn.innerHTML = originalText;
-              e.target.reset(); document.getElementById('lift-date').valueAsDate = new Date();
+              document.getElementById('lift-weight').value = ""; document.getElementById('lift-notes').value = "";
+              if (document.getElementById('lift-rpe')) document.getElementById('lift-rpe').value = "";
               syncPostToCloud(payload);
             });
         }
 
         let timerInterval, startTime, elapsedTime = 0;
-        const timerDisplay = document.getElementById('timer-display'), btnStart = document.getElementById('btn-start'), btnStop = document.getElementById('btn-stop'), btnReset = document.getElementById('btn-reset');
+        let isRunning = false, isPaused = false;
+        let currentMode = 'stopwatch';
+        let countdownSecs = 0, currentRound = 1, totalRounds = 1;
+        let tabataPhase = 'work';
+
+        const timerDisplay = document.getElementById('timer-display');
+        const timerMs = document.getElementById('timer-ms');
+        const timerStatus = document.getElementById('timer-status');
+        const timerRoundDisplay = document.getElementById('timer-round-display');
         
-        function formatTime(ms) { 
-            let totalSeconds = Math.floor(ms / 1000), minutes = Math.floor(totalSeconds / 60), seconds = totalSeconds % 60, tenths = Math.floor((ms % 1000) / 100); 
-            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}<span class="text-4xl text-gray-500">.${tenths}</span>`; 
+        const btnStart = document.getElementById('btn-start');
+        const btnStop = document.getElementById('btn-stop');
+        const btnReset = document.getElementById('btn-reset');
+
+        let audioCtx = null;
+        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        function playBeep(type) {
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                if (type === 'short') {
+                    osc.frequency.value = 880; osc.type = 'sine';
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+                } else {
+                    osc.frequency.value = 660; osc.type = 'square';
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+                }
+            } catch(e) {}
         }
 
-        if(btnStart) {
-            btnStart.addEventListener('click', () => { 
-                if(navigator.vibrate) navigator.vibrate(50); 
-                startTime = Date.now() - elapsedTime; 
-                timerInterval = setInterval(() => { elapsedTime = Date.now() - startTime; timerDisplay.innerHTML = formatTime(elapsedTime); }, 50); 
-                btnStart.classList.add('hidden'); btnStop.classList.remove('hidden'); 
+        document.querySelectorAll('.timer-mode-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if(isRunning || isPaused) resetTimer();
+                document.querySelectorAll('.timer-mode-btn').forEach(b => {
+                    b.classList.replace('text-white', 'text-gray-500'); b.classList.remove('bg-[#333336]');
+                });
+                e.target.classList.replace('text-gray-500', 'text-white'); e.target.classList.add('bg-[#333336]');
+                currentMode = e.target.getAttribute('data-mode');
+                
+                document.getElementById('timer-config-amrap').classList.add('hidden');
+                document.getElementById('timer-config-emom').classList.add('hidden');
+                document.getElementById('timer-config-tabata').classList.add('hidden');
+                
+                timerStatus.classList.add('hidden'); timerRoundDisplay.classList.add('hidden');
+                
+                if(currentMode === 'amrap') document.getElementById('timer-config-amrap').classList.remove('hidden');
+                if(currentMode === 'emom') document.getElementById('timer-config-emom').classList.remove('hidden');
+                if(currentMode === 'tabata') document.getElementById('timer-config-tabata').classList.remove('hidden');
+                
+                updateDisplay(0);
             });
-            btnStop.addEventListener('click', () => { 
-                if(navigator.vibrate) navigator.vibrate([50, 50, 50]); 
-                clearInterval(timerInterval); btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); 
-            });
-            btnReset.addEventListener('click', () => { 
-                clearInterval(timerInterval); elapsedTime = 0; timerDisplay.innerHTML = '00:00<span class="text-4xl text-gray-500">.0</span>'; 
-                btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); 
-            });
+        });
+
+        function updateDisplay(ms) { 
+            if(currentMode === 'stopwatch') {
+                let totalSecs = Math.floor(ms / 1000); let mins = Math.floor(totalSecs / 60); let secs = totalSecs % 60; let tenths = Math.floor((ms % 1000) / 100); 
+                timerDisplay.innerHTML = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}<span class="text-4xl text-gray-500">.${tenths}</span>`; 
+            } else {
+                let displaySecs = Math.ceil((countdownSecs * 1000 - ms) / 1000);
+                if (displaySecs < 0) displaySecs = 0;
+                let mins = Math.floor(displaySecs / 60); let secs = displaySecs % 60;
+                timerDisplay.innerHTML = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                if(displaySecs > 0 && displaySecs <= 3 && Math.floor((countdownSecs * 1000 - ms)/100) % 10 === 0) playBeep('short');
+                if(displaySecs === 0 && Math.floor((countdownSecs * 1000 - ms)/100) % 10 === 0) playBeep('long');
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval); isRunning = false; isPaused = false; elapsedTime = 0;
+            btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); btnStart.textContent = "START";
+            timerStatus.classList.add('hidden'); timerRoundDisplay.classList.add('hidden');
+            timerDisplay.classList.remove('text-red-500', 'text-gym-neon'); timerDisplay.classList.add('text-white');
+            updateDisplay(0);
+        }
+
+        btnStart.addEventListener('click', () => { 
+            initAudio();
+            if(navigator.vibrate) navigator.vibrate(50);
+            
+            if(!isRunning && !isPaused) {
+                if(currentMode === 'amrap') {
+                    countdownSecs = parseInt(document.getElementById('cfg-amrap-min').value) * 60;
+                } else if (currentMode === 'emom') {
+                    countdownSecs = parseInt(document.getElementById('cfg-emom-every').value) * 60;
+                    totalRounds = parseInt(document.getElementById('cfg-emom-rds').value);
+                    currentRound = 1; timerRoundDisplay.textContent = `ROUND ${currentRound}/${totalRounds}`; timerRoundDisplay.classList.remove('hidden');
+                } else if (currentMode === 'tabata') {
+                    countdownSecs = 20; totalRounds = 8; currentRound = 1; tabataPhase = 'work';
+                    timerStatus.textContent = "WORK"; timerStatus.classList.remove('hidden', 'text-blue-500'); timerStatus.classList.add('text-gym-neon');
+                    timerDisplay.classList.remove('text-white'); timerDisplay.classList.add('text-gym-neon');
+                    timerRoundDisplay.textContent = `ROUND ${currentRound}/${totalRounds}`; timerRoundDisplay.classList.remove('hidden');
+                }
+            }
+
+            startTime = Date.now() - elapsedTime; isRunning = true; isPaused = false;
+            
+            timerInterval = setInterval(() => { 
+                elapsedTime = Date.now() - startTime;
+                
+                if (currentMode !== 'stopwatch') {
+                    if (elapsedTime >= countdownSecs * 1000) {
+                        if (currentMode === 'amrap') {
+                            resetTimer(); playBeep('long'); showToast('TIME CAP REACHED!'); return;
+                        } else if (currentMode === 'emom') {
+                            if (currentRound >= totalRounds) { resetTimer(); playBeep('long'); showToast('EMOM COMPLETE!'); return; }
+                            currentRound++; timerRoundDisplay.textContent = `ROUND ${currentRound}/${totalRounds}`;
+                            startTime = Date.now(); elapsedTime = 0; 
+                        } else if (currentMode === 'tabata') {
+                            if (tabataPhase === 'work') {
+                                tabataPhase = 'rest'; countdownSecs = 10;
+                                timerStatus.textContent = "REST"; timerStatus.classList.replace('text-gym-neon', 'text-blue-500');
+                                timerDisplay.classList.replace('text-gym-neon', 'text-red-500');
+                            } else {
+                                if (currentRound >= totalRounds) { resetTimer(); playBeep('long'); showToast('TABATA COMPLETE!'); return; }
+                                currentRound++; tabataPhase = 'work'; countdownSecs = 20; timerRoundDisplay.textContent = `ROUND ${currentRound}/${totalRounds}`;
+                                timerStatus.textContent = "WORK"; timerStatus.classList.replace('text-blue-500', 'text-gym-neon');
+                                timerDisplay.classList.replace('text-red-500', 'text-gym-neon');
+                            }
+                            startTime = Date.now(); elapsedTime = 0;
+                        }
+                    }
+                }
+                updateDisplay(elapsedTime); 
+            }, 50); 
+            
+            btnStart.classList.add('hidden'); btnStop.classList.remove('hidden'); 
+        });
+
+        btnStop.addEventListener('click', () => { 
+            if(navigator.vibrate) navigator.vibrate([50, 50, 50]); 
+            clearInterval(timerInterval); isRunning = false; isPaused = true;
+            btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); btnStart.textContent = "RESUME";
+        });
+
+        btnReset.addEventListener('click', () => { resetTimer(); });
+
+        // --- Timer Logging ---
+        let timerLogs = [];
+        try { timerLogs = JSON.parse(localStorage.getItem('cf_timer_logs')) || []; } catch(e){}
+
+        function saveTimerLog(mode, duration, rounds) {
+            const entry = { id: 'tl_' + Date.now(), mode, duration, rounds, date: new Date().toISOString().split('T')[0], timestamp: Date.now() };
+            timerLogs.push(entry);
+            localStorage.setItem('cf_timer_logs', JSON.stringify(timerLogs));
+            renderTimerLogs();
+            syncPostToCloud({ ...entry, type: 'timer_log' });
+        }
+
+        function renderTimerLogs() {
+            const list = document.getElementById('timer-log-list');
+            if (!list) return;
+            if (timerLogs.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 text-xs font-bold text-center py-4">No sessions saved yet.</p>';
+                return;
+            }
+            list.innerHTML = [...timerLogs].reverse().slice(0, 10).map(t => `
+                <div class="flex items-center justify-between bg-app-input rounded-xl px-4 py-2.5 border border-app-border">
+                    <div><span class="text-xs font-black text-white uppercase">${t.mode}</span><span class="text-[10px] text-gray-500 font-bold ml-2">${t.duration}${t.rounds ? ' · '+t.rounds+' rds' : ''}</span></div>
+                    <span class="text-[10px] text-gray-500 font-bold">${t.date}</span>
+                </div>
+            `).join('');
+        }
+
+        function saveTimerCompletion() {
+            const totalSecs = Math.floor(elapsedTime / 1000);
+            const mins = Math.floor(totalSecs / 60);
+            const secs = totalSecs % 60;
+            const duration = `${mins}:${secs.toString().padStart(2, '0')}`;
+            let rounds = '';
+            if (currentMode === 'emom') rounds = `${currentRound}/${totalRounds}`;
+            else if (currentMode === 'tabata') rounds = `${currentRound}/${totalRounds}`;
+            else if (currentMode === 'amrap') rounds = `${Math.floor(countdownSecs/60)}min cap`;
+            saveTimerLog(currentMode, duration, rounds);
+        }
+
+        const origResetTimer = resetTimer;
+        resetTimer = function() {
+            if (isRunning || isPaused) {
+                if (currentMode !== 'stopwatch' && elapsedTime > 1000) {
+                    saveTimerCompletion();
+                }
+            }
+            origResetTimer();
+        };
+
+        document.getElementById('btn-clear-timer-logs')?.addEventListener('click', () => {
+            timerLogs = [];
+            localStorage.setItem('cf_timer_logs', JSON.stringify(timerLogs));
+            renderTimerLogs();
+            showToast('Timer logs cleared');
+        });
+
+        // --- Body Fat Calculator ---
+        document.getElementById('btn-calc-bf')?.addEventListener('click', () => {
+            const h = parseFloat(document.getElementById('bf-height').value);
+            const n = parseFloat(document.getElementById('bf-neck').value);
+            const w = parseFloat(document.getElementById('bf-waist').value);
+            if (!h || !n || !w) { showToast('Enter all measurements'); return; }
+            const bf = 495 / (1.0324 - 0.19077 * Math.log10(w - n) + 0.15456 * Math.log10(h)) - 450;
+            const result = document.getElementById('bf-result');
+            document.getElementById('bf-percent').textContent = bf.toFixed(1);
+            result.classList.remove('hidden');
+
+            const bfStorage = JSON.parse(localStorage.getItem('cf_bf_logs') || '[]');
+            bfStorage.push({ date: new Date().toISOString().split('T')[0], bf: parseFloat(bf.toFixed(1)) });
+            localStorage.setItem('cf_bf_logs', JSON.stringify(bfStorage));
+            showToast(`BF: ${bf.toFixed(1)}%`);
+        });
+
+        // --- Notifications ---
+        function requestNotifPermission() {
+            if (!('Notification' in window)) return;
+            if (Notification.permission === 'default') Notification.requestPermission();
+        }
+
+        function sendLocalNotification(title, body) {
+            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+            try {
+                const n = new Notification(title, { body, icon: 'icon.svg', tag: 'salvapp' });
+                setTimeout(() => n.close(), 5000);
+            } catch(e) {}
+        }
+
+        function checkNotifications() {
+            const enabled = localStorage.getItem('cf_notif_enabled') === 'true';
+            if (!enabled) return;
+            const today = new Date().toISOString().split('T')[0];
+            const loggedToday = workouts.some(w => w.date === today);
+            if (!loggedToday) {
+                const lastNotif = localStorage.getItem('cf_last_notif_date');
+                if (lastNotif !== today) {
+                    sendLocalNotification('Salvapp', 'You haven\'t logged today\'s training yet! Get after it 💪');
+                    localStorage.setItem('cf_last_notif_date', today);
+                }
+            }
+        }
+
+        document.getElementById('toggle-notifications')?.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                localStorage.setItem('cf_notif_enabled', 'true');
+                requestNotifPermission();
+                showToast('Reminders enabled! 🔔');
+            } else {
+                localStorage.setItem('cf_notif_enabled', 'false');
+                showToast('Reminders disabled');
+            }
+        });
+
+        const notifToggle = document.getElementById('toggle-notifications');
+        if (notifToggle) notifToggle.checked = localStorage.getItem('cf_notif_enabled') === 'true';
+
+        // Check for reminders every 10 minutes
+        setInterval(checkNotifications, 600000);
+        setTimeout(checkNotifications, 30000);
+
+        // PR Notification system
+        function checkForPR(newWorkout) {
+            if (!newWorkout || !newWorkout.movement) return;
+            const parsed = parseFloat(newWorkout.weight) || 0;
+            if (parsed <= 0) return;
+            const prev = workouts.filter(w => w.movement === newWorkout.movement && w.id !== newWorkout.id);
+            const prevBest = Math.max(...prev.map(w => parseFloat(w.weight) || 0), 0);
+            if (prev.length > 0 && parsed > prevBest) {
+                sendLocalNotification('🏆 NEW PR!', `${newWorkout.movement}: ${parsed}kg (previous best: ${prevBest}kg)`);
+                showToast(`🔥 NEW PR: ${newWorkout.movement} ${parsed}kg!`);
+            }
         }
 
         loadLocalCache();
         syncWithCloud();
+
+        // --- Mobility Persistence ---
+        function loadMobility() {
+            try {
+                const saved = JSON.parse(localStorage.getItem('cf_mobility')) || {};
+                ['mob-hips', 'mob-shoulders', 'mob-ankles'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.checked = saved[id] || false;
+                });
+            } catch(e) {}
+        }
+        function saveMobility() {
+            const state = {};
+            ['mob-hips', 'mob-shoulders', 'mob-ankles'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) state[id] = el.checked;
+            });
+            localStorage.setItem('cf_mobility', JSON.stringify(state));
+        }
+        ['mob-hips', 'mob-shoulders', 'mob-ankles'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', saveMobility);
+        });
+        loadMobility();
+
+        // --- Service Worker Registration ---
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => {
+                console.log('SW registration failed', err);
+            });
+        }
+
+        // --- Pull to Refresh ---
+        let touchStartY = 0;
+        let pulling = false;
+        const pullIndicator = document.createElement('div');
+        pullIndicator.id = 'pull-indicator';
+        pullIndicator.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99;display:flex;justify-content:center;align-items:flex-end;padding-bottom:8px;height:60px;background:linear-gradient(to bottom,#000,#0000);color:#58cc02;font-size:12px;font-weight:700;transform:translateY(-100%);transition:transform 0.2s;pointer-events:none';
+        pullIndicator.textContent = '↓ Pull to sync';
+        document.body.appendChild(pullIndicator);
+
+        window.addEventListener('touchstart', (e) => {
+            if (window.scrollY <= 0) {
+                touchStartY = e.touches[0].clientY;
+                pulling = true;
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!pulling) return;
+            const dy = e.touches[0].clientY - touchStartY;
+            if (dy > 40) {
+                pullIndicator.style.transform = 'translateY(0)';
+                pullIndicator.textContent = 'Release to sync';
+                pullIndicator.style.color = currentThemeColor;
+            } else if (dy > 0) {
+                const progress = dy / 40;
+                pullIndicator.style.transform = `translateY(${-60 + dy}px)`;
+                pullIndicator.textContent = '↓ Pull to sync';
+            } else {
+                pullIndicator.style.transform = 'translateY(-100%)';
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            if (!pulling) return;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            pulling = false;
+            if (dy > 40) {
+                pullIndicator.style.transform = 'translateY(-100%)';
+                pullIndicator.textContent = '↓ Pull to sync';
+                syncWithCloud();
+                if(navigator.vibrate) navigator.vibrate(30);
+            } else {
+                pullIndicator.style.transform = 'translateY(-100%)';
+            }
+        }, { passive: true });
     });
   </script>
 </body>

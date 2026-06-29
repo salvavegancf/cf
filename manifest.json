@@ -1,0 +1,20 @@
+{
+  "name": "Salvapp - CrossFit Tracker",
+  "short_name": "Salvapp",
+  "description": "Track your CrossFit workouts, lifts, WODs, nutrition, and progress",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "status_bar": "black-translucent",
+  "categories": ["fitness", "health", "sports"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
