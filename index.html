@@ -236,13 +236,13 @@
         </div>
         <div class="flex gap-1.5 mb-4 overflow-x-auto pb-1" id="food-categories">
           <button class="food-cat-btn active px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#1d1d1f] text-white" data-cat="all">All</button>
-          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="meat">Meat</button>
-          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="fish">Fish</button>
-          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="dairy">Dairy</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="legumes">Legumes</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="seeds">Seeds</button>
           <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="grains">Grains</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="plant">Plant</button>
           <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="fruits">Fruits</button>
           <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="veggies">Veggies</button>
-          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="legumes">Nuts</button>
+          <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[#f2f2f7] text-[#8e8e93]" data-cat="fats">Fats</button>
         </div>
         <div id="food-selected" class="hidden bg-[#f2f2f7] rounded-xl p-4 border border-[#e5e5ea] mb-4">
           <div class="flex items-center justify-between mb-3">
@@ -362,8 +362,7 @@
             </div>
             
             <div class="w-full overflow-x-auto pb-4 flex justify-center relative z-10">
-              <div id="share-card-capture" class="w-[360px] h-[640px] flex-shrink-0 relative bg-black overflow-hidden rounded-[24px]" style="touch-action: none; cursor: grab;">
-                <img id="capture-bg-img" src="" class="absolute inset-0 w-full h-full object-cover hidden z-0 pointer-events-none" alt="Background">
+              <div id="share-card-capture" class="w-[360px] h-[640px] flex-shrink-0 relative bg-black overflow-hidden rounded-[24px]" style="touch-action: none; cursor: grab; background-position: center center; background-size: cover; background-repeat: no-repeat;">
                 <div class="absolute inset-0 bg-black/40 pointer-events-none z-0"></div>
                 <div class="absolute top-6 left-6 right-6 z-20 flex justify-between items-center w-[312px] pointer-events-none">
                   <div class="w-9 h-9 rounded-xl bg-gym-neon flex items-center justify-center" id="card-pro-logo-container"><svg id="card-pro-logo" class="text-black" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
@@ -391,6 +390,10 @@
                 <div class="relative">
                   <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">BACKGROUND IMAGE</label> 
                   <label class="w-full bento-input rounded-xl px-4 py-3 font-bold flex items-center justify-between cursor-pointer hover:bg-[#e5e5ea] transition"><span id="share-upload-text" class="text-xs truncate">Upload Photo...</span><i data-lucide="upload" class="w-4 h-4 text-gym-neon flex-shrink-0" id="share-upload-icon"></i><input type="file" id="share-image-upload" accept="image/*" class="hidden"></label>
+                </div>
+                <div id="gallery-picker" class="hidden">
+                  <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">OR PICK FROM GALLERY</label>
+                  <div id="gallery-picker-grid" class="flex gap-2 overflow-x-auto pb-2"></div>
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-[#8e8e93] mb-2 block pl-1">COLOR ACCENT</label> 
@@ -530,27 +533,28 @@
         let macros = [];
 
         const FOOD_DB = [
-          { name:'Chicken Breast', cat:'meat', protein:31, carbs:0, fat:3.6, kcal:165 },
-          { name:'Chicken Thigh', cat:'meat', protein:26, carbs:0, fat:10, kcal:209 },
-          { name:'Ground Beef 90/10', cat:'meat', protein:26, carbs:0, fat:10, kcal:200 },
-          { name:'Ground Beef 80/20', cat:'meat', protein:22, carbs:0, fat:17, kcal:250 },
-          { name:'Sirloin Steak', cat:'meat', protein:27, carbs:0, fat:7, kcal:175 },
-          { name:'Pork Chop', cat:'meat', protein:26, carbs:0, fat:9, kcal:190 },
-          { name:'Turkey Breast', cat:'meat', protein:29, carbs:0, fat:1.5, kcal:135 },
-          { name:'Bacon', cat:'meat', protein:37, carbs:1.4, fat:42, kcal:540 },
-          { name:'Salmon', cat:'fish', protein:25, carbs:0, fat:13, kcal:220 },
-          { name:'Canned Tuna', cat:'fish', protein:26, carbs:0, fat:1, kcal:115 },
-          { name:'Shrimp', cat:'fish', protein:24, carbs:0, fat:0.3, kcal:100 },
-          { name:'Cod', cat:'fish', protein:22, carbs:0, fat:0.5, kcal:95 },
-          { name:'Eggs', cat:'dairy', protein:13, carbs:1.1, fat:10, kcal:155 },
-          { name:'Egg Whites', cat:'dairy', protein:11, carbs:0.7, fat:0, kcal:50 },
-          { name:'Greek Yogurt', cat:'dairy', protein:9, carbs:4, fat:5, kcal:95 },
-          { name:'Cottage Cheese', cat:'dairy', protein:11, carbs:3.5, fat:4.5, kcal:100 },
-          { name:'Milk (Whole)', cat:'dairy', protein:3.3, carbs:4.8, fat:3.3, kcal:64 },
-          { name:'Skim Milk', cat:'dairy', protein:3.4, carbs:5, fat:0.1, kcal:35 },
-          { name:'Cheddar Cheese', cat:'dairy', protein:25, carbs:1.3, fat:33, kcal:408 },
-          { name:'Mozzarella', cat:'dairy', protein:28, carbs:3, fat:22, kcal:318 },
-          { name:'Whey Protein', cat:'dairy', protein:80, carbs:6, fat:3, kcal:380 },
+          { name:'Tofu (Firm)', cat:'legumes', protein:8, carbs:2, fat:4.8, kcal:76 },
+          { name:'Tempeh', cat:'legumes', protein:19, carbs:9, fat:11, kcal:193 },
+          { name:'Edamame', cat:'legumes', protein:11, carbs:8.9, fat:5, kcal:121 },
+          { name:'Seitan', cat:'legumes', protein:24, carbs:7, fat:1.5, kcal:140 },
+          { name:'Black Beans', cat:'legumes', protein:8.2, carbs:23.7, fat:0.5, kcal:132 },
+          { name:'Lentils', cat:'legumes', protein:9, carbs:20, fat:0.4, kcal:116 },
+          { name:'Chickpeas', cat:'legumes', protein:7.7, carbs:22, fat:1.6, kcal:130 },
+          { name:'Kidney Beans', cat:'legumes', protein:8, carbs:23, fat:0.5, kcal:127 },
+          { name:'Pinto Beans', cat:'legumes', protein:9, carbs:26, fat:0.6, kcal:145 },
+          { name:'Green Peas', cat:'legumes', protein:5, carbs:14, fat:0.4, kcal:80 },
+          { name:'Peanuts', cat:'legumes', protein:26, carbs:16, fat:49, kcal:567 },
+          { name:'Peanut Butter', cat:'legumes', protein:25, carbs:20, fat:50, kcal:590 },
+          { name:'Almonds', cat:'legumes', protein:21, carbs:22, fat:49, kcal:575 },
+          { name:'Walnuts', cat:'legumes', protein:15, carbs:14, fat:65, kcal:650 },
+          { name:'Cashews', cat:'legumes', protein:18, carbs:30, fat:44, kcal:553 },
+          { name:'Chia Seeds', cat:'seeds', protein:17, carbs:42, fat:31, kcal:486 },
+          { name:'Hemp Seeds', cat:'seeds', protein:31, carbs:9, fat:49, kcal:553 },
+          { name:'Flax Seeds', cat:'seeds', protein:18, carbs:29, fat:42, kcal:534 },
+          { name:'Pumpkin Seeds', cat:'seeds', protein:19, carbs:15, fat:46, kcal:446 },
+          { name:'Sunflower Seeds', cat:'seeds', protein:21, carbs:20, fat:51, kcal:584 },
+          { name:'Sesame Seeds', cat:'seeds', protein:17, carbs:23, fat:50, kcal:573 },
+          { name:'Tahini', cat:'seeds', protein:17, carbs:12, fat:60, kcal:595 },
           { name:'White Rice', cat:'grains', protein:2.7, carbs:28, fat:0.3, kcal:130 },
           { name:'Brown Rice', cat:'grains', protein:2.6, carbs:23, fat:0.9, kcal:110 },
           { name:'Oats', cat:'grains', protein:12, carbs:55, fat:5.5, kcal:320 },
@@ -559,6 +563,15 @@
           { name:'Potato', cat:'grains', protein:2, carbs:17, fat:0.1, kcal:77 },
           { name:'Sweet Potato', cat:'grains', protein:1.6, carbs:20, fat:0.1, kcal:90 },
           { name:'Quinoa', cat:'grains', protein:4.4, carbs:21, fat:1.9, kcal:120 },
+          { name:'Couscous', cat:'grains', protein:6, carbs:24, fat:0.6, kcal:130 },
+          { name:'Buckwheat', cat:'grains', protein:5.7, carbs:21, fat:1.1, kcal:110 },
+          { name:'Millet', cat:'grains', protein:3.5, carbs:23, fat:1, kcal:120 },
+          { name:'Soy Milk', cat:'plant', protein:3.3, carbs:3.4, fat:1.8, kcal:41 },
+          { name:'Almond Milk', cat:'plant', protein:0.6, carbs:1.5, fat:1.1, kcal:17 },
+          { name:'Oat Milk', cat:'plant', protein:0.5, carbs:7, fat:1.5, kcal:45 },
+          { name:'Coconut Milk', cat:'plant', protein:0.5, carbs:3, fat:5, kcal:55 },
+          { name:'Vegan Yogurt', cat:'plant', protein:3, carbs:6, fat:2, kcal:55 },
+          { name:'Nutritional Yeast', cat:'plant', protein:48, carbs:22, fat:5, kcal:325 },
           { name:'Banana', cat:'fruits', protein:1.1, carbs:22.8, fat:0.3, kcal:90 },
           { name:'Apple', cat:'fruits', protein:0.3, carbs:14, fat:0.2, kcal:55 },
           { name:'Blueberries', cat:'fruits', protein:0.7, carbs:14, fat:0.3, kcal:55 },
@@ -566,6 +579,13 @@
           { name:'Orange', cat:'fruits', protein:0.9, carbs:12, fat:0.1, kcal:47 },
           { name:'Grapes', cat:'fruits', protein:0.6, carbs:17, fat:0.1, kcal:65 },
           { name:'Avocado', cat:'fruits', protein:2, carbs:9, fat:15, kcal:160 },
+          { name:'Pineapple', cat:'fruits', protein:0.5, carbs:13, fat:0.1, kcal:50 },
+          { name:'Mango', cat:'fruits', protein:0.8, carbs:15, fat:0.4, kcal:60 },
+          { name:'Papaya', cat:'fruits', protein:0.5, carbs:11, fat:0.2, kcal:43 },
+          { name:'Kiwi', cat:'fruits', protein:1.1, carbs:15, fat:0.5, kcal:61 },
+          { name:'Watermelon', cat:'fruits', protein:0.9, carbs:7.6, fat:0.2, kcal:30 },
+          { name:'Coconut Meat', cat:'fruits', protein:3.3, carbs:15, fat:33, kcal:354 },
+          { name:'Raspberries', cat:'fruits', protein:1.2, carbs:12, fat:0.7, kcal:52 },
           { name:'Broccoli', cat:'veggies', protein:2.8, carbs:7, fat:0.4, kcal:34 },
           { name:'Spinach', cat:'veggies', protein:2.9, carbs:3.6, fat:0.4, kcal:23 },
           { name:'Mixed Greens', cat:'veggies', protein:1.5, carbs:3, fat:0.2, kcal:18 },
@@ -574,20 +594,23 @@
           { name:'Carrot', cat:'veggies', protein:0.9, carbs:10, fat:0.2, kcal:41 },
           { name:'Onion', cat:'veggies', protein:1.1, carbs:9, fat:0.1, kcal:40 },
           { name:'Asparagus', cat:'veggies', protein:2.2, carbs:4, fat:0.1, kcal:20 },
-          { name:'Black Beans', cat:'legumes', protein:8.2, carbs:23.7, fat:0.5, kcal:132 },
-          { name:'Lentils', cat:'legumes', protein:9, carbs:20, fat:0.4, kcal:116 },
-          { name:'Chickpeas', cat:'legumes', protein:7.7, carbs:22, fat:1.6, kcal:130 },
-          { name:'Almonds', cat:'legumes', protein:21, carbs:22, fat:49, kcal:575 },
-          { name:'Peanut Butter', cat:'legumes', protein:25, carbs:20, fat:50, kcal:590 },
-          { name:'Walnuts', cat:'legumes', protein:15, carbs:14, fat:65, kcal:650 },
-          { name:'Cashews', cat:'legumes', protein:18, carbs:30, fat:44, kcal:553 },
+          { name:'Kale', cat:'veggies', protein:4.3, carbs:8.8, fat:0.9, kcal:49 },
+          { name:'Cucumber', cat:'veggies', protein:0.7, carbs:3.6, fat:0.1, kcal:15 },
+          { name:'Zucchini', cat:'veggies', protein:1.2, carbs:3.1, fat:0.3, kcal:17 },
+          { name:'Mushrooms', cat:'veggies', protein:3.1, carbs:3.3, fat:0.3, kcal:22 },
+          { name:'Cauliflower', cat:'veggies', protein:1.9, carbs:5, fat:0.3, kcal:25 },
+          { name:'Cabbage', cat:'veggies', protein:1.3, carbs:6, fat:0.1, kcal:25 },
+          { name:'Brussels Sprouts', cat:'veggies', protein:3.4, carbs:9, fat:0.3, kcal:43 },
+          { name:'Celery', cat:'veggies', protein:0.7, carbs:3, fat:0.2, kcal:16 },
+          { name:'Sweet Corn', cat:'veggies', protein:3.3, carbs:19, fat:1.2, kcal:86 },
           { name:'Olive Oil', cat:'fats', protein:0, carbs:0, fat:100, kcal:884 },
           { name:'Coconut Oil', cat:'fats', protein:0, carbs:0, fat:100, kcal:862 },
-          { name:'Butter', cat:'fats', protein:0.5, carbs:0, fat:81, kcal:717 },
-          { name:'Honey', cat:'other', protein:0.3, carbs:82, fat:0, kcal:304 },
+          { name:'Agave Syrup', cat:'other', protein:0, carbs:76, fat:0, kcal:310 },
           { name:'Maple Syrup', cat:'other', protein:0, carbs:67, fat:0, kcal:260 },
           { name:'Dark Chocolate 70%', cat:'other', protein:7, carbs:45, fat:31, kcal:480 },
-          { name:'Protein Bar', cat:'other', protein:30, carbs:35, fat:10, kcal:350 }
+          { name:'Protein Bar', cat:'other', protein:30, carbs:35, fat:10, kcal:350 },
+          { name:'Cacao Nibs', cat:'other', protein:14, carbs:16, fat:48, kcal:500 },
+          { name:'Coconut Flakes', cat:'other', protein:2.5, carbs:12, fat:34, kcal:360 }
         ];
         let foodLogs = [];
         try { foodLogs = JSON.parse(localStorage.getItem('cf_food_logs')) || []; } catch(e){}
@@ -943,6 +966,7 @@
         const picSaveBtn = document.getElementById('pic-save-btn');
 
         function renderPics() {
+          renderGalleryPicker();
           const gallery = document.getElementById('pic-gallery');
           if (!gallery) return;
           if (pics.length === 0) {
@@ -1144,17 +1168,38 @@
             updateSharePreview();
         }
 
+        function setStoryBackground(url) {
+            const card = document.getElementById('share-card-capture');
+            card.style.backgroundImage = `url(${url})`;
+            shareUploadText.textContent = "Photo loaded! ✅";
+            shareUploadText.style.color = currentThemeColor;
+        }
+
+        function renderGalleryPicker() {
+            const grid = document.getElementById('gallery-picker-grid');
+            const container = document.getElementById('gallery-picker');
+            if (!grid || !container) return;
+            if (pics.length === 0) { container.classList.add('hidden'); return; }
+            container.classList.remove('hidden');
+            grid.innerHTML = pics.slice(0, 10).map(p => `
+                <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-[#f2f2f7] border border-[#e5e5ea] cursor-pointer active:scale-95 transition" onclick="pickGalleryPic('${p.url}')">
+                    <img src="${p.url}" class="w-full h-full object-cover" onerror="this.style.display='none'" loading="lazy">
+                </div>
+            `).join('');
+        }
+
+        window.pickGalleryPic = function(url) {
+            setStoryBackground(url);
+            showToast('Gallery photo applied!');
+        };
+
         if(shareImageUpload) {
             shareImageUpload.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if(file) {
                     const reader = new FileReader();
                     reader.onload = function(event) {
-                        const bgImg = document.getElementById('capture-bg-img');
-                        bgImg.src = event.target.result;
-                        bgImg.classList.remove('hidden');
-                        shareUploadText.textContent = "Photo loaded! ✅"; 
-                        shareUploadText.style.color = currentThemeColor;
+                        setStoryBackground(event.target.result);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -1540,7 +1585,7 @@
         function updateDisplay(ms) { 
             if(currentMode === 'stopwatch') {
                 let totalSecs = Math.floor(ms / 1000); let mins = Math.floor(totalSecs / 60); let secs = totalSecs % 60; let tenths = Math.floor((ms % 1000) / 100); 
-                timerDisplay.innerHTML = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}<span class="text-4xl text-gray-500">.${tenths}</span>`; 
+                timerDisplay.innerHTML = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}<span class="text-4xl text-[#8e8e93]">.${tenths}</span>`; 
             } else {
                 let displaySecs = Math.ceil((countdownSecs * 1000 - ms) / 1000);
                 if (displaySecs < 0) displaySecs = 0;
@@ -1556,7 +1601,7 @@
             clearInterval(timerInterval); isRunning = false; isPaused = false; elapsedTime = 0;
             btnStop.classList.add('hidden'); btnStart.classList.remove('hidden'); btnStart.textContent = "START";
             timerStatus.classList.add('hidden'); timerRoundDisplay.classList.add('hidden');
-            timerDisplay.classList.remove('text-red-500', 'text-gym-neon'); timerDisplay.classList.add('text-white');
+            timerDisplay.classList.remove('text-red-500', 'text-gym-neon'); timerDisplay.classList.add('text-[#1d1d1f]');
             updateDisplay(0);
         }
 
@@ -1574,7 +1619,7 @@
                 } else if (currentMode === 'tabata') {
                     countdownSecs = 20; totalRounds = 8; currentRound = 1; tabataPhase = 'work';
                     timerStatus.textContent = "WORK"; timerStatus.classList.remove('hidden', 'text-blue-500'); timerStatus.classList.add('text-gym-neon');
-                    timerDisplay.classList.remove('text-white'); timerDisplay.classList.add('text-gym-neon');
+                    timerDisplay.classList.remove('text-[#1d1d1f]'); timerDisplay.classList.add('text-gym-neon');
                     timerRoundDisplay.textContent = `ROUND ${currentRound}/${totalRounds}`; timerRoundDisplay.classList.remove('hidden');
                 }
             }
@@ -1637,7 +1682,7 @@
             const list = document.getElementById('timer-log-list');
             if (!list) return;
             if (timerLogs.length === 0) {
-                list.innerHTML = '<p class="text-gray-500 text-xs font-bold text-center py-4">No sessions saved yet.</p>';
+                list.innerHTML = '<p class="text-[#8e8e93] text-xs font-bold text-center py-4">No sessions saved yet.</p>';
                 return;
             }
             list.innerHTML = [...timerLogs].reverse().slice(0, 10).map(t => `
