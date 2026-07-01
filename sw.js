@@ -1,4 +1,4 @@
-const CACHE = 'salvapp-v3';
+const CACHE = 'salvapp-v4';
 const PRECACHE_URLS = [
   '/index.html',
   '/manifest.json',
