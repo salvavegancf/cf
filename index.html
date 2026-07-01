@@ -57,11 +57,11 @@
     [data-theme="dark"] {
       --bg: #000000;
       --card: #1a1a1a;
-      --input: #1a1a1a;
-      --border: #2a2a2a;
+      --input: #222222;
+      --border: #333333;
       --text: #ffffff;
-      --secondary: #8e8e93;
-      --tertiary: #636366;
+      --secondary: #aeaeb2;
+      --tertiary: #8e8e93;
       --accent: #58cc02;
       --accent-hover: #4ab002;
       --nav-bg: rgba(0,0,0,0.9);
@@ -98,13 +98,13 @@
     .lightbox-img-enter { transform: scale(1) !important; }
 
     .liquid-selector { position: relative; display: flex; background: var(--input); border-radius: 12px; padding: 4px; border: 1px solid var(--border); }
-    .liquid-pill { position: absolute; top: 4px; bottom: 4px; border-radius: 8px; background: var(--card); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.3s ease; z-index: 1; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .liquid-pill { position: absolute; top: 4px; bottom: 4px; border-radius: 8px; background: var(--bg); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.3s ease; z-index: 1; box-shadow: var(--shadow); }
     .liquid-btn { position: relative; z-index: 2; flex: 1; padding: 8px 0; text-align: center; font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.05em; transition: color 0.2s; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     .liquid-btn.active { color: var(--text); }
     
     .text-shadow-heavy { text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
     .custom-range { -webkit-appearance: none; width: 100%; background: var(--border); height: 6px; border-radius: 9999px; outline: none; border: none; }
-    .custom-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid white; transition: transform 0.15s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .custom-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--bg); transition: transform 0.15s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
     .custom-range::-webkit-slider-thumb:active { transform: scale(1.2); }
 
     .animate-fade-in { animation: fadeIn 0.3s ease forwards; }
@@ -114,6 +114,7 @@
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
     select, input, button { -webkit-appearance: none; }
+    .food-cat-btn, .timer-mode-btn { transition: all 0.2s ease; }
     input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; }
     input[type="number"]::-webkit-inner-spin-button { display: none; }
 
@@ -125,6 +126,10 @@
     [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
     [data-theme="dark"] select { background-color: #1a1a1a; color: #ffffff; }
     [data-theme="dark"] .bento-input:focus { box-shadow: 0 0 0 3px rgba(88,204,2,0.3); }
+    [data-theme="dark"] .food-cat-btn { transition: all 0.2s ease; }
+    [data-theme="dark"] .timer-mode-btn { transition: all 0.2s ease; }
+    .template-thumb { transition: all 0.2s ease; }
+    .template-thumb:hover { transform: scale(1.08); }
   </style>
 </head>
 
@@ -156,7 +161,7 @@
     </div>
   </header>
 
-  <div id="lightbox" class="fixed inset-0 z-[100] bg-[var(--text)]/95 opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
+  <div id="lightbox" class="fixed inset-0 z-[100] bg-black/85 opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center p-4" onclick="closeLightbox()">
     <button class="absolute top-8 right-6 text-white bg-[var(--card)]/10 hover:bg-[var(--card)]/20 p-3 rounded-full transition active:scale-90"><i data-lucide="x" class="w-6 h-6"></i></button>
     <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] rounded-xl scale-95 transition-transform duration-300 object-contain">
   </div>
@@ -183,7 +188,7 @@
         <div class="flex justify-between items-center mb-6">
             <h2 class="font-bold text-xl text-[var(--text)]">Log Training</h2>
             <div class="bg-[var(--input)] rounded-xl p-1 border border-[var(--border)] flex">
-                <button id="btn-mode-lift" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-lg bg-[var(--card)] text-[var(--text)] shadow-sm transition">Lifts</button>
+                <button id="btn-mode-lift" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-lg bg-gym-neon text-white shadow-sm transition">Lifts</button>
                 <button id="btn-mode-wod" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-lg text-[var(--secondary)] transition">WODs</button>
             </div>
         </div>
@@ -277,7 +282,7 @@
           <div id="food-results" class="hidden absolute z-30 left-0 right-0 top-full mt-1 bg-[var(--card)] border border-[var(--border)] rounded-xl max-h-52 overflow-y-auto shadow-xl"></div>
         </div>
         <div class="flex gap-1.5 mb-4 overflow-x-auto pb-1" id="food-categories">
-          <button class="food-cat-btn active px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[var(--text)] text-white" data-cat="all">All</button>
+          <button class="food-cat-btn active px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-gym-neon text-white" data-cat="all">All</button>
           <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[var(--input)] text-[var(--secondary)]" data-cat="legumes">Legumes</button>
           <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[var(--input)] text-[var(--secondary)]" data-cat="seeds">Seeds</button>
           <button class="food-cat-btn px-3 py-1.5 text-[9px] font-bold uppercase rounded-lg bg-[var(--input)] text-[var(--secondary)]" data-cat="grains">Grains</button>
@@ -404,26 +409,29 @@
 
     <section id="tab-studio" class="space-y-6 hidden">
       <div class="flex bg-[var(--card)] p-1 rounded-xl border border-[var(--border)] shadow-sm">
-          <button id="btn-studio-share" class="flex-1 py-2 text-xs font-bold uppercase rounded-lg bg-[var(--text)] text-white transition">Story Creator</button>
+          <button id="btn-studio-share" class="flex-1 py-2 text-xs font-bold uppercase rounded-lg bg-gym-neon text-white transition">Story Creator</button>
           <button id="btn-studio-gallery" class="flex-1 py-2 text-xs font-bold uppercase rounded-lg text-[var(--secondary)] transition">Gallery Vault</button>
       </div>
 
       <div id="view-story">
-          <div class="bento-card p-6 flex flex-col items-center border-gym-neon/30 relative overflow-hidden mb-6">
+          <div class="bento-card p-6 flex flex-col items-center border-gym-neon/30 relative overflow-hidden mb-6" style="background: linear-gradient(135deg, var(--card), var(--input))">
             <div class="absolute inset-0 bg-gradient-to-br from-gym-neon/[0.03] to-transparent pointer-events-none"></div>
             <div class="w-full flex justify-between items-center mb-4 relative z-10">
                 <h2 class="font-bold text-xl text-[var(--text)]">Live Preview</h2>
-                <div class="flex gap-2 text-[var(--secondary)] text-xs font-bold items-center"><i data-lucide="move" class="w-4 h-4"></i> Drag / Pinch</div>
+                <div class="flex gap-2 text-[var(--secondary)] text-xs font-bold items-center"><i data-lucide="move" class="w-4 h-4"></i> Drag · Pinch · Scroll</div>
             </div>
             
-            <div class="w-full overflow-x-auto pb-4 flex justify-center relative z-10">
-              <div id="share-card-capture" class="w-[360px] h-[640px] flex-shrink-0 relative bg-black overflow-hidden rounded-[24px]" style="touch-action: none; cursor: grab; background-position: center center; background-size: cover; background-repeat: no-repeat;">
-                <div class="absolute inset-0 bg-black/40 pointer-events-none z-0"></div>
-                <div class="absolute top-6 left-6 right-6 z-20 flex justify-between items-center w-[312px] pointer-events-none">
-                  <div class="w-9 h-9 rounded-xl bg-gym-neon flex items-center justify-center" id="card-pro-logo-container"><svg id="card-pro-logo" class="text-black" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-                  <div id="card-intensity-badge" class="text-gym-neon text-[10px] font-black uppercase tracking-widest text-shadow-heavy transition-colors duration-300">NEW PR 🏆</div>
+            <div class="w-full pb-4 flex justify-center relative z-10" style="perspective: 1000px;">
+              <div style="padding: 8px; background: rgba(0,0,0,0.6); border-radius: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                <div id="share-card-capture" class="w-[360px] h-[640px] flex-shrink-0 relative bg-black overflow-hidden rounded-[24px]" style="touch-action: none; cursor: grab; background-position: center center; background-size: cover; background-repeat: no-repeat;">
+                  <div class="absolute inset-0 bg-black/40 pointer-events-none z-0"></div>
+                  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 text-white/30 text-[8px] font-bold uppercase tracking-widest flex items-center gap-1.5 pointer-events-none" id="drag-hint"><i data-lucide="move" class="w-3 h-3"></i> drag to position</div>
+                  <div class="absolute top-6 left-6 right-6 z-20 flex justify-between items-center w-[312px] pointer-events-none">
+                    <div class="w-9 h-9 rounded-xl bg-gym-neon flex items-center justify-center" id="card-pro-logo-container"><svg id="card-pro-logo" class="text-black" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                    <div id="card-intensity-badge" class="text-gym-neon text-[10px] font-black uppercase tracking-widest text-shadow-heavy transition-colors duration-300">NEW PR 🏆</div>
+                  </div>
+                  <div id="share-content-container" class="absolute left-6 right-6 z-10 transition-transform duration-75 will-change-transform" style="top: 50%; transform: translateY(-50%); width: 312px; transform-origin: center center; pointer-events: none;"></div>
                 </div>
-                <div id="share-content-container" class="absolute left-6 right-6 z-10 transition-transform duration-75 will-change-transform" style="top: 50%; transform: translateY(-50%); width: 312px; transform-origin: center center; pointer-events: none;"></div>
               </div>
             </div>
             <button id="btn-download-share" disabled class="w-full py-4 mt-2 rounded-2xl font-bold text-white text-sm uppercase tracking-wide bg-[var(--secondary)] transition flex justify-center items-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed relative z-10"><i data-lucide="download" class="w-5 h-5"></i> SAVE FULL HD STORY</button>
@@ -438,8 +446,34 @@
                       <select id="share-workout-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer"><option value="">Choose item...</option></select>
                     </div>
                     <div>
-                      <label class="text-[11px] font-bold text-[var(--secondary)] mb-2 block pl-1">STYLE</label> 
-                      <select id="share-style-select" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs cursor-pointer"><option value="style1">Strava Activity</option><option value="style2">Story Highlight</option><option value="style3">Performance</option><option value="style4">Minimal Bold</option><option value="style5">Athlete Score</option><option value="style6">Classic Grid</option></select>
+                      <label class="text-[11px] font-bold text-[var(--secondary)] mb-2 block pl-1">TEMPLATE</label>
+                      <select id="share-style-select" class="hidden"><option value="style1">Strava Activity</option><option value="style2">Story Highlight</option><option value="style3">Performance</option><option value="style4">Minimal Bold</option><option value="style5">Athlete Score</option><option value="style6">Classic Grid</option></select>
+                      <div class="flex gap-1.5 overflow-x-auto pb-1" id="template-thumbnails">
+                        <div class="template-thumb active" data-style="style1" style="flex-shrink:0;width:52px;height:52px;border-radius:12px;background:#58cc02;border:2px solid #58cc02;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;padding:4px;">
+                          <div style="height:4px;width:70%;background:rgba(255,255,255,0.5);border-radius:2px;margin-bottom:2px"></div>
+                          <div style="height:10px;width:100%;background:rgba(255,255,255,0.2);border-radius:3px;margin-top:auto"></div>
+                        </div>
+                        <div class="template-thumb" data-style="style2" style="flex-shrink:0;width:52px;height:52px;border-radius:12px;background:#1a1a1a;border:2px solid transparent;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;align-items:center;padding:6px 4px;">
+                          <div style="height:4px;width:60%;background:#58cc02;border-radius:2px;margin-bottom:3px"></div>
+                          <div style="height:12px;width:100%;background:rgba(255,255,255,0.15);border-radius:3px;"></div>
+                        </div>
+                        <div class="template-thumb" data-style="style3" style="flex-shrink:0;width:52px;height:52px;border-radius:12px;background:#1a1a1a;border:2px solid transparent;overflow:hidden;cursor:pointer;display:flex;padding:5px;gap:3px;">
+                          <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="height:4px;width:100%;background:#58cc02;border-radius:2px"></div><div style="height:8px;width:100%;background:rgba(255,255,255,0.15);border-radius:3px;margin-top:auto"></div></div>
+                          <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="height:4px;width:100%;background:rgba(255,255,255,0.2);border-radius:2px"></div><div style="height:8px;width:100%;background:rgba(255,255,255,0.15);border-radius:3px;margin-top:auto"></div></div>
+                        </div>
+                        <div class="template-thumb" data-style="style4" style="flex-shrink:0;width:52px;height:52px;border-radius:12px;background:#1a1a1a;border:2px solid transparent;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;align-items:center;padding:8px 4px;">
+                          <div style="height:4px;width:50%;background:#58cc02;border-radius:2px;margin-bottom:4px"></div>
+                          <div style="height:14px;width:100%;background:rgba(255,255,255,0.15);border-radius:3px;"></div>
+                        </div>
+                        <div class="template-thumb" data-style="style5" style="flex-shrink:0;width:52px;height:52px;border-radius:12px;background:#1a1a1a;border:2px solid transparent;overflow:hidden;cursor:pointer;display:flex;padding:5px;gap:3px;">
+                          <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="height:4px;width:100%;background:#58cc02;border-radius:2px"></div><div style="height:16px;background:rgba(255,255,255,0.15);border-radius:3px;"></div></div>
+                          <div style="width:16px;display:flex;flex-direction:column"><div style="height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin-bottom:3px"></div><div style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px"></div></div>
+                        </div>
+                        <div class="template-thumb" data-style="style6" style="flex-shrink:0;width:52px;height:52px;border-radius:12px;background:#1a1a1a;border:2px solid transparent;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:5px;">
+                          <div style="display:flex;gap:2px;flex:1"><div style="flex:1;background:rgba(255,255,255,0.15);border-radius:3px"></div><div style="flex:1;background:rgba(255,255,255,0.15);border-radius:3px"></div><div style="flex:1;background:rgba(255,255,255,0.15);border-radius:3px"></div></div>
+                          <div style="height:4px;width:60%;background:#58cc02;border-radius:2px;margin:0 auto"></div>
+                        </div>
+                      </div>
                     </div>
                 </div>
                 <div class="relative">
@@ -451,7 +485,10 @@
                   <div id="gallery-picker-grid" class="flex gap-2 overflow-x-auto pb-2"></div>
                 </div>
                 <div>
-                    <label class="text-[11px] font-bold text-[var(--secondary)] mb-2 block pl-1">COLOR ACCENT</label> 
+                    <div class="flex items-center justify-between">
+                      <label class="text-[11px] font-bold text-[var(--secondary)] block pl-1">COLOR ACCENT</label>
+                      <button id="btn-shuffle-style" class="text-[10px] font-bold text-[var(--secondary)] hover:text-gym-neon transition flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-[var(--input)]"><i data-lucide="shuffle" class="w-3 h-3"></i> Shuffle</button>
+                    </div>
                     <div class="liquid-selector" id="theme-selector">
                       <div class="liquid-pill" id="theme-pill" style="width: 33.33%; transform: translateX(0%);"></div>
                       <div class="liquid-btn active" data-theme="neon" data-color="#58cc02" data-index="0">Neon</div>
@@ -483,12 +520,38 @@
                   <label class="text-[11px] font-bold text-[var(--secondary)] mb-2 block pl-1">CUSTOM CAPTION</label> 
                   <input id="share-custom-text-input" type="text" placeholder="e.g., Day 45: Crushed my squat PR!" class="w-full bento-input rounded-xl px-4 py-3 font-bold text-xs">
                 </div>
-                <details class="group mt-4 border border-[var(--border)] rounded-xl bg-[var(--input)]">
-                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-4 text-xs text-[var(--secondary)]"><span>Manual Scale Sliders</span><span class="transition group-open:rotate-180"><i data-lucide="chevron-down" class="w-4 h-4"></i></span></summary>
-                    <div class="p-4 pt-0 space-y-4 border-t border-[var(--border)] mt-2">
-                        <input type="range" id="share-size-slider" min="30" max="200" value="100" class="custom-range">
-                    </div>
-                </details>
+
+                <div class="border-t border-[var(--border)] pt-4 mt-4">
+                  <div class="flex items-center justify-between mb-3">
+                    <label class="text-[11px] font-bold text-[var(--secondary)] pl-1">TEXT SIZE</label>
+                    <span class="text-xs font-bold text-[var(--text)]"><span id="size-val-display">100</span>%</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <button id="btn-size-down" class="w-8 h-8 rounded-lg bg-[var(--input)] border border-[var(--border)] text-[var(--text)] font-bold flex items-center justify-center active:scale-90 text-lg">−</button>
+                    <input type="range" id="share-size-slider" min="30" max="200" value="100" class="custom-range flex-1">
+                    <button id="btn-size-up" class="w-8 h-8 rounded-lg bg-[var(--input)] border border-[var(--border)] text-[var(--text)] font-bold flex items-center justify-center active:scale-90 text-lg">+</button>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="text-[11px] font-bold text-[var(--secondary)] mb-2 block pl-1">TEXT POSITION</label>
+                  <div class="flex items-center gap-2 bg-[var(--input)] rounded-xl p-1 border border-[var(--border)]">
+                    <button id="btn-align-top" class="flex-1 py-2 text-[10px] font-bold rounded-lg text-[var(--secondary)] transition flex items-center justify-center gap-1"><i data-lucide="align-start-vertical" class="w-3.5 h-3.5"></i> Top</button>
+                    <button id="btn-align-center" class="flex-1 py-2 text-[10px] font-bold rounded-lg bg-gym-neon text-white transition flex items-center justify-center gap-1"><i data-lucide="align-center" class="w-3.5 h-3.5"></i> Center</button>
+                    <button id="btn-align-bottom" class="flex-1 py-2 text-[10px] font-bold rounded-lg text-[var(--secondary)] transition flex items-center justify-center gap-1"><i data-lucide="align-end-vertical" class="w-3.5 h-3.5"></i> Bottom</button>
+                  </div>
+                </div>
+
+                <div class="flex gap-2">
+                  <div class="flex-1">
+                    <label class="text-[11px] font-bold text-[var(--secondary)] mb-2 block pl-1">VERTICAL NUDGE</label>
+                    <input type="range" id="share-nudge-slider" min="-200" max="200" value="0" class="custom-range">
+                  </div>
+                  <div class="flex-1">
+                    <label class="text-[11px] font-bold text-[var(--secondary)] mb-2 block pl-1">HORIZONTAL NUDGE</label>
+                    <input type="range" id="share-x-nudge-slider" min="-200" max="200" value="0" class="custom-range">
+                  </div>
+                </div>
             </div>
           </div>
       </div>
@@ -534,7 +597,7 @@
 
     <section id="tab-timer" class="hidden h-full pb-10">
       <div class="flex bg-[var(--card)] p-1 rounded-xl border border-[var(--border)] mb-6 shadow-sm">
-          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg bg-[var(--text)] text-white transition" data-mode="stopwatch">Watch</button>
+          <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg bg-gym-neon text-white transition" data-mode="stopwatch">Watch</button>
           <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-[var(--secondary)] transition" data-mode="amrap">AMRAP</button>
           <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-[var(--secondary)] transition" data-mode="emom">EMOM</button>
           <button class="timer-mode-btn flex-1 py-2 text-[10px] font-bold uppercase rounded-lg text-[var(--secondary)] transition" data-mode="tabata">Tabata</button>
@@ -582,12 +645,12 @@
 
   <nav class="fixed left-4 right-4 max-w-sm mx-auto nav-pill z-50 rounded-full py-2.5 px-4 shadow-lg" style="bottom: max(1.5rem, env(safe-area-inset-bottom));">
     <div class="flex justify-between items-center gap-0.5">
-      <button class="nav-item nav-active flex flex-col items-center gap-0.5" data-tab="tracker"><i data-lucide="dumbbell" class="w-5 h-5"></i><span class="text-[8px] font-bold">Train</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-0.5" data-tab="health"><i data-lucide="heart-pulse" class="w-5 h-5"></i><span class="text-[8px] font-bold">Health</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-0.5" data-tab="progress"><i data-lucide="bar-chart-2" class="w-5 h-5"></i><span class="text-[8px] font-bold">Metrics</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-0.5" data-tab="studio"><i data-lucide="aperture" class="w-5 h-5"></i><span class="text-[8px] font-bold">Studio</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-0.5" data-tab="profile"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[8px] font-bold">Profile</span></button>
-      <button class="nav-item nav-inactive flex flex-col items-center gap-0.5" data-tab="timer"><i data-lucide="timer" class="w-5 h-5"></i><span class="text-[8px] font-bold">Timer</span></button>
+      <button class="nav-item nav-active flex flex-col items-center gap-0" data-tab="tracker"><i data-lucide="dumbbell" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold leading-tight">Train</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-0" data-tab="health"><i data-lucide="heart-pulse" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold leading-tight">Health</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-0" data-tab="progress"><i data-lucide="bar-chart-2" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold leading-tight">Metrics</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-0" data-tab="studio"><i data-lucide="aperture" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold leading-tight">Studio</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-0" data-tab="profile"><i data-lucide="settings" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold leading-tight">Profile</span></button>
+      <button class="nav-item nav-inactive flex flex-col items-center gap-0" data-tab="timer"><i data-lucide="timer" class="w-[18px] h-[18px]"></i><span class="text-[7px] font-bold leading-tight">Timer</span></button>
     </div>
   </nav>
 
@@ -876,28 +939,28 @@
 
         // Studio Sub-Tabs
         document.getElementById('btn-studio-share').addEventListener('click', (e) => {
-            e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.add('bg-[var(--text)]');
-            const gal = document.getElementById('btn-studio-gallery'); gal.classList.replace('text-white', 'text-[var(--secondary)]'); gal.classList.remove('bg-[var(--text)]');
+            e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.replace('bg-[var(--input)]', 'bg-gym-neon');
+            const gal = document.getElementById('btn-studio-gallery'); gal.classList.replace('text-white', 'text-[var(--secondary)]'); gal.classList.replace('bg-gym-neon', 'bg-[var(--input)]');
             document.getElementById('view-story').classList.remove('hidden'); document.getElementById('view-gallery').classList.add('hidden');
         });
         document.getElementById('btn-studio-gallery').addEventListener('click', (e) => {
-            e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.add('bg-[var(--text)]');
-            const shr = document.getElementById('btn-studio-share'); shr.classList.replace('text-white', 'text-[var(--secondary)]'); shr.classList.remove('bg-[var(--text)]');
+            e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.replace('bg-[var(--input)]', 'bg-gym-neon');
+            const shr = document.getElementById('btn-studio-share'); shr.classList.replace('text-white', 'text-[var(--secondary)]'); shr.classList.replace('bg-gym-neon', 'bg-[var(--input)]');
             document.getElementById('view-gallery').classList.remove('hidden'); document.getElementById('view-story').classList.add('hidden');
         });
 
         // Lift vs WOD modes
         document.getElementById('btn-mode-lift').addEventListener('click', (e) => {
             e.preventDefault();
-            e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.add('bg-[var(--text)]');
-            const wodBtn = document.getElementById('btn-mode-wod'); wodBtn.classList.replace('text-white', 'text-[var(--secondary)]'); wodBtn.classList.remove('bg-[var(--text)]');
+            e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.replace('bg-[var(--input)]', 'bg-gym-neon');
+            const wodBtn = document.getElementById('btn-mode-wod'); wodBtn.classList.replace('text-white', 'text-[var(--secondary)]'); wodBtn.classList.replace('bg-gym-neon', 'bg-[var(--input)]');
             document.getElementById('input-lift-group').classList.remove('hidden'); document.getElementById('input-wod-group').classList.add('hidden');
             document.getElementById('lbl-weight').textContent = "WEIGHT (KG)";
         });
         document.getElementById('btn-mode-wod').addEventListener('click', (e) => {
             e.preventDefault();
-            e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.add('bg-[var(--text)]');
-            const liftBtn = document.getElementById('btn-mode-lift'); liftBtn.classList.replace('text-white', 'text-[var(--secondary)]'); liftBtn.classList.remove('bg-[var(--text)]');
+            e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.replace('bg-[var(--input)]', 'bg-gym-neon');
+            const liftBtn = document.getElementById('btn-mode-lift'); liftBtn.classList.replace('text-white', 'text-[var(--secondary)]'); liftBtn.classList.replace('bg-gym-neon', 'bg-[var(--input)]');
             document.getElementById('input-wod-group').classList.remove('hidden'); document.getElementById('input-lift-group').classList.add('hidden');
             document.getElementById('lbl-weight').textContent = "SCORE / TIME";
         });
@@ -1155,8 +1218,6 @@
         const shareNudgeSlider = document.getElementById('share-nudge-slider');
         const shareXNudgeSlider = document.getElementById('share-x-nudge-slider');
         const shareSizeSlider = document.getElementById('share-size-slider');
-        const nudgeValDisplay = document.getElementById('nudge-val-display');
-        const xNudgeValDisplay = document.getElementById('x-nudge-val-display');
         const sizeValDisplay = document.getElementById('size-val-display');
         const shareContentContainer = document.getElementById('share-content-container');
 
@@ -1181,8 +1242,6 @@
                 styleSheet.innerHTML = `.custom-range::-webkit-slider-thumb { background: ${color} !important; }`;
                 document.head.appendChild(styleSheet);
                 
-                if(nudgeValDisplay) nudgeValDisplay.style.color = color;
-                if(xNudgeValDisplay) xNudgeValDisplay.style.color = color;
                 if(sizeValDisplay) sizeValDisplay.style.color = color;
 
                 if(!shareBtn.disabled) { 
@@ -1218,14 +1277,12 @@
         if (shareNudgeSlider) {
             shareNudgeSlider.addEventListener('input', (e) => {
                 pixelNudgeValue = parseInt(e.target.value);
-                if (nudgeValDisplay) nudgeValDisplay.textContent = (pixelNudgeValue > 0 ? '+' : '') + pixelNudgeValue + 'px';
                 repositionShareContainer();
             });
         }
         if (shareXNudgeSlider) {
             shareXNudgeSlider.addEventListener('input', (e) => {
                 horizontalNudgeValue = parseInt(e.target.value);
-                if (xNudgeValDisplay) xNudgeValDisplay.textContent = (horizontalNudgeValue > 0 ? '+' : '') + horizontalNudgeValue + 'px';
                 repositionShareContainer();
             });
         }
@@ -1236,6 +1293,75 @@
                 repositionShareContainer();
             });
         }
+
+        // Template thumbnail selector
+        document.querySelectorAll('.template-thumb').forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                document.querySelectorAll('.template-thumb').forEach(t => { t.style.borderColor = 'transparent'; t.style.opacity = '0.5'; });
+                thumb.style.borderColor = currentThemeColor; thumb.style.opacity = '1';
+                document.getElementById('share-style-select').value = thumb.dataset.style;
+                updateSharePreview();
+            });
+        });
+
+        // Shuffle — random style + color
+        document.getElementById('btn-shuffle-style')?.addEventListener('click', () => {
+            const styles = ['style1','style2','style3','style4','style5','style6'];
+            const themeColors = ['#58cc02','#38bdf8','#f97316'];
+            const randStyle = styles[Math.floor(Math.random() * styles.length)];
+            const randColor = themeColors[Math.floor(Math.random() * themeColors.length)];
+            document.querySelectorAll('.template-thumb').forEach(t => { t.style.borderColor = 'transparent'; t.style.opacity = '0.5'; });
+            const target = document.querySelector(`.template-thumb[data-style="${randStyle}"]`);
+            if (target) { target.style.borderColor = randColor; target.style.opacity = '1'; }
+            document.getElementById('share-style-select').value = randStyle;
+            currentThemeColor = randColor;
+            const colorIndex = colors.indexOf(randColor);
+            themeBtns.forEach(b => b.classList.remove('active'));
+            const matchedBtn = Array.from(themeBtns).find(b => b.dataset.color === randColor);
+            if (matchedBtn) { matchedBtn.classList.add('active'); themePill.style.transform = `translateX(${matchedBtn.dataset.index * 100}%)`; }
+            headerPro.style.color = randColor;
+            cardIntensityBadge.style.color = randColor;
+            document.getElementById('card-pro-logo-container').style.background = randColor;
+            if(sizeValDisplay) sizeValDisplay.style.color = randColor;
+            const styleSheet = document.createElement('style');
+            styleSheet.innerHTML = `.custom-range::-webkit-slider-thumb { background: ${randColor} !important; }`;
+            document.head.appendChild(styleSheet);
+            updateSharePreview();
+        });
+
+        // Text alignment buttons
+        document.getElementById('btn-align-top')?.addEventListener('click', () => {
+            document.querySelectorAll('#btn-align-top, #btn-align-center, #btn-align-bottom').forEach(b => { b.classList.replace('bg-gym-neon','bg-[var(--input)]'); b.classList.replace('text-white','text-[var(--secondary)]'); });
+            document.getElementById('btn-align-top').classList.replace('bg-[var(--input)]','bg-gym-neon'); document.getElementById('btn-align-top').classList.replace('text-[var(--secondary)]','text-white');
+            macroAlignment = 'top';
+            repositionShareContainer();
+        });
+        document.getElementById('btn-align-center')?.addEventListener('click', () => {
+            document.querySelectorAll('#btn-align-top, #btn-align-center, #btn-align-bottom').forEach(b => { b.classList.replace('bg-gym-neon','bg-[var(--input)]'); b.classList.replace('text-white','text-[var(--secondary)]'); });
+            document.getElementById('btn-align-center').classList.replace('bg-[var(--input)]','bg-gym-neon'); document.getElementById('btn-align-center').classList.replace('text-[var(--secondary)]','text-white');
+            macroAlignment = 'center';
+            repositionShareContainer();
+        });
+        document.getElementById('btn-align-bottom')?.addEventListener('click', () => {
+            document.querySelectorAll('#btn-align-top, #btn-align-center, #btn-align-bottom').forEach(b => { b.classList.replace('bg-gym-neon','bg-[var(--input)]'); b.classList.replace('text-white','text-[var(--secondary)]'); });
+            document.getElementById('btn-align-bottom').classList.replace('bg-[var(--input)]','bg-gym-neon'); document.getElementById('btn-align-bottom').classList.replace('text-[var(--secondary)]','text-white');
+            macroAlignment = 'bottom';
+            repositionShareContainer();
+        });
+
+        // Size +/- buttons
+        document.getElementById('btn-size-down')?.addEventListener('click', () => {
+            scaleTextValue = Math.max(30, scaleTextValue - 10);
+            if(shareSizeSlider) shareSizeSlider.value = scaleTextValue;
+            if(sizeValDisplay) sizeValDisplay.textContent = scaleTextValue + '%';
+            repositionShareContainer();
+        });
+        document.getElementById('btn-size-up')?.addEventListener('click', () => {
+            scaleTextValue = Math.min(200, scaleTextValue + 10);
+            if(shareSizeSlider) shareSizeSlider.value = scaleTextValue;
+            if(sizeValDisplay) sizeValDisplay.textContent = scaleTextValue + '%';
+            repositionShareContainer();
+        });
 
         const captureArea = document.getElementById('share-card-capture');
         let isDragging = false;
@@ -1261,8 +1387,6 @@
                 pixelNudgeValue = Math.min(Math.max(startNudgeY + dy, -500), 500);
                 if(shareXNudgeSlider) shareXNudgeSlider.value = horizontalNudgeValue;
                 if(shareNudgeSlider) shareNudgeSlider.value = pixelNudgeValue;
-                if(xNudgeValDisplay) xNudgeValDisplay.textContent = (horizontalNudgeValue > 0 ? '+' : '') + Math.round(horizontalNudgeValue) + 'px';
-                if(nudgeValDisplay) nudgeValDisplay.textContent = (pixelNudgeValue > 0 ? '+' : '') + Math.round(pixelNudgeValue) + 'px';
                 repositionShareContainer();
             } else if (e.touches.length === 2 && initialDistance) {
                 e.preventDefault(); 
@@ -1284,8 +1408,6 @@
             pixelNudgeValue = Math.min(Math.max(startNudgeY + dy, -500), 500);
             if(shareXNudgeSlider) shareXNudgeSlider.value = horizontalNudgeValue;
             if(shareNudgeSlider) shareNudgeSlider.value = pixelNudgeValue;
-            if(xNudgeValDisplay) xNudgeValDisplay.textContent = (horizontalNudgeValue > 0 ? '+' : '') + Math.round(horizontalNudgeValue) + 'px';
-            if(nudgeValDisplay) nudgeValDisplay.textContent = (pixelNudgeValue > 0 ? '+' : '') + Math.round(pixelNudgeValue) + 'px';
             repositionShareContainer();
         });
         window.addEventListener('mouseup', () => { isDragging = false; captureArea.style.cursor = 'grab'; });
@@ -1361,8 +1483,9 @@
                 const w = workouts.find(x => x.id === wid);
                 if (w) {
                     movement = w.movement; date = w.date; weight = w.weight; reps = w.reps; est1RM = calculate1RM(w.weight, w.reps);
-                    shareBtn.disabled = false; shareBtn.style.backgroundColor = currentThemeColor; shareBtn.style.color = "#000";
-                    shareBtn.className = "w-full py-4 mt-2 rounded-2xl font-bold text-sm uppercase tracking-wide transition active:scale-95 relative z-10";
+                    shareBtn.disabled = false; shareBtn.style.backgroundColor = currentThemeColor; shareBtn.style.color = "#000000";
+                    shareBtn.className = "w-full py-4 mt-2 rounded-2xl font-bold text-sm uppercase tracking-wide transition active:scale-95 relative z-10 flex justify-center items-center gap-2";
+                    shareBtn.style.boxShadow = `0 4px 16px ${currentThemeColor}4D`;
                 }
             } else {
                 shareBtn.disabled = true; shareBtn.style = "";
@@ -1704,9 +1827,9 @@
             btn.addEventListener('click', (e) => {
                 if(isRunning || isPaused) resetTimer();
                 document.querySelectorAll('.timer-mode-btn').forEach(b => {
-                    b.classList.replace('text-white', 'text-[var(--secondary)]'); b.classList.remove('bg-[var(--text)]');
+                    b.classList.replace('text-white', 'text-[var(--secondary)]'); b.classList.replace('bg-gym-neon', 'bg-transparent');
                 });
-                e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.add('bg-[var(--text)]');
+                e.target.classList.replace('text-[var(--secondary)]', 'text-white'); e.target.classList.replace('bg-transparent', 'bg-gym-neon');
                 currentMode = e.target.getAttribute('data-mode');
                 
                 document.getElementById('timer-config-amrap').classList.add('hidden');
@@ -2003,8 +2126,8 @@
         }
         document.querySelectorAll('.food-cat-btn').forEach(btn => {
           btn.addEventListener('click', () => {
-            document.querySelectorAll('.food-cat-btn').forEach(b => { b.classList.remove('active','bg-[var(--text)]','text-white'); b.classList.add('bg-[var(--input)]','text-[var(--secondary)]'); });
-            btn.classList.add('active','bg-[var(--text)]','text-white'); btn.classList.remove('bg-[var(--input)]','text-[var(--secondary)]');
+            document.querySelectorAll('.food-cat-btn').forEach(b => { b.classList.remove('active'); b.classList.replace('bg-gym-neon','bg-[var(--input)]'); b.classList.replace('text-white','text-[var(--secondary)]'); });
+            btn.classList.add('active'); btn.classList.replace('bg-[var(--input)]','bg-gym-neon'); btn.classList.replace('text-[var(--secondary)]','text-white');
             foodCategory = btn.dataset.cat; searchFood();
           });
         });
@@ -2048,6 +2171,8 @@
           document.getElementById('custom-food-form').classList.add('hidden');
           showToast(`"${food.name}" saved!`);
         });
+
+        try { lucide.createIcons(); } catch(e){}
 
         loadLocalCache();
         syncWithCloud();
