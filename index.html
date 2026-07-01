@@ -73,12 +73,16 @@
       --splash: #000000;
     }
 
-    body { background-color: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; }
+    body { background-color: var(--bg); color: var(--text); font-family: 'Montserrat', sans-serif; overflow-x: hidden; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; transition: background-color 0.3s ease, color 0.3s ease; }
     
-    .bento-card { background-color: var(--card); border: 1px solid var(--border); border-radius: 20px; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; box-shadow: var(--shadow); }
+    .bento-card { background-color: var(--card); border: 1px solid var(--border); border-radius: 20px; transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; box-shadow: var(--shadow); }
     .bento-card:active { transform: scale(0.995); }
     .bento-card:hover { border-color: var(--tertiary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .bento-input { background-color: var(--input); border: 1px solid transparent; color: var(--text); transition: all 0.2s ease; border-radius: 14px; }
+    .bento-input { background-color: var(--input); border: 1px solid transparent; color: var(--text); transition: all 0.2s ease, background-color 0.3s ease, color 0.3s ease; border-radius: 14px; }
+    .nav-pill { transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+    .liquid-selector { transition: background-color 0.3s ease, border-color 0.3s ease; }
+    .glass { transition: background-color 0.3s ease, border-color 0.3s ease; }
+    select { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
     .bento-input:focus { border-color: var(--accent); background-color: var(--card); outline: none; box-shadow: 0 0 0 3px rgba(88,204,2,0.15); }
     .bento-input::placeholder { color: var(--tertiary); }
 
@@ -124,12 +128,16 @@
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
     [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
-    [data-theme="dark"] select { background-color: #1a1a1a; color: #ffffff; }
+    [data-theme="dark"] select { background-color: #222222; color: #ffffff; border-color: #333333; }
     [data-theme="dark"] .bento-input:focus { box-shadow: 0 0 0 3px rgba(88,204,2,0.3); }
     [data-theme="dark"] .food-cat-btn { transition: all 0.2s ease; }
+    [data-theme="dark"] .custom-range { background: #333333; }
+    [data-theme="dark"] .custom-range::-webkit-slider-thumb { border-color: #000000; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
     [data-theme="dark"] .timer-mode-btn { transition: all 0.2s ease; }
-    .template-thumb { transition: all 0.2s ease; }
-    .template-thumb:hover { transform: scale(1.08); }
+    .template-thumb { transition: all 0.2s ease; border: 2px solid transparent; opacity: 0.5; }
+    .template-thumb:hover { transform: scale(1.08); opacity: 0.8; }
+    .template-thumb.active { opacity: 1; border-color: var(--accent) !important; box-shadow: 0 0 12px rgba(88,204,2,0.2); }
+    [data-theme="dark"] .template-thumb.active { box-shadow: 0 0 16px rgba(88,204,2,0.3); }
   </style>
 </head>
 
@@ -427,10 +435,10 @@
                   <div class="absolute inset-0 bg-black/40 pointer-events-none z-0"></div>
                   <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 text-white/30 text-[8px] font-bold uppercase tracking-widest flex items-center gap-1.5 pointer-events-none" id="drag-hint"><i data-lucide="move" class="w-3 h-3"></i> drag to position</div>
                   <div class="absolute top-6 left-6 right-6 z-20 flex justify-between items-center w-[312px] pointer-events-none">
-                    <div class="w-9 h-9 rounded-xl bg-gym-neon flex items-center justify-center" id="card-pro-logo-container"><svg id="card-pro-logo" class="text-black" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                    <div class="w-9 h-9 rounded-xl bg-gym-neon flex items-center justify-center" id="card-pro-logo-container"><svg id="card-pro-logo" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="black"/></svg></div>
                     <div id="card-intensity-badge" class="text-gym-neon text-[10px] font-black uppercase tracking-widest text-shadow-heavy transition-colors duration-300">NEW PR 🏆</div>
                   </div>
-                  <div id="share-content-container" class="absolute left-6 right-6 z-10 transition-transform duration-75 will-change-transform" style="top: 50%; transform: translateY(-50%); width: 312px; transform-origin: center center; pointer-events: none;"></div>
+                  <div id="share-content-container" class="absolute left-6 right-6 z-10 transition-transform duration-150 ease-out will-change-transform" style="top: 50%; transform: translateY(-50%); width: 312px; transform-origin: center center; pointer-events: none;"></div>
                 </div>
               </div>
             </div>
@@ -449,7 +457,7 @@
                       <label class="text-[11px] font-bold text-[var(--secondary)] mb-2 block pl-1">TEMPLATE</label>
                       <select id="share-style-select" class="hidden"><option value="style1">Strava Activity</option><option value="style2">Story Highlight</option><option value="style3">Performance</option><option value="style4">Minimal Bold</option><option value="style5">Athlete Score</option><option value="style6">Classic Grid</option></select>
                       <div class="flex gap-1.5 overflow-x-auto pb-1" id="template-thumbnails">
-                        <div class="template-thumb active" data-style="style1" style="flex-shrink:0;width:52px;height:52px;border-radius:12px;background:#58cc02;border:2px solid #58cc02;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;padding:4px;">
+                        <div class="template-thumb active" data-style="style1" style="flex-shrink:0;width:52px;height:52px;border-radius:12px;background:#58cc02;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;padding:4px;">
                           <div style="height:4px;width:70%;background:rgba(255,255,255,0.5);border-radius:2px;margin-bottom:2px"></div>
                           <div style="height:10px;width:100%;background:rgba(255,255,255,0.2);border-radius:3px;margin-top:auto"></div>
                         </div>
@@ -1297,8 +1305,8 @@
         // Template thumbnail selector
         document.querySelectorAll('.template-thumb').forEach(thumb => {
             thumb.addEventListener('click', () => {
-                document.querySelectorAll('.template-thumb').forEach(t => { t.style.borderColor = 'transparent'; t.style.opacity = '0.5'; });
-                thumb.style.borderColor = currentThemeColor; thumb.style.opacity = '1';
+                document.querySelectorAll('.template-thumb').forEach(t => t.classList.remove('active'));
+                thumb.classList.add('active');
                 document.getElementById('share-style-select').value = thumb.dataset.style;
                 updateSharePreview();
             });
@@ -1310,9 +1318,9 @@
             const themeColors = ['#58cc02','#38bdf8','#f97316'];
             const randStyle = styles[Math.floor(Math.random() * styles.length)];
             const randColor = themeColors[Math.floor(Math.random() * themeColors.length)];
-            document.querySelectorAll('.template-thumb').forEach(t => { t.style.borderColor = 'transparent'; t.style.opacity = '0.5'; });
+            document.querySelectorAll('.template-thumb').forEach(t => t.classList.remove('active'));
             const target = document.querySelector(`.template-thumb[data-style="${randStyle}"]`);
-            if (target) { target.style.borderColor = randColor; target.style.opacity = '1'; }
+            if (target) target.classList.add('active');
             document.getElementById('share-style-select').value = randStyle;
             currentThemeColor = randColor;
             const colorIndex = colors.indexOf(randColor);
@@ -1496,20 +1504,134 @@
             const location = gymInput.value || 'Location';
             const dayName = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 
-            let htmlContent = "";
+            const c = currentThemeColor;
+            const vol = parseInt(weight) * parseInt(reps) || 0;
+            const hasCustom = customText ? 1 : 0;
 
             if (style === 'style1') {
-                htmlContent = `<div class="w-full text-left" style="font-family: 'Montserrat', sans-serif;"><div class="bg-black/70 p-5 rounded-3xl border border-white/10 backdrop-blur-sm"><div class="flex items-center gap-2 mb-3"><div class="w-2 h-2 rounded-full" style="background:${currentThemeColor}"></div><span class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color:${currentThemeColor}">${movement}</span></div><div class="flex items-end justify-between mb-4"><span class="text-5xl font-black text-white tracking-tight">${weight}</span><span class="text-sm font-bold text-gray-400 mb-2">${reps} reps</span></div><div class="flex gap-4 text-[10px] font-bold text-gray-500 uppercase tracking-wider"><span>1RM ${est1RM}kg</span><span>${dayName}</span></div>${customText ? `<div class="mt-3 pt-3 border-t border-white/10 text-xs font-semibold text-gray-300">${customText}</div>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><p class="text-xs font-black text-white">${athlete}</p><p class="text-[9px] font-bold text-gray-400">${location}</p></div></div></div>`;
+                htmlContent = `<div style="font-family:'Montserrat',sans-serif;width:100%;">
+<div style="background:linear-gradient(135deg,rgba(0,0,0,0.75),rgba(0,0,0,0.55));padding:20px;border-radius:24px;border:1px solid rgba(255,255,255,0.08);">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+<div style="width:3px;height:24px;border-radius:2px;background:${c};flex-shrink:0;"></div>
+<span style="font-size:11px;font-weight:900;letter-spacing:0.15em;color:${c};text-transform:uppercase;">${movement}</span>
+</div>
+<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:8px;">
+<span style="font-size:52px;font-weight:900;color:white;line-height:1;letter-spacing:-0.03em;">${weight}<span style="font-size:16px;font-weight:700;color:rgba(255,255,255,0.4);margin-left:4px;">kg</span></span>
+<span style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:6px;">${reps} reps</span>
+</div>
+<div style="display:flex;gap:16px;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.05em;">
+<span>1RM ${est1RM}kg</span><span style="color:${c};">●</span><span>${dayName}</span>
+</div>
+${customText ? `<div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;font-weight:600;color:rgba(255,255,255,0.6);">${customText}</div>` : ''}
+</div>
+<div style="margin-top:8px;background:rgba(0,0,0,0.5);padding:10px 16px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;gap:10px;">
+<div style="width:28px;height:28px;border-radius:50%;background:${c}20;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+<span style="font-size:12px;font-weight:900;color:white;">${athlete}</span>
+<span style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.35);">· ${location}</span>
+</div></div>`;
             } else if (style === 'style2') {
-                htmlContent = `<div class="w-full text-center" style="font-family: 'Montserrat', sans-serif;"><div class="bg-black/60 p-6 rounded-3xl border border-white/10 backdrop-blur-sm"><span class="text-[11px] font-black uppercase tracking-[0.25em]" style="color:${currentThemeColor}">${movement}</span><div class="text-7xl font-black text-white my-3 tracking-tight">${weight}</div><div class="flex justify-center gap-6 text-[11px]"><div><span class="text-gray-500 font-bold block uppercase tracking-wider">Reps</span><span class="text-white font-black text-lg">${reps}</span></div><div><span class="text-gray-500 font-bold block uppercase tracking-wider">1RM</span><span class="text-white font-black text-lg">${est1RM}</span></div></div>${customText ? `<p class="mt-4 text-xs text-gray-300 italic pt-3 border-t border-white/10">${customText}</p>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center justify-center gap-3"><div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="text-xs font-black text-white">${athlete}</span><span class="text-[9px] text-gray-400 font-bold">· ${location}</span></div></div>`;
+                htmlContent = `<div style="font-family:'Montserrat',sans-serif;width:100%;text-align:center;">
+<div style="background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.4));padding:28px 20px;border-radius:24px;border:1px solid rgba(255,255,255,0.08);">
+<div style="display:inline-block;padding:4px 12px;border-radius:20px;background:${c}20;border:1px solid ${c}30;margin-bottom:12px;">
+<span style="font-size:9px;font-weight:900;letter-spacing:0.2em;color:${c};text-transform:uppercase;">${movement}</span>
+</div>
+<div style="font-size:68px;font-weight:900;color:white;line-height:1;letter-spacing:-0.04em;margin:8px 0;">${weight}</div>
+<div style="display:flex;justify-content:center;gap:24px;margin-top:12px;">
+<div><span style="font-size:8px;font-weight:800;color:rgba(255,255,255,0.35);display:block;text-transform:uppercase;letter-spacing:0.1em;">Reps</span><span style="font-size:20px;font-weight:900;color:white;">${reps}</span></div>
+<div><span style="font-size:8px;font-weight:800;color:rgba(255,255,255,0.35);display:block;text-transform:uppercase;letter-spacing:0.1em;">1RM</span><span style="font-size:20px;font-weight:900;color:white;">${est1RM}</span></div>
+<div><span style="font-size:8px;font-weight:800;color:rgba(255,255,255,0.35);display:block;text-transform:uppercase;letter-spacing:0.1em;">Volume</span><span style="font-size:20px;font-weight:900;color:white;">${vol.toLocaleString()}</span></div>
+</div>
+${customText ? `<div style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);font-style:italic;">${customText}</div>` : ''}
+</div>
+<div style="margin-top:8px;background:rgba(0,0,0,0.5);padding:10px 16px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;gap:8px;">
+<div style="width:24px;height:24px;border-radius:50%;background:${c}20;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+<span style="font-size:11px;font-weight:900;color:white;">${athlete}</span>
+<span style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.35);">· ${location}</span>
+</div></div>`;
             } else if (style === 'style3') {
-                htmlContent = `<div class="w-full" style="font-family: 'Montserrat', sans-serif;"><div class="bg-gradient-to-br from-black/80 to-black/60 p-5 rounded-3xl border border-white/10"><div class="flex justify-between items-start mb-4"><div><p class="text-[9px] font-black uppercase tracking-[0.2em]" style="color:${currentThemeColor}">${movement}</p><p class="text-[10px] font-bold text-gray-500 mt-0.5">${dayName}</p></div><div class="text-right"><p class="text-4xl font-black text-white tracking-tight">${weight}</p><p class="text-[10px] font-bold text-gray-400">${reps} reps</p></div></div><div class="flex gap-3"><div class="flex-1 bg-white/5 rounded-xl p-3 text-center"><p class="text-[8px] font-bold text-gray-500 uppercase tracking-wider">1RM</p><p class="text-sm font-black text-white">${est1RM}</p></div><div class="flex-1 bg-white/5 rounded-xl p-3 text-center"><p class="text-[8px] font-bold text-gray-500 uppercase tracking-wider">Volume</p><p class="text-sm font-black text-white">${parseInt(weight) * parseInt(reps) || 0}</p></div></div>${customText ? `<p class="mt-3 text-[10px] text-gray-300 font-semibold text-center pt-2 border-t border-white/10">"${customText}"</p>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center gap-3"><div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="text-xs font-black text-white">${athlete}</span><span class="text-[9px] text-gray-400 font-bold">· ${location}</span></div></div>`;
+                htmlContent = `<div style="font-family:'Montserrat',sans-serif;width:100%;">
+<div style="background:linear-gradient(145deg,rgba(0,0,0,0.8),rgba(0,0,0,0.5));padding:20px;border-radius:24px;border:1px solid rgba(255,255,255,0.06);position:relative;overflow:hidden;">
+<div style="position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:${c}08;pointer-events:none;"></div>
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+<div><span style="font-size:10px;font-weight:900;letter-spacing:0.15em;color:${c};text-transform:uppercase;">${movement}</span><span style="display:block;font-size:9px;font-weight:600;color:rgba(255,255,255,0.35);margin-top:2px;">${dayName}</span></div>
+<div style="text-align:right;"><span style="font-size:40px;font-weight:900;color:white;line-height:1;letter-spacing:-0.03em;">${weight}</span><span style="display:block;font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);">${reps} reps</span></div>
+</div>
+<div style="display:flex;gap:8px;">
+<div style="flex:1;background:rgba(255,255,255,0.04);border-radius:14px;padding:12px 8px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+<span style="font-size:8px;font-weight:800;color:rgba(255,255,255,0.3);display:block;text-transform:uppercase;letter-spacing:0.08em;">1RM</span>
+<span style="font-size:16px;font-weight:900;color:white;">${est1RM}</span>
+</div>
+<div style="flex:1;background:rgba(255,255,255,0.04);border-radius:14px;padding:12px 8px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+<span style="font-size:8px;font-weight:800;color:rgba(255,255,255,0.3);display:block;text-transform:uppercase;letter-spacing:0.08em;">Volume</span>
+<span style="font-size:16px;font-weight:900;color:white;">${vol.toLocaleString()}</span>
+</div>
+<div style="flex:1;background:rgba(255,255,255,0.04);border-radius:14px;padding:12px 8px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+<span style="font-size:8px;font-weight:800;color:rgba(255,255,255,0.3);display:block;text-transform:uppercase;letter-spacing:0.08em;">RPE</span>
+<span style="font-size:16px;font-weight:900;color:white;">${parseInt(reps) <= 1 ? '10' : '8'}</span>
+</div>
+</div>
+${customText ? `<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.05);text-align:center;font-size:10px;font-weight:500;color:rgba(255,255,255,0.5);">${customText}</div>` : ''}
+</div>
+<div style="margin-top:8px;background:rgba(0,0,0,0.5);padding:10px 16px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;gap:10px;">
+<div style="width:28px;height:28px;border-radius:50%;background:${c}20;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+<span style="font-size:11px;font-weight:900;color:white;">${athlete}</span>
+<span style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.35);">· ${location}</span>
+</div></div>`;
             } else if (style === 'style4') {
-                htmlContent = `<div class="w-full" style="font-family: 'Montserrat', sans-serif;"><div class="text-center py-4"><span class="text-[10px] font-black uppercase tracking-[0.3em]" style="color:${currentThemeColor}">${movement}</span><div class="text-7xl font-black text-white my-2 tracking-tight">${weight}<span class="text-2xl text-gray-500 font-bold ml-1">kg</span></div><p class="text-xs font-bold text-gray-400">${reps} reps · Est 1RM ${est1RM}kg</p>${customText ? `<p class="mt-4 text-xs text-gray-300 font-medium border-t border-white/10 pt-3 mx-4">${customText}</p>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center justify-center gap-3"><div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="text-xs font-black text-white">${athlete}</span><span class="text-[9px] text-gray-400 font-bold">· ${dayName}</span></div></div>`;
+                htmlContent = `<div style="font-family:'Montserrat',sans-serif;width:100%;">
+<div style="text-align:center;padding:20px 0;">
+<span style="font-size:9px;font-weight:900;letter-spacing:0.25em;color:${c};text-transform:uppercase;">${movement}</span>
+<div style="font-size:76px;font-weight:900;color:white;line-height:1;letter-spacing:-0.04em;margin:12px 0 4px;">${weight}<span style="font-size:20px;font-weight:700;color:rgba(255,255,255,0.3);margin-left:2px;">kg</span></div>
+<div style="display:flex;justify-content:center;gap:20px;margin-top:8px;">
+<span style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);">${reps} reps</span>
+<span style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);">1RM ${est1RM}kg</span>
+</div>
+${customText ? `<div style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:10px;font-weight:500;color:rgba(255,255,255,0.5);margin-left:16px;margin-right:16px;">${customText}</div>` : ''}
+</div>
+<div style="margin-top:8px;background:rgba(0,0,0,0.5);padding:10px 16px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;gap:8px;">
+<div style="width:24px;height:24px;border-radius:50%;background:${c}20;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+<span style="font-size:11px;font-weight:900;color:white;">${athlete}</span>
+<span style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.35);">· ${dayName}</span>
+</div></div>`;
             } else if (style === 'style5') {
-                htmlContent = `<div class="w-full" style="font-family: 'Montserrat', sans-serif;"><div class="bg-black/70 p-5 rounded-3xl border border-white/10" style="border-left: 4px solid ${currentThemeColor};"><div class="flex items-start justify-between"><div><p class="text-[9px] font-black uppercase tracking-widest" style="color:${currentThemeColor}">${movement}</p><p class="text-3xl font-black text-white mt-1 tracking-tight">${weight} <span class="text-sm font-bold text-gray-400">kg</span></p></div><div class="text-right"><p class="text-[10px] font-bold text-gray-500">${reps} reps</p><p class="text-[10px] font-bold text-gray-500">1RM ${est1RM}</p></div></div>${customText ? `<p class="mt-3 text-[10px] text-gray-300 font-medium pt-2 border-t border-white/10">${customText}</p>` : ''}</div><div class="mt-3 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center gap-3"><div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><p class="text-xs font-black text-white">${athlete}</p><p class="text-[8px] font-bold text-gray-400 uppercase tracking-wider">${location} · ${dayName}</p></div></div></div>`;
+                htmlContent = `<div style="font-family:'Montserrat',sans-serif;width:100%;">
+<div style="background:rgba(0,0,0,0.7);padding:20px;border-radius:24px;border:1px solid rgba(255,255,255,0.06);border-left:3px solid ${c};position:relative;overflow:hidden;">
+<div style="position:absolute;bottom:-30px;left:-30px;width:100px;height:100px;border-radius:50%;background:${c}06;pointer-events:none;"></div>
+<div style="display:flex;align-items:flex-start;justify-content:space-between;">
+<div><span style="font-size:10px;font-weight:900;letter-spacing:0.15em;color:${c};text-transform:uppercase;">${movement}</span>
+<div style="font-size:34px;font-weight:900;color:white;line-height:1.2;letter-spacing:-0.03em;margin-top:4px;">${weight} <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.35);">kg</span></div></div>
+<div style="text-align:right;"><span style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);">${reps} reps</span><span style="display:block;font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);">1RM ${est1RM}</span></div>
+</div>
+${customText ? `<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.05);font-size:10px;font-weight:500;color:rgba(255,255,255,0.5);">${customText}</div>` : ''}
+</div>
+<div style="margin-top:8px;background:rgba(0,0,0,0.5);padding:10px 16px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;gap:10px;">
+<div style="width:28px;height:28px;border-radius:50%;background:${c}20;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+<div><span style="font-size:11px;font-weight:900;color:white;">${athlete}</span><span style="display:block;font-size:8px;font-weight:600;color:rgba(255,255,255,0.35);">${location} · ${dayName}</span></div>
+</div></div>`;
             } else {
-                htmlContent = `<div class="w-full" style="font-family: 'Montserrat', sans-serif;"><div class="flex items-stretch gap-2"><div class="flex-1 bg-black/70 p-4 rounded-2xl border border-white/10 text-center"><p class="text-[8px] font-black uppercase tracking-widest text-gray-500">Load</p><p class="text-xl font-black text-white">${weight}</p></div><div class="flex-1 bg-black/70 p-4 rounded-2xl border border-white/10 text-center"><p class="text-[8px] font-black uppercase tracking-widest text-gray-500">Reps</p><p class="text-xl font-black text-white">${reps}</p></div><div class="flex-1 bg-black/70 p-4 rounded-2xl border border-white/10 text-center"><p class="text-[8px] font-black uppercase tracking-widest text-gray-500">1RM</p><p class="text-xl font-black text-white">${est1RM}</p></div></div><div class="mt-2 bg-black/60 p-3 rounded-2xl border border-white/5 flex items-center justify-between"><div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full" style="background:${currentThemeColor}"></div><span class="text-[10px] font-bold uppercase tracking-wider" style="color:${currentThemeColor}">${movement}</span></div><div class="flex items-center gap-2"><span class="text-[10px] font-bold text-gray-400">${dayName}</span><div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center"><svg class="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div></div></div></div>`;
+                htmlContent = `<div style="font-family:'Montserrat',sans-serif;width:100%;">
+<div style="display:flex;gap:6px;">
+<div style="flex:1;background:linear-gradient(180deg,rgba(0,0,0,0.7),rgba(0,0,0,0.5));padding:14px 6px;border-radius:18px;border:1px solid rgba(255,255,255,0.05);text-align:center;">
+<span style="font-size:7px;font-weight:900;color:rgba(255,255,255,0.3);display:block;text-transform:uppercase;letter-spacing:0.1em;">Load</span>
+<span style="font-size:22px;font-weight:900;color:white;display:block;margin-top:2px;">${weight}</span>
+</div>
+<div style="flex:1;background:linear-gradient(180deg,rgba(0,0,0,0.7),rgba(0,0,0,0.5));padding:14px 6px;border-radius:18px;border:1px solid rgba(255,255,255,0.05);text-align:center;">
+<span style="font-size:7px;font-weight:900;color:rgba(255,255,255,0.3);display:block;text-transform:uppercase;letter-spacing:0.1em;">Reps</span>
+<span style="font-size:22px;font-weight:900;color:white;display:block;margin-top:2px;">${reps}</span>
+</div>
+<div style="flex:1;background:linear-gradient(180deg,rgba(0,0,0,0.7),rgba(0,0,0,0.5));padding:14px 6px;border-radius:18px;border:1px solid rgba(255,255,255,0.05);text-align:center;">
+<span style="font-size:7px;font-weight:900;color:rgba(255,255,255,0.3);display:block;text-transform:uppercase;letter-spacing:0.1em;">1RM</span>
+<span style="font-size:22px;font-weight:900;color:white;display:block;margin-top:2px;">${est1RM}</span>
+</div>
+</div>
+<div style="margin-top:6px;background:rgba(0,0,0,0.5);padding:10px 14px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:space-between;">
+<div style="display:flex;align-items:center;gap:6px;"><div style="width:6px;height:6px;border-radius:50%;background:${c};"></div><span style="font-size:9px;font-weight:900;letter-spacing:0.05em;color:${c};text-transform:uppercase;">${movement}</span></div>
+<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.35);">${dayName}</span><div style="width:20px;height:20px;border-radius:50%;background:${c}20;display:flex;align-items:center;justify-content:center;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div></div>
+</div>
+<div style="margin-top:6px;background:rgba(0,0,0,0.5);padding:10px 14px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;gap:8px;">
+<div style="width:22px;height:22px;border-radius:50%;background:${c}20;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+<div><span style="font-size:10px;font-weight:900;color:white;">${athlete}</span><span style="font-size:7px;font-weight:600;color:rgba(255,255,255,0.35);margin-left:4px;">${location}</span></div>
+</div></div>`;
             }
 
             shareContentContainer.innerHTML = htmlContent;
@@ -2095,6 +2217,8 @@
               ? 'linear-gradient(to bottom, #000000, color-mix(in srgb, #000000 95%, transparent))'
               : 'linear-gradient(to bottom, #f5f5f7, color-mix(in srgb, #f5f5f7 95%, transparent))';
           }
+          const chartGrid = document.getElementById('weight-trend-chart') || document.getElementById('progress-chart');
+          if (chartGrid && chartGrid.chart) { chartGrid.chart.destroy(); updateChart(); }
         }
 
         const darkToggle = document.getElementById('toggle-dark-mode');
